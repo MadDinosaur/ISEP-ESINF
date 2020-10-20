@@ -1,2 +1,6 @@
-public class Continent {
+public class Continent
+{
+    public Continent(){
+
+    }
 }
