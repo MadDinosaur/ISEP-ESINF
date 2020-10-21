@@ -1,6 +1,7 @@
-import javax.print.attribute.standard.MediaSize;
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Main {
@@ -32,8 +33,8 @@ public class Main {
     public static void readFile(String fileName) throws IOException {
         Scanner reader = new Scanner(new File(fileName));
 
-        Continent continent;
-        Country country;
+        Continent continent = null;
+        Country country = null;
 
         //Descarta linha do cabeçalho, se o ficheiro não estiver vazio
         if (reader.hasNextLine()) {
@@ -43,15 +44,14 @@ public class Main {
         while(reader.hasNextLine()) {
             String[] line = reader.nextLine().split(",");
 
-            if (!(line[CONTINENT] in World.getContinents())){
+            if (World.getContinents().contains(line[CONTINENT])){
                 continent = new Continent(line[CONTINENT]);
             }
 
-            if (!(line[ISO_CODE] in continent.getCountryCodes())){
+            if (continent.getCountries().get(line[ISO_CODE]) == null){
                 country = new Country(line[ISO_CODE], line[LOCATION]);
                 continent.addCountry(country);
             }
-
             LocalDate date = new LocalDate(line[DATE]);
             Case dailyCases = new Case();
             Death dailyDeaths = new Death();
