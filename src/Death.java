@@ -1,45 +1,45 @@
+import sun.reflect.generics.tree.Tree;
+
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class Death {
 
-    Map<LocalDate,Integer> totalDeaths;
-    Map<LocalDate,Integer> newDeaths;
+    private Map<LocalDate, Integer> totalDeaths;
+    private Map<LocalDate, Integer> newDeaths;
 
-    public Death()
-    {
+    public Death() {
         totalDeaths = new TreeMap<>();
         newDeaths = new TreeMap<>();
     }
 
-    public void addDeath(String newDeaths, String totalDeaths, LocalDate date){
+    public void addDeath(String newDeaths, String totalDeaths, LocalDate date) {
 
         int newDeathsInt;
         int totalDeathsInt;
 
-        if(newDeaths.equalsIgnoreCase("NA"))
-        {
+        if (newDeaths.equalsIgnoreCase("NA")) {
             newDeathsInt = 0;
-        }
-
-        else
-        {
+        } else {
             newDeathsInt = Integer.parseInt(newDeaths);
         }
 
-        if(totalDeaths.equalsIgnoreCase("NA"))
-        {
-            totalDeathsInt=0;
-        }
-
-        else
-        {
+        if (totalDeaths.equalsIgnoreCase("NA")) {
+            totalDeathsInt = 0;
+        } else {
             totalDeathsInt = Integer.parseInt(totalDeaths);
         }
 
-        this.newDeaths.put(date,newDeathsInt);
-        this.totalDeaths.put(date,totalDeathsInt);
+        this.getNewDeaths().put(date, newDeathsInt);
+        this.getTotalDeaths().put(date, totalDeathsInt);
     }
 
+    public Map<LocalDate, Integer> getTotalDeaths() {
+        return new TreeMap<>(totalDeaths);
+    }
+
+    public Map<LocalDate, Integer> getNewDeaths() {
+        return new TreeMap<>(newDeaths);
+    }
 }

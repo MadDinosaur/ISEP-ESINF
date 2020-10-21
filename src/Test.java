@@ -4,43 +4,41 @@ import java.util.TreeMap;
 
 public class Test {
 
-    Map<LocalDate,Integer> totalTests;
-    Map<LocalDate,Integer> newTests;
+    private Map<LocalDate, Integer> totalTests;
+    private Map<LocalDate, Integer> newTests;
 
-    public Test()
-    {
+    public Test() {
         totalTests = new TreeMap();
         newTests = new TreeMap();
     }
 
-    public void addTest(String newTests, String totalTests, LocalDate date){
+    public void addTest(String newTests, String totalTests, LocalDate date) {
 
         int newTestsInt;
         int totalTestsInt;
 
-        if(newTests.equalsIgnoreCase("NA"))
-        {
+        if (newTests.equalsIgnoreCase("NA")) {
             newTestsInt = 0;
-        }
-
-        else
-        {
+        } else {
             newTestsInt = Integer.parseInt(newTests);
         }
 
-        if(totalTests.equalsIgnoreCase("NA"))
-        {
-            totalTestsInt=0;
-        }
-
-        else
-        {
+        if (totalTests.equalsIgnoreCase("NA")) {
+            totalTestsInt = 0;
+        } else {
             totalTestsInt = Integer.parseInt(totalTests);
         }
 
-        this.newTests.put(date,newTestsInt);
-        this.totalTests.put(date,totalTestsInt);
+        this.getNewTests().put(date, newTestsInt);
+        this.getTotalTests().put(date, totalTestsInt);
 
     }
 
+    public Map<LocalDate, Integer> getTotalTests() {
+        return new TreeMap<>(totalTests);
+    }
+
+    public Map<LocalDate, Integer> getNewTests() {
+        return new TreeMap<>(newTests);
+    }
 }

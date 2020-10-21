@@ -4,42 +4,40 @@ import java.util.TreeMap;
 
 public class Case {
 
-    Map<LocalDate,Integer> totalCases;
-    Map<LocalDate,Integer> newCases;
+    private Map<LocalDate, Integer> totalCases;
+    private Map<LocalDate, Integer> newCases;
 
-    public Case()
-    {
+    public Case() {
         totalCases = new TreeMap<>();
         newCases = new TreeMap<>();
     }
 
-    public void addCase(String newCases, String totalCases, LocalDate date){
+    public void addCase(String newCases, String totalCases, LocalDate date) {
+        int newCasesInt;
+        int totalCasesInt;
 
-    int newCasesInt;
-    int totalCasesInt;
+        if (newCases.equalsIgnoreCase("NA")) {
+            newCasesInt = 0;
+        } else {
+            newCasesInt = Integer.parseInt(newCases);
+        }
 
-    if(newCases.equalsIgnoreCase("NA"))
-    {
-        newCasesInt = 0;
+        if (totalCases.equalsIgnoreCase("NA")) {
+            totalCasesInt = 0;
+        } else {
+            totalCasesInt = Integer.parseInt(totalCases);
+        }
+
+        this.getNewCases().put(date, newCasesInt);
+        this.getTotalCases().put(date, totalCasesInt);
     }
 
-    else
-    {
-        newCasesInt = Integer.parseInt(newCases);
+
+    public Map<LocalDate, Integer> getTotalCases() {
+        return new TreeMap<>(totalCases);
     }
 
-    if(totalCases.equalsIgnoreCase("NA"))
-    {
-        totalCasesInt=0;
+    public Map<LocalDate, Integer> getNewCases() {
+        return new TreeMap<>(newCases);
     }
-
-    else
-    {
-        totalCasesInt = Integer.parseInt(totalCases);
-    }
-
-    this.newCases.put(date,newCasesInt);
-    this.totalCases.put(date,totalCasesInt);
-    }
-
 }

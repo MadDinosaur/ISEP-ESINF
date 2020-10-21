@@ -2,6 +2,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
@@ -41,18 +42,19 @@ public class Main {
             reader.nextLine();
         }
         //Lê o ficheiro linha a linha e atribuiu os valores das colunas às respetivas classes
-        while(reader.hasNextLine()) {
+        while (reader.hasNextLine()) {
             String[] line = reader.nextLine().split(",");
 
-            if (World.getContinents().contains(line[CONTINENT])){
+            if (World.getContinents().contains(line[CONTINENT])) {
                 continent = new Continent(line[CONTINENT]);
             }
 
-            if (continent.getCountries().get(line[ISO_CODE]) == null){
+            if (continent.getCountries().get(line[ISO_CODE]) == null) {
                 country = new Country(line[ISO_CODE], line[LOCATION]);
                 continent.addCountry(country);
             }
-            LocalDate date = new LocalDate(line[DATE]);
+
+            LocalDate date = LocalDate.parse(line[DATE]);
             Case dailyCases = new Case();
             Death dailyDeaths = new Death();
             Test dailyTests = new Test();
@@ -61,7 +63,7 @@ public class Main {
             dailyCases.addCase(line[NEW_CASES], line[TOTAL_CASES], date);
             dailyDeaths.addDeath(line[NEW_DEATHS], line[TOTAL_DEATHS], date);
             dailyTests.addTest(line[NEW_TESTS], line[TOTAL_TESTS], date);
-            dailySmokers.addSmoker(line[FEMALE_SMOKERS],line[MALE_SMOKERS], date);
+            dailySmokers.addSmoker(line[FEMALE_SMOKERS], line[MALE_SMOKERS], date);
 
             country.addData(dailyCases, dailyDeaths, dailyTests, dailySmokers);
         }
