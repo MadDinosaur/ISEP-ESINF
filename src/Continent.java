@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Continent {
     private String name;
-    private Map<String, String> countries = new TreeMap<>();
+    private Map<String, Country> countries = new TreeMap<>();
 
     public Continent(String name) {
         this.name = name;
@@ -14,14 +14,15 @@ public class Continent {
     }
 
     public void addCountry(Country c) {
-        countries.put(c.getIsoCode(), c.getLocation());
+        countries.put(c.getIsoCode(), c);
+        c.setContinent(this);
     }
 
     public Set<String> getCountryCodes() {
         return countries.keySet();
     }
 
-    public Map<String, String> getCountries() {
+    public Map<String, Country> getCountries() {
         return new TreeMap<>(countries);
     }
 
