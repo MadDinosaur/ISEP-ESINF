@@ -31,8 +31,8 @@ public class Death {
             totalDeathsInt = Integer.parseInt(totalDeaths);
         }
 
-        this.getNewDeaths().put(date, newDeathsInt);
-        this.getTotalDeaths().put(date, totalDeathsInt);
+        this.newDeaths.put(date, newDeathsInt);
+        this.totalDeaths.put(date, totalDeathsInt);
     }
 
     public Map<LocalDate, Integer> getTotalDeaths() {

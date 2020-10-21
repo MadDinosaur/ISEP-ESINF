@@ -1,8 +1,5 @@
 import java.io.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
@@ -27,15 +24,21 @@ public class Main {
     static final int LIFE_EXPECTANCY = 17;
 
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws IOException {
+        readFile("owid-covid-data.csv");
     }
 
     public static void readFile(String fileName) throws IOException {
         Scanner reader = new Scanner(new File(fileName));
 
+        //Inicialização das classes
         Continent continent = null;
         Country country = null;
+        Case dailyCases = null;
+        Death dailyDeaths = null;
+        Test dailyTests = null;
+        Smoker dailySmokers = null;
+        LocalDate date;
 
         //Descarta linha do cabeçalho, se o ficheiro não estiver vazio
         if (reader.hasNextLine()) {
@@ -45,20 +48,21 @@ public class Main {
         while (reader.hasNextLine()) {
             String[] line = reader.nextLine().split(",");
 
-            if (World.getContinents().contains(line[CONTINENT])) {
+            if (!World.getContinents().contains(line[CONTINENT])) {
                 continent = new Continent(line[CONTINENT]);
             }
 
             if (continent.getCountries().get(line[ISO_CODE]) == null) {
                 country = new Country(line[ISO_CODE], line[LOCATION]);
                 continent.addCountry(country);
+
+                dailyCases = new Case();
+                dailyDeaths = new Death();
+                dailyTests = new Test();
+                dailySmokers = new Smoker();
             }
 
-            LocalDate date = LocalDate.parse(line[DATE]);
-            Case dailyCases = new Case();
-            Death dailyDeaths = new Death();
-            Test dailyTests = new Test();
-            Smoker dailySmokers = new Smoker();
+            date = LocalDate.parse(line[DATE]);
 
             dailyCases.addCase(line[NEW_CASES], line[TOTAL_CASES], date);
             dailyDeaths.addDeath(line[NEW_DEATHS], line[TOTAL_DEATHS], date);

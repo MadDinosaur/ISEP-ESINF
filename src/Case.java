@@ -28,8 +28,8 @@ public class Case {
             totalCasesInt = Integer.parseInt(totalCases);
         }
 
-        this.getNewCases().put(date, newCasesInt);
-        this.getTotalCases().put(date, totalCasesInt);
+        this.newCases.put(date, newCasesInt);
+        this.totalCases.put(date, totalCasesInt);
     }
 
 

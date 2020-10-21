@@ -29,8 +29,8 @@ public class Test {
             totalTestsInt = Integer.parseInt(totalTests);
         }
 
-        this.getNewTests().put(date, newTestsInt);
-        this.getTotalTests().put(date, totalTestsInt);
+        this.newTests.put(date, newTestsInt);
+        this.totalTests.put(date, totalTestsInt);
 
     }
 

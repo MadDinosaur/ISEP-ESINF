@@ -37,7 +37,7 @@ public class Smoker {
 
         this.femaleSmokers.put(date, femaleSmokersFloat);
         this.maleSmokers.put(date, maleSmokersFloat);
-        this.getTotalSmokers().put(date, totalSmokersFloat);
+        this.totalSmokers.put(date, totalSmokersFloat);
     }
 
     public Map<LocalDate, Float> getTotalSmokers() {
