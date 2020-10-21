@@ -1,4 +1,5 @@
 public class Country {
+
     private String isoCode;
     private String location;
 
