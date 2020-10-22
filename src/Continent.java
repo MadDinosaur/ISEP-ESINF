@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.*;
 
 public class Continent {
@@ -25,6 +26,13 @@ public class Continent {
     public Map<String, Country> getCountries() {
         return new TreeMap<>(countries);
     }
+
+    public void printTotalCasesPerMonth()
+    {
+        
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
