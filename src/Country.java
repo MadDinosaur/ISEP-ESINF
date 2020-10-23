@@ -1,7 +1,4 @@
-import javafx.util.Pair;
-
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -58,27 +55,23 @@ public class Country {
     }
 
     /**
-     * Retorna a data em que o país atingiu um dado número de casos positivos, assim como o número de dias que demorou
-     * a atingir esse número a partir da data inicial de recolha de dados.
+     * Calcula a data em que o país atingiu um dado número de casos positivos.
      *
      * @param numCases Número de casos positivos a atingir
-     * @return Um Pair cuja Key é a data em que o país atingiu o dado número de casos positivos e o Value é o número de
-     * dias desde a data inicial de recolha de dados até essa data.
+     * @return Data em que o país atingiu o dado número de casos positivos.
      */
-    public Pair<LocalDate, Long> daysUntilXCases(int numCases) {
+    public LocalDate dateUntilXCases(int numCases) {
         Iterator<Map.Entry<LocalDate, Integer>> i = totalCases.entrySet().iterator();
 
         Map.Entry<LocalDate, Integer> currentEntry = i.next();
-        LocalDate initialDate = currentEntry.getKey();
 
         while (i.hasNext() && currentEntry.getValue() < numCases) {
             currentEntry = i.next();
         }
 
         LocalDate casesAchievedDate = currentEntry.getKey();
-        long numDays = ChronoUnit.DAYS.between(initialDate, casesAchievedDate);
 
-        return new Pair<LocalDate, Long>(casesAchievedDate, numDays);
+        return casesAchievedDate;
     }
 
     @Override
@@ -100,5 +93,9 @@ public class Country {
     @Override
     public int hashCode() {
         return getIsoCode().hashCode();
+    }
+
+    public int getTotalCases(LocalDate d) {
+        return totalCases.get(d);
     }
 }

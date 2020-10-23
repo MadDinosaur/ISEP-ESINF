@@ -1,6 +1,10 @@
 import java.io.*;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class Main {
 
@@ -74,7 +78,25 @@ public class Main {
         reader.close();
     }
 
+    public static void printMinDays() {
+        int numCases = 50000;
+        Map<LocalDate, Country> totalCasesByMinDays = new TreeMap<>();
+        //ALTERAR
+        LocalDate firstDate = LocalDate.of(2020, 1, 1);
 
+        for (Continent continent : World.getContinents()) {
+            for (Country country : continent.getCountries().values()) {
+                totalCasesByMinDays.put(country.dateUntilXCases(numCases), country);
+            }
+        }
 
-
+        Iterator printer = totalCasesByMinDays.entrySet().iterator();
+        while (printer.hasNext()) {
+            Map.Entry<LocalDate, Country> entry = (Map.Entry<LocalDate, Country>) printer.next();
+            LocalDate d = entry.getKey();
+            int minDays = (int) ChronoUnit.DAYS.between(firstDate, d);
+            Country c = entry.getValue();
+            System.out.printf("%s %s %s %s %d %d days\n", c.getIsoCode(), c.getContinent().getName(), c.getLocation(), d, c.getTotalCases(d), minDays);
+        }
+    }
 }
