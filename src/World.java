@@ -1,19 +1,21 @@
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class World {
-    private static Set<Continent> continents = new HashSet<>();
-    private static Set<String> continentNames = new HashSet<>();
+    private static Map<String, Continent> continents = new HashMap<>();
 
-    public static boolean addContinent(Continent c) {
-        return continents.add(c) && continentNames.add(c.getName());
+    public static void addContinent(Continent c) {
+        continents.put(c.getName(), c);
     }
 
     public static Set<String> continentList() {
-        return new HashSet<String>(continentNames);
+        return continents.keySet();
     }
 
-    public static Set<Continent> getContinents() {
-        return new HashSet<Continent>(continents);
+    public static Collection<Continent> getContinents() {
+        return continents.values();
+    }
+
+    public static Continent get(String name) {
+        return continents.get(name);
     }
 }

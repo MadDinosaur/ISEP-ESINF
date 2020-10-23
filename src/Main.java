@@ -30,6 +30,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         readFile("owid-covid-data.csv");
+        printMinDays();
     }
 
     public static void readFile(String fileName) throws IOException {
@@ -52,8 +53,10 @@ public class Main {
         while (reader.hasNextLine()) {
             String[] line = reader.nextLine().split(",");
 
-            if (!World.getContinents().contains(line[CONTINENT])) {
+            if (!World.continentList().contains(line[CONTINENT])) {
                 continent = new Continent(line[CONTINENT]);
+            } else {
+                continent = World.get(line[CONTINENT]);
             }
 
             if (continent.getCountries().get(line[ISO_CODE]) == null) {
@@ -86,17 +89,20 @@ public class Main {
 
         for (Continent continent : World.getContinents()) {
             for (Country country : continent.getCountries().values()) {
-                totalCasesByMinDays.put(country.dateUntilXCases(numCases), country);
+                LocalDate casesAchievedDate = country.dateUntilXCases(numCases);
+                if (casesAchievedDate != null) {
+                    totalCasesByMinDays.put(country.dateUntilXCases(numCases), country);
+                }
             }
         }
-
+        System.out.printf("%-10s %-15s %-22s %-15s %-15s %-10s\n", "iso_code", "continent", "location", "date", "total_cases", "mindays");
         Iterator printer = totalCasesByMinDays.entrySet().iterator();
         while (printer.hasNext()) {
             Map.Entry<LocalDate, Country> entry = (Map.Entry<LocalDate, Country>) printer.next();
             LocalDate d = entry.getKey();
             int minDays = (int) ChronoUnit.DAYS.between(firstDate, d);
             Country c = entry.getValue();
-            System.out.printf("%s %s %s %s %d %d days\n", c.getIsoCode(), c.getContinent().getName(), c.getLocation(), d, c.getTotalCases(d), minDays);
+            System.out.printf("%-10s %-15s %-22s %-15s %-15d %d days\n", c.getIsoCode(), c.getContinent().getName(), c.getLocation(), d, c.getTotalCases(d), minDays);
         }
     }
 }
