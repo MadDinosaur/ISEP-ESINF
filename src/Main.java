@@ -25,16 +25,14 @@ public class Main {
     static final int HOSPITAL_BEDS_PER_THOUSAND = 16;
     static final int LIFE_EXPECTANCY = 17;
     static final float PERCENTAGE_SMOKERS = 70f;
+    static final int YEAR = 2020;
 
 
     public static void main(String[] args) throws IOException {
         readFile("owid-covid-data.csv");
-<<<<<<< HEAD
-        printMonthlyCasesAndDeaths();
-
-=======
-        printMinDays();
->>>>>>> 5828fbe21cbd1837bfa901b9718a9d30ddd8ee36
+        //printDailyCases("\"Europe\"", 9);
+        //printMonthlyCasesAndDeaths();
+        //printMinDays();
     }
 
     //ex01
@@ -62,11 +60,6 @@ public class Main {
             if (!World.continentList().contains(line[CONTINENT])) {
                 continent = new Continent(line[CONTINENT]);
             } else {
-                continent = World.get(line[CONTINENT]);
-            }
-
-            else
-            {
                 continent = World.get(line[CONTINENT]);
             }
 
@@ -121,41 +114,39 @@ public class Main {
 
     // ex03
 
-    public static void printMonthlyCasesAndDeaths()
-    {
-        for(Continent continent : World.getContinents())
-        {
-            Map<Integer,Integer> deaths = continent.totalDeathsPerMonth();
-            Map<Integer,Integer> cases = continent.totalCasesPerMonth();
+    public static void printMonthlyCasesAndDeaths() {
+        for (Continent continent : World.getContinents()) {
+            Map<Integer, Integer> deaths = continent.totalDeathsPerMonth();
+            Map<Integer, Integer> cases = continent.totalCasesPerMonth();
 
-            for (int month: cases.keySet())
-            {
-                System.out.printf("%s %d %d %d\n", continent.getName(),month,cases.get(month),deaths.get(month));
+            for (int month : cases.keySet()) {
+                System.out.printf("%s %d %d %d\n", continent.getName(), month, cases.get(month), deaths.get(month));
             }
         }
     }
 
     //ex04
 
+    public static void printDailyCases(String continent, int month) {
+        World.get(continent).newCasesPerMonth(YEAR, month);
+    }
+
     //ex05
 
-    public static void printDeathsSmokersByCountry()
-    {
-        Map<Integer,String> deaths = new HashMap<>();
+    /*public static void printDeathsSmokersByCountry() {
+        Map<Integer, String> deaths = new HashMap<>();
 
-        for(Continent continent : World.getContinents())
-        {
-            for(Country country : continent.getCountries().values())
-            {
-                LocalDate date = LocalDate.of(2020,1,1);
+        for (Continent continent : World.getContinents()) {
+            for (Country country : continent.getCountries().values()) {
+                LocalDate date = LocalDate.of(2020, 1, 1);
 
                 float percentage = country.getTotalSmokers(date);
 
-                deaths.put(continent.getDeathsPerSmokerPercentage(percentage).keySet().iterator().next(),country.getLocation());
+                deaths.put(continent.getDeathsPerSmokerPercentage(percentage).keySet().iterator().next(), country.getLocation());
 
-                System.out.println("[%s, %.2f, %d]\n", deaths.values(),country.getTotalSmokers(date), deaths.keySet().iterator().next());
+                System.out.println("[%s, %.2f, %d]\n", deaths.values(), country.getTotalSmokers(date), deaths.keySet().iterator().next());
             }
         }
 
-    }
+    }*/
 }

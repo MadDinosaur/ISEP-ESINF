@@ -27,10 +27,9 @@ public class Death {
             newDeathsInt = Integer.parseInt(newDeaths);
         }
 
-        if (totalDeaths.equalsIgnoreCase("NA"))
-        {
+        if (totalDeaths.equalsIgnoreCase("NA")) {
             totalDeathsInt = 0;
-            if(this.totalDeaths.get(date.minusDays(1))!= null) {
+            if (this.totalDeaths.get(date.minusDays(1)) != null) {
                 totalDeathsInt = this.totalDeaths.get(date.minusDays(1));
             }
         } else {
