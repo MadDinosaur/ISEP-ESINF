@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,10 +34,18 @@ public class Case {
             totalCasesInt = Integer.parseInt(totalCases);
         }
 
+        //Preenche intervalos "vazios", sem datas registadas
+        if (latestDate != null && date.compareTo(latestDate.plusDays(1)) > 0) {
+            for (int numDays = 1; numDays < (int) ChronoUnit.DAYS.between(latestDate, date); numDays++) {
+                this.newCases.put(latestDate.plusDays(numDays), 0);
+                this.totalCases.put(latestDate.plusDays(numDays), this.totalCases.get(latestDate));
+            }
+        }
+
         this.newCases.put(date, newCasesInt);
         this.totalCases.put(date, totalCasesInt);
 
-        if (latestDate == null || date.compareTo(latestDate) < 0) {
+        if (latestDate == null || date.compareTo(latestDate) > 0) {
             this.latestDate = date;
         }
     }
@@ -70,18 +79,21 @@ public class Case {
     }
 
     private void generateMonthlyCases() {
-        LocalDate startOfMonth = totalCases.keySet().iterator().next();
-        LocalDate endOfMonth = lastDateOfMonth(startOfMonth.getMonthValue(), startOfMonth.getYear());
-        while (totalCases.get(startOfMonth) != null) {
+        LocalDate currentDate = newCases.keySet().iterator().next();
+        LocalDate endOfMonthDate = lastDateOfMonth(currentDate.getMonthValue(), currentDate.getYear());
+        int casesPerMonth = 0;
+        while (newCases.get(currentDate) != null) {
+            while (currentDate.compareTo(endOfMonthDate) <= 0) {
 
-            int casesByEndOfMonth = totalCases.get(endOfMonth);
+                casesPerMonth += newCases.get(currentDate);
+                currentDate = currentDate.plusDays(1);
+            }
 
-            int casesPerMonth = casesByEndOfMonth - totalCases.get(startOfMonth) + newCases.get(startOfMonth);
+            monthlyCases.put(endOfMonthDate.getMonthValue(), casesPerMonth);
 
-            startOfMonth = endOfMonth.plusDays(1);
-            endOfMonth = lastDateOfMonth(startOfMonth.getMonthValue(), startOfMonth.getYear());
-
-            monthlyCases.put(startOfMonth.getMonthValue(), casesPerMonth);
+            endOfMonthDate = lastDateOfMonth(currentDate.getMonthValue(), currentDate.getYear());
+            casesPerMonth = 0;
         }
     }
 }
+

@@ -2,6 +2,7 @@ import sun.reflect.generics.tree.Tree;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -39,10 +40,18 @@ public class Death {
             totalDeathsInt = Integer.parseInt(totalDeaths);
         }
 
+        //Preenche intervalos "vazios", sem datas registadas
+        if (latestDate != null && date.compareTo(latestDate.plusDays(1)) > 0) {
+            for (int numDays = 1; numDays < (int) ChronoUnit.DAYS.between(latestDate, date); numDays++) {
+                this.newDeaths.put(latestDate.plusDays(numDays), 0);
+                this.totalDeaths.put(latestDate.plusDays(numDays), this.totalDeaths.get(latestDate));
+            }
+        }
+
         this.newDeaths.put(date, newDeathsInt);
         this.totalDeaths.put(date, totalDeathsInt);
 
-        if (latestDate == null || date.compareTo(latestDate) < 0) {
+        if (latestDate == null || date.compareTo(latestDate) > 0) {
             this.latestDate = date;
         }
     }
@@ -84,10 +93,10 @@ public class Death {
 
             int deathsPerMonth = deathsByEndOfMonth - totalDeaths.get(startOfMonth) + newDeaths.get(startOfMonth);
 
+            monthlyDeaths.put(startOfMonth.getMonthValue(), deathsPerMonth);
+
             startOfMonth = endOfMonth.plusDays(1);
             endOfMonth = lastDateOfMonth(startOfMonth.getMonthValue(), startOfMonth.getYear());
-
-            monthlyDeaths.put(startOfMonth.getMonthValue(), deathsPerMonth);
         }
     }
 }

@@ -119,8 +119,9 @@ public class Main {
             Map<Integer, Integer> deaths = continent.totalDeathsPerMonth();
             Map<Integer, Integer> cases = continent.totalCasesPerMonth();
 
+            System.out.printf("%-15s %-5s %-10s %-10s\n", "continent", "month", "new_cases", "new_deaths");
             for (int month : cases.keySet()) {
-                System.out.printf("%s %d %d %d\n", continent.getName(), month, cases.get(month), deaths.get(month));
+                System.out.printf("%-15s %-5d %-10d %-10d\n", continent.getName(), month, cases.get(month), deaths.get(month));
             }
         }
     }
