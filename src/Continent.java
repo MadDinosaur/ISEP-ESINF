@@ -19,6 +19,30 @@ public class Continent {
         c.setContinent(this);
     }
 
+    public Map<Integer, Integer> totalDeathsPerMonth()
+    {
+        Map<Integer,Integer> mapAux = new HashMap<>();
+
+        for(Country c : countries.values())
+        {
+            c.totalDeathsPerMonth(mapAux);
+        }
+
+        return mapAux;
+    }
+
+    public Map<Integer, Integer> totalCasesPerMonth()
+    {
+        Map<Integer,Integer> mapAux = new HashMap<>();
+
+        for(Country c : countries.values())
+        {
+            c.totalCasesPerMonth(mapAux);
+        }
+
+        return mapAux;
+    }
+
     public Set<String> getCountryCodes() {
         return countries.keySet();
     }
@@ -27,12 +51,26 @@ public class Continent {
         return new TreeMap<>(countries);
     }
 
-    public void printTotalCasesPerMonth()
+
+    public Map<Integer,String> getDeathsPerSmokerPercentage(Float percentage)
     {
-        
+        Map<Integer,String> mapAux = new HashMap<>();
+
+        for(Country country : countries.values())
+        {
+            if(country.hasMoreSmokers(percentage) == true)
+            {
+
+                LocalDate date;
+
+                int totalCasesLastDay = country.getTotalCases(date);
+
+                mapAux.put(totalCasesLastDay,country.getLocation());
+            }
+        }
+
+        return  mapAux;
     }
-
-
 
     @Override
     public boolean equals(Object o) {

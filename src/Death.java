@@ -27,47 +27,18 @@ public class Death {
             newDeathsInt = Integer.parseInt(newDeaths);
         }
 
-        if (totalDeaths.equalsIgnoreCase("NA")) {
+        if (totalDeaths.equalsIgnoreCase("NA"))
+        {
             totalDeathsInt = 0;
+            if(this.totalDeaths.get(date.minusDays(1))!= null) {
+                totalDeathsInt = this.totalDeaths.get(date.minusDays(1));
+            }
         } else {
             totalDeathsInt = Integer.parseInt(totalDeaths);
         }
 
         this.newDeaths.put(date, newDeathsInt);
         this.totalDeaths.put(date, totalDeathsInt);
-    }
-
-    public Map<Integer,Integer> totalDeathsPerMonth(LocalDate date)
-    {
-        Map.Entry<LocalDate,Integer> firstDay = totalDeaths.entrySet().iterator().next();
-
-        Map<Integer,Integer> totalDeathsMonth= new HashMap<>();
-
-        LocalDate newDate = firstDay.getKey();
-
-        while(totalDeaths.get(newDate) != null) {
-
-            int year = newDate.getYear();
-            int month = newDate.getMonth().getValue();
-
-            int lastDayMonth = YearMonth.of(year,month).lengthOfMonth();
-
-            LocalDate lastDateOfMonth = LocalDate.of(year,month,lastDayMonth);
-
-            if(totalDeaths.get(lastDateOfMonth) == null)
-            {
-                break;
-            }
-
-            int deathsByEndMonth = totalDeaths.get(lastDateOfMonth);
-
-            int monthDeaths = deathsByEndMonth - totalDeaths.get(newDate);
-
-            newDate = lastDateOfMonth.plusDays(1);
-
-            totalDeathsMonth.put(month,monthDeaths);
-        }
-        return totalDeathsMonth;
     }
 
     public Map<LocalDate, Integer> getTotalDeaths() {

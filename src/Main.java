@@ -1,10 +1,8 @@
+import javax.naming.Name;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Main {
 
@@ -26,11 +24,16 @@ public class Main {
     static final int MALE_SMOKERS = 15;
     static final int HOSPITAL_BEDS_PER_THOUSAND = 16;
     static final int LIFE_EXPECTANCY = 17;
+    static final float PERCENTAGE_SMOKERS = 70f;
 
 
     public static void main(String[] args) throws IOException {
         readFile("owid-covid-data.csv");
+        printMonthlyCasesAndDeaths();
+
     }
+
+    //ex01
 
     public static void readFile(String fileName) throws IOException {
         Scanner reader = new Scanner(new File(fileName));
@@ -52,8 +55,13 @@ public class Main {
         while (reader.hasNextLine()) {
             String[] line = reader.nextLine().split(",");
 
-            if (!World.getContinents().contains(line[CONTINENT])) {
+            if (!World.continentList().contains(line[CONTINENT])) {
                 continent = new Continent(line[CONTINENT]);
+            }
+
+            else
+            {
+                continent = World.get(line[CONTINENT]);
             }
 
             if (continent.getCountries().get(line[ISO_CODE]) == null) {
@@ -78,6 +86,8 @@ public class Main {
         reader.close();
     }
 
+    //ex02
+
     public static void printMinDays() {
         int numCases = 50000;
         Map<LocalDate, Country> totalCasesByMinDays = new TreeMap<>();
@@ -98,5 +108,45 @@ public class Main {
             Country c = entry.getValue();
             System.out.printf("%s %s %s %s %d %d days\n", c.getIsoCode(), c.getContinent().getName(), c.getLocation(), d, c.getTotalCases(d), minDays);
         }
+    }
+
+    // ex03
+
+    public static void printMonthlyCasesAndDeaths()
+    {
+        for(Continent continent : World.getContinents())
+        {
+            Map<Integer,Integer> deaths = continent.totalDeathsPerMonth();
+            Map<Integer,Integer> cases = continent.totalCasesPerMonth();
+
+            for (int month: cases.keySet())
+            {
+                System.out.printf("%s %d %d %d\n", continent.getName(),month,cases.get(month),deaths.get(month));
+            }
+        }
+    }
+
+    //ex04
+
+    //ex05
+
+    public static void printDeathsSmokersByCountry()
+    {
+        Map<Integer,String> deaths = new HashMap<>();
+
+        for(Continent continent : World.getContinents())
+        {
+            for(Country country : continent.getCountries().values())
+            {
+                LocalDate date = LocalDate.of(2020,1,1);
+
+                float percentage = country.getTotalSmokers(date);
+
+                deaths.put(continent.getDeathsPerSmokerPercentage(percentage).keySet().iterator().next(),country.getLocation());
+
+                System.out.println("[%s, %.2f, %d]\n", deaths.values(),country.getTotalSmokers(date), deaths.keySet().iterator().next());
+            }
+        }
+
     }
 }
