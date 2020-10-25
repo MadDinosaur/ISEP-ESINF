@@ -38,7 +38,7 @@ public class Continent {
         return mapAux;
     }
 
-    public Map<Integer, Integer> totalCasesPerMonth() {
+    public Map<Integer, Integer> newCasesPerMonth() {
         Map<Integer, Integer> mapAux = new HashMap<>();
 
         for (Country c : countries.values()) {
