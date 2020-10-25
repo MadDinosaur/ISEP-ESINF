@@ -74,7 +74,12 @@ public class Country {
             currentEntry = i.next();
         }
 
-        LocalDate casesAchievedDate = currentEntry.getKey();
+        LocalDate casesAchievedDate;
+        if(currentEntry.getValue() >= numCases) {
+            casesAchievedDate = currentEntry.getKey();
+        } else {
+            casesAchievedDate = null;
+        }
 
         return casesAchievedDate;
     }
