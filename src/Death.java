@@ -80,19 +80,14 @@ public class Death {
         LocalDate endOfMonth = lastDateOfMonth(startOfMonth.getMonthValue(), startOfMonth.getYear());
         while (totalDeaths.get(startOfMonth) != null) {
 
-            int casesByEndOfMonth = totalDeaths.get(endOfMonth);
+            int deathsByEndOfMonth = totalDeaths.get(endOfMonth);
 
-            int casesPerMonth = casesByEndOfMonth - totalDeaths.get(startOfMonth) + totalDeaths.get(startOfMonth);
+            int deathsPerMonth = deathsByEndOfMonth - totalDeaths.get(startOfMonth) + newDeaths.get(startOfMonth);
 
             startOfMonth = endOfMonth.plusDays(1);
+            endOfMonth = lastDateOfMonth(startOfMonth.getMonthValue(), startOfMonth.getYear());
 
-            monthlyDeaths.put(startOfMonth.getMonthValue(), casesPerMonth);
-
-            /*if (totalCasesMonth.get(month) == null) {
-                totalCasesMonth.put(month, monthCases);
-            } else {
-                totalCasesMonth.put(month, totalCasesMonth.get(month) + monthCases);
-            }*/
+            monthlyDeaths.put(startOfMonth.getMonthValue(), deathsPerMonth);
         }
     }
 }

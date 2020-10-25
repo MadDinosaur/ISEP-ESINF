@@ -53,6 +53,14 @@ public class Country {
         return caseLists.getMonthlyCases().get(month);
     }
 
+    public Map<Integer, Integer> getMonthlyDeaths() {
+        return deathLists.getMonthlyDeaths();
+    }
+
+    public int getMonthlyDeaths(int month) {
+        return deathLists.getMonthlyDeaths().get(month);
+    }
+
     public float getTotalSmokers(LocalDate d) {
         return totalSmokers.get(d);
     }

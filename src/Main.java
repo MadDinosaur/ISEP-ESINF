@@ -31,7 +31,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         readFile("owid-covid-data.csv");
         //printDailyCases("\"Europe\"", 9);
-        //printMonthlyCasesAndDeaths();
+        printMonthlyCasesAndDeaths();
         //printMinDays();
     }
 
@@ -95,9 +95,9 @@ public class Main {
 
         for (Continent continent : World.getContinents()) {
             for (Country country : continent.getCountries().values()) {
-                LocalDate casesAchievedDate = country.dateUntilXCases(numCases);
+                LocalDate casesAchievedDate = country.numCasesReached(numCases);
                 if (casesAchievedDate != null) {
-                    totalCasesByMinDays.put(country.dateUntilXCases(numCases), country);
+                    totalCasesByMinDays.put(country.numCasesReached(numCases), country);
                 }
             }
         }

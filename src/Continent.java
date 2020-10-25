@@ -11,6 +11,7 @@ public class Continent {
         World.addContinent(this);
     }
 
+    //---------------- Getters ----------------
     public String getName() {
         return this.name;
     }
@@ -23,31 +24,41 @@ public class Continent {
         return countries.keySet();
     }
 
+    //---------------- Public update methods ----------------
     public void addCountry(Country c) {
         countries.put(c.getIsoCode(), c);
         c.setContinent(this);
     }
 
+    public Map<Integer, Integer> totalCasesPerMonth() {
+        Map<Integer, Integer> totalCasesPerMonth = new HashMap<>();
+        for (Country c : countries.values()) {
+            for (int month : c.getMonthlyCases().keySet()) {
+                if (totalCasesPerMonth.containsKey(month)) {
+                    totalCasesPerMonth.put(month, totalCasesPerMonth.get(month) + c.getMonthlyCases(month));
+                } else {
+                    totalCasesPerMonth.put(month, c.getMonthlyCases(month));
+                }
+            }
+        }
+        return totalCasesPerMonth;
+    }
+
     public Map<Integer, Integer> totalDeathsPerMonth() {
-        Map<Integer, Integer> mapAux = new HashMap<>();
-
+        Map<Integer, Integer> totalDeathsPerMonth = new HashMap<>();
         for (Country c : countries.values()) {
-            c.totalDeathsPerMonth(mapAux);
+            for (int month : c.getMonthlyDeaths().keySet()) {
+                if (totalDeathsPerMonth.containsKey(month)) {
+                    totalDeathsPerMonth.put(month, totalDeathsPerMonth.get(month) + c.getMonthlyDeaths(month));
+                } else {
+                    totalDeathsPerMonth.put(month, c.getMonthlyDeaths(month));
+                }
+            }
         }
-
-        return mapAux;
+        return totalDeathsPerMonth;
     }
 
-    public Map<Integer, Integer> newCasesPerMonth() {
-        Map<Integer, Integer> mapAux = new HashMap<>();
-
-        for (Country c : countries.values()) {
-            c.totalCasesPerMonth(mapAux);
-        }
-
-        return mapAux;
-    }
-
+    //---------------- Public statistical methods ----------------
     public void newCasesPerMonth(int year, int month) {
         int firstDayOfMonth = 1;
         int lastDayOfMonth = YearMonth.of(year, month).lengthOfMonth();
@@ -85,6 +96,7 @@ public class Continent {
         return mapAux;
     }*/
 
+    //---------------- Override methods ----------------
     @Override
     public boolean equals(Object o) {
         // self check

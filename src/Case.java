@@ -79,14 +79,9 @@ public class Case {
             int casesPerMonth = casesByEndOfMonth - totalCases.get(startOfMonth) + newCases.get(startOfMonth);
 
             startOfMonth = endOfMonth.plusDays(1);
+            endOfMonth = lastDateOfMonth(startOfMonth.getMonthValue(), startOfMonth.getYear());
 
             monthlyCases.put(startOfMonth.getMonthValue(), casesPerMonth);
-
-            /*if (totalCasesMonth.get(month) == null) {
-                totalCasesMonth.put(month, monthCases);
-            } else {
-                totalCasesMonth.put(month, totalCasesMonth.get(month) + monthCases);
-            }*/
         }
     }
 }
