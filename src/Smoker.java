@@ -40,7 +40,7 @@ public class Smoker {
         this.totalSmokers.put(date, totalSmokersFloat);
     }
 
-    public Map<LocalDate, Float> getTotalSmokers() {
+    public TreeMap<LocalDate, Float> getTotalSmokers() {
         return new TreeMap<>(totalSmokers);
     }
 }

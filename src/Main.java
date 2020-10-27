@@ -30,9 +30,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         readFile("owid-covid-data.csv");
-        //printDailyCases("\"Europe\"", 9);
-        printMonthlyCasesAndDeaths();
+
         //printMinDays();
+        //printMonthlyCasesAndDeaths();
+        //printDailyCases("\"Europe\"", 9);
+        //printDeathsSmokersByCountry();
     }
 
     //ex01
@@ -89,26 +91,31 @@ public class Main {
 
     public static void printMinDays() {
         int numCases = 50000;
-        Map<LocalDate, Country> totalCasesByMinDays = new TreeMap<>();
-        //ALTERAR
-        LocalDate firstDate = LocalDate.of(2020, 1, 1);
-
+        List<Country> casesReached = new ArrayList<>();
+        LocalDate initialDate = LocalDate.now();
+        Comparator<Country> byMinDays = new Comparator<Country>() {
+            @Override
+            public int compare(Country o1, Country o2) {
+                return o1.dateCasesReached(numCases).compareTo(o2.dateCasesReached(numCases));
+            }
+        };
         for (Continent continent : World.getContinents()) {
             for (Country country : continent.getCountries().values()) {
-                LocalDate casesAchievedDate = country.numCasesReached(numCases);
-                if (casesAchievedDate != null) {
-                    totalCasesByMinDays.put(country.numCasesReached(numCases), country);
+                if (country.dateCasesReached(numCases) != null) {
+                    initialDate = initialDate.compareTo(country.oldestEntry()) < 0 ? initialDate : country.oldestEntry();
+                    casesReached.add(country);
                 }
             }
         }
+        Collections.sort(casesReached, byMinDays);
+
+        //Print text
         System.out.printf("%-10s %-15s %-22s %-15s %-15s %-10s\n", "iso_code", "continent", "location", "date", "total_cases", "mindays");
-        Iterator printer = totalCasesByMinDays.entrySet().iterator();
-        while (printer.hasNext()) {
-            Map.Entry<LocalDate, Country> entry = (Map.Entry<LocalDate, Country>) printer.next();
-            LocalDate d = entry.getKey();
-            int minDays = (int) ChronoUnit.DAYS.between(firstDate, d);
-            Country c = entry.getValue();
-            System.out.printf("%-10s %-15s %-22s %-15s %-15d %d days\n", c.getIsoCode(), c.getContinent().getName(), c.getLocation(), d, c.getTotalCases(d), minDays);
+
+        for (Country c : casesReached) {
+            LocalDate d = c.dateCasesReached(numCases);
+            System.out.printf("%-10s %-15s %-22s %-15s %-15d %d days\n", c.getIsoCode(), c.getContinent().getName(),
+                    c.getLocation(), d, c.getTotalCases(d), c.numCasesReached(initialDate, numCases));
         }
     }
 
@@ -129,25 +136,39 @@ public class Main {
     //ex04
 
     public static void printDailyCases(String continent, int month) {
-        World.get(continent).newCasesPerMonth(YEAR, month);
+        Continent c = World.get(continent);
+        LocalDate d = LocalDate.of(YEAR, month, 1);
+
+        do {
+            System.out.printf("Dia %d --> ", d.getDayOfMonth());
+            c.newCasesPerDay(d).forEach((key, value) -> System.out.printf("%s (%d)\n", value, key));
+            d = d.plusDays(1);
+        } while (c.newCasesPerDay(d) != null);
     }
 
     //ex05
 
-    /*public static void printDeathsSmokersByCountry() {
-        Map<Integer, String> deaths = new HashMap<>();
+    public static void printDeathsSmokersByCountry() {
+        ArrayList<Country> countries = new ArrayList<>();
+        Comparator<Country> byNewDeaths = new Comparator<Country>() {
+
+            @Override
+            public int compare(Country o1, Country o2) {
+                return -Integer.compare(o1.getLatestTotalDeaths(), o2.getLatestTotalDeaths());
+            }
+        };
 
         for (Continent continent : World.getContinents()) {
             for (Country country : continent.getCountries().values()) {
-                LocalDate date = LocalDate.of(2020, 1, 1);
-
-                float percentage = country.getTotalSmokers(date);
-
-                deaths.put(continent.getDeathsPerSmokerPercentage(percentage).keySet().iterator().next(), country.getLocation());
-
-                System.out.println("[%s, %.2f, %d]\n", deaths.values(), country.getTotalSmokers(date), deaths.keySet().iterator().next());
+                if (country.hasMoreSmokersThan(70f)) {
+                    countries.add(country);
+                }
             }
         }
 
-    }*/
+        Collections.sort(countries, byNewDeaths);
+
+        countries.forEach(country -> System.out.printf("[%s, %.1f, %d]\n", country, country.getSmokerPercentage(), country.getLatestTotalDeaths()));
+    }
 }
+

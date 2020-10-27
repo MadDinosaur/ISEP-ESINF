@@ -5,14 +5,14 @@ import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 public class Death {
 
-    private Map<LocalDate, Integer> totalDeaths;
-    private Map<LocalDate, Integer> newDeaths;
+    private TreeMap<LocalDate, Integer> totalDeaths;
+    private TreeMap<LocalDate, Integer> newDeaths;
     private Map<Integer, Integer> monthlyDeaths;
-    private LocalDate latestDate;
 
     public Death() {
         totalDeaths = new TreeMap<>();
@@ -20,48 +20,13 @@ public class Death {
         monthlyDeaths = new HashMap<>();
     }
 
-    public void addDeath(String newDeaths, String totalDeaths, LocalDate date) {
-
-        int newDeathsInt;
-        int totalDeathsInt;
-
-        if (newDeaths.equalsIgnoreCase("NA")) {
-            newDeathsInt = 0;
-        } else {
-            newDeathsInt = Integer.parseInt(newDeaths);
-        }
-
-        if (totalDeaths.equalsIgnoreCase("NA")) {
-            totalDeathsInt = 0;
-            if (this.totalDeaths.get(date.minusDays(1)) != null) {
-                totalDeathsInt = this.totalDeaths.get(date.minusDays(1));
-            }
-        } else {
-            totalDeathsInt = Integer.parseInt(totalDeaths);
-        }
-
-        //Preenche intervalos "vazios", sem datas registadas
-        if (latestDate != null && date.compareTo(latestDate.plusDays(1)) > 0) {
-            for (int numDays = 1; numDays < (int) ChronoUnit.DAYS.between(latestDate, date); numDays++) {
-                this.newDeaths.put(latestDate.plusDays(numDays), 0);
-                this.totalDeaths.put(latestDate.plusDays(numDays), this.totalDeaths.get(latestDate));
-            }
-        }
-
-        this.newDeaths.put(date, newDeathsInt);
-        this.totalDeaths.put(date, totalDeathsInt);
-
-        if (latestDate == null || date.compareTo(latestDate) > 0) {
-            this.latestDate = date;
-        }
-    }
-
+    //---------------- Getters ----------------
     public Map<LocalDate, Integer> getTotalDeaths() {
-        return new TreeMap<>(totalDeaths);
+        return totalDeaths;
     }
 
     public Map<LocalDate, Integer> getNewDeaths() {
-        return new TreeMap<>(newDeaths);
+        return newDeaths;
     }
 
     public Map<Integer, Integer> getMonthlyDeaths() {
@@ -71,32 +36,80 @@ public class Death {
         return monthlyDeaths;
     }
 
-    public LocalDate lastDateOfMonth(Integer month, Integer year) {
+    public int getLatestDeathTotal() {
+        return totalDeaths.lastEntry().getValue();
+    }
+
+    public int getLatestDeath() {
+        return newDeaths.lastEntry().getValue();
+    }
+
+    public LocalDate getLatestDate() {
+        try {
+            return this.totalDeaths.lastKey();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+    }
+
+    public LocalDate getOldestDate() {
+        return this.totalDeaths.firstKey();
+    }
+
+    //---------------- Public update methods ----------------
+    public void addDeath(String newCases, String totalCases, LocalDate date) {
+        int newCasesInt;
+        int totalCasesInt;
+
+        if (newCases.equalsIgnoreCase("NA")) {
+            newCasesInt = 0;
+        } else {
+            newCasesInt = Integer.parseInt(newCases);
+        }
+
+        if (totalCases.equalsIgnoreCase("NA")) {
+            totalCasesInt = 0;
+        } else {
+            totalCasesInt = Integer.parseInt(totalCases);
+        }
+
+        //Preenche intervalos "vazios", sem datas registadas
+        while (getLatestDate() != null && date.compareTo(getLatestDate().plusDays(1)) > 0) {
+            this.newDeaths.put(getLatestDate().plusDays(1), 0);
+            this.totalDeaths.put(getLatestDate().plusDays(1), getLatestDeathTotal());
+        }
+
+        this.newDeaths.put(date, newCasesInt);
+        this.totalDeaths.put(date, totalCasesInt);
+    }
+
+    //---------------- Private methods ----------------
+    private void generateMonthlyDeaths() {
+        LocalDate currentDate = newDeaths.firstKey();
+        LocalDate endOfMonthDate = lastDateOfMonth(currentDate.getMonthValue(), currentDate.getYear());
+        int casesPerMonth = 0;
+        while (newDeaths.get(currentDate) != null) {
+            while (currentDate.compareTo(endOfMonthDate) <= 0) {
+                casesPerMonth += newDeaths.get(currentDate);
+                currentDate = currentDate.plusDays(1);
+            }
+
+            monthlyDeaths.put(endOfMonthDate.getMonthValue(), casesPerMonth);
+
+            endOfMonthDate = lastDateOfMonth(currentDate.getMonthValue(), currentDate.getYear());
+            casesPerMonth = 0;
+        }
+    }
+
+    private LocalDate lastDateOfMonth(Integer month, Integer year) {
         int lastDayOfMonth = YearMonth.of(year, month).lengthOfMonth();
 
         LocalDate lastDateOfMonth = LocalDate.of(year, month, lastDayOfMonth);
 
-        while (totalDeaths.get(lastDateOfMonth) == null && lastDateOfMonth != latestDate) {
-            lastDateOfMonth = lastDateOfMonth.minusDays(1);
-            continue;
+        if (totalDeaths.get(lastDateOfMonth) == null) {
+            return getLatestDate();
         }
 
         return lastDateOfMonth;
-    }
-
-    private void generateMonthlyDeaths() {
-        LocalDate startOfMonth = totalDeaths.keySet().iterator().next();
-        LocalDate endOfMonth = lastDateOfMonth(startOfMonth.getMonthValue(), startOfMonth.getYear());
-        while (totalDeaths.get(startOfMonth) != null) {
-
-            int deathsByEndOfMonth = totalDeaths.get(endOfMonth);
-
-            int deathsPerMonth = deathsByEndOfMonth - totalDeaths.get(startOfMonth) + newDeaths.get(startOfMonth);
-
-            monthlyDeaths.put(startOfMonth.getMonthValue(), deathsPerMonth);
-
-            startOfMonth = endOfMonth.plusDays(1);
-            endOfMonth = lastDateOfMonth(startOfMonth.getMonthValue(), startOfMonth.getYear());
-        }
     }
 }

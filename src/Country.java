@@ -1,4 +1,6 @@
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -10,9 +12,9 @@ public class Country {
     private String location;
     private Case caseLists;
     private Death deathLists;
-    private Map<LocalDate, Integer> totalTests;
-    private Map<LocalDate, Integer> newTests;
-    private Map<LocalDate, Float> totalSmokers;
+    private TreeMap<LocalDate, Integer> totalTests;
+    private TreeMap<LocalDate, Integer> newTests;
+    private TreeMap<LocalDate, Float> totalSmokers;
 
     public Country(String isoCode, String location) {
         this.isoCode = isoCode;
@@ -45,12 +47,24 @@ public class Country {
         return caseLists.getTotalCases().get(d);
     }
 
+    public Map<LocalDate, Integer> getNewCases() {
+        return caseLists.getNewCases();
+    }
+
+    public int getNewCases(LocalDate d) {
+        return caseLists.getNewCases().get(d);
+    }
+
     public Map<Integer, Integer> getMonthlyCases() {
         return caseLists.getMonthlyCases();
     }
 
     public int getMonthlyCases(int month) {
         return caseLists.getMonthlyCases().get(month);
+    }
+
+    public int getLatestTotalDeaths() {
+        return deathLists.getLatestDeathTotal();
     }
 
     public Map<Integer, Integer> getMonthlyDeaths() {
@@ -61,8 +75,12 @@ public class Country {
         return deathLists.getMonthlyDeaths().get(month);
     }
 
-    public float getTotalSmokers(LocalDate d) {
-        return totalSmokers.get(d);
+    public float getSmokerPercentage() {
+        return totalSmokers.lastEntry().getValue();
+    }
+
+    public LocalDate oldestEntry() {
+        return caseLists.getOldestDate();
     }
 
     //---------------- Setters ----------------
@@ -80,6 +98,7 @@ public class Country {
     }
 
     //---------------- Public statistical methods ----------------
+
     /**
      * Calcula a data em que o país atingiu um dado número de casos positivos.
      *
@@ -87,7 +106,12 @@ public class Country {
      * @return Data em que o país atingiu o dado número de casos positivos.
      */
 
-    public LocalDate numCasesReached(int numCases) {
+    public LocalDate dateCasesReached(int numCases) {
+        //Check para verificar se o mais recente total de casos ultrapassa numCases
+        if (caseLists.getLatestCaseTotal() < numCases) {
+            return null;
+        }
+
         Iterator<Map.Entry<LocalDate, Integer>> i = caseLists.getTotalCases().entrySet().iterator();
 
         Map.Entry<LocalDate, Integer> currentEntry = i.next();
@@ -96,23 +120,23 @@ public class Country {
             currentEntry = i.next();
         }
 
-        LocalDate casesAchievedDate;
-        if (currentEntry.getValue() >= numCases) {
-            casesAchievedDate = currentEntry.getKey();
-        } else {
-            casesAchievedDate = null;
-        }
+        LocalDate casesAchievedDate = currentEntry.getKey();
 
         return casesAchievedDate;
     }
 
-    public boolean hasMoreSmokers(Float percentage) {
-        if (percentage > 70.0) {
-            return true;
-        }
-
-        return false;
+    public int numCasesReached(LocalDate initialDate, int numCases) {
+        return (int) ChronoUnit.DAYS.between(initialDate, dateCasesReached(numCases));
     }
+
+    public boolean hasMoreSmokersThan(Float percentage) {
+        return percentage <= totalSmokers.lastEntry().getValue();
+    }
+
+    public LocalDate lastDateOfMonth(Integer month, Integer year) {
+        return caseLists.lastDateOfMonth(month, year);
+    }
+
     //---------------- Override methods ----------------
     @Override
     public boolean equals(Object o) {
@@ -133,5 +157,10 @@ public class Country {
     @Override
     public int hashCode() {
         return getIsoCode().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.location;
     }
 }

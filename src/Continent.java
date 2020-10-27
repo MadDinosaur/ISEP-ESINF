@@ -59,23 +59,19 @@ public class Continent {
     }
 
     //---------------- Public statistical methods ----------------
-    public void newCasesPerMonth(int year, int month) {
-        int firstDayOfMonth = 1;
-        int lastDayOfMonth = YearMonth.of(year, month).lengthOfMonth();
-        LocalDate daily = LocalDate.of(year, month, firstDayOfMonth);
+    public Map<Integer, Country> newCasesPerDay(LocalDate currentDate) {
+        Map<Integer, Country> newCasesPerDay = new TreeMap<>(Collections.reverseOrder());
 
-        Map<Integer, Country> newCasesPerMonth = new TreeMap<>(Collections.reverseOrder());
+        int month = currentDate.getMonthValue();
+        int year = currentDate.getYear();
 
-        for (int day = firstDayOfMonth; day <= lastDayOfMonth; day++) {
-            for (Country c : countries.values()) {
-                newCasesPerMonth.put(c.getTotalCases(LocalDate.of(year, month, day)), c);
+        for (Country c : countries.values()) {
+            if (currentDate.equals(c.lastDateOfMonth(month, year))) {
+                return null;
             }
-            System.out.printf("Dia %2d -->    ", day);
-            for (Map.Entry entry : newCasesPerMonth.entrySet()) {
-                System.out.printf("%s (%d)\n", entry.getValue(), entry.getKey());
-            }
-            newCasesPerMonth.clear();
+            newCasesPerDay.put(c.getNewCases(currentDate), c);
         }
+        return newCasesPerDay;
     }
 
     /*public Map<Integer, String> getDeathsPerSmokerPercentage(Float percentage) {
@@ -96,25 +92,25 @@ public class Continent {
         return mapAux;
     }*/
 
-    //---------------- Override methods ----------------
-    @Override
-    public boolean equals(Object o) {
+//---------------- Override methods ----------------
+@Override
+public boolean equals(Object o){
         // self check
-        if (this == o)
-            return true;
+        if(this==o)
+        return true;
         // null check
-        if (o == null)
-            return false;
+        if(o==null)
+        return false;
         // type check and cast
-        if (getClass() != o.getClass())
-            return false;
-        Continent c = (Continent) o;
+        if(getClass()!=o.getClass())
+        return false;
+        Continent c=(Continent)o;
         // field comparison
         return c.name.equalsIgnoreCase(this.name);
-    }
+        }
 
-    @Override
-    public int hashCode() {
+@Override
+public int hashCode(){
         return name.hashCode();
-    }
-}
+        }
+        }

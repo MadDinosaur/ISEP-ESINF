@@ -3,14 +3,14 @@ import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 public class Case {
 
-    private Map<LocalDate, Integer> totalCases;
-    private Map<LocalDate, Integer> newCases;
+    private TreeMap<LocalDate, Integer> totalCases;
+    private TreeMap<LocalDate, Integer> newCases;
     private Map<Integer, Integer> monthlyCases;
-    private LocalDate latestDate;
 
     public Case() {
         totalCases = new TreeMap<>();
@@ -18,6 +18,43 @@ public class Case {
         monthlyCases = new HashMap<>();
     }
 
+    //---------------- Getters ----------------
+    public Map<LocalDate, Integer> getTotalCases() {
+        return totalCases;
+    }
+
+    public Map<LocalDate, Integer> getNewCases() {
+        return newCases;
+    }
+
+    public Map<Integer, Integer> getMonthlyCases() {
+        if (monthlyCases.isEmpty()) {
+            generateMonthlyCases();
+        }
+        return monthlyCases;
+    }
+
+    public int getLatestCaseTotal() {
+        return totalCases.lastEntry().getValue();
+    }
+
+    public int getLatestCase() {
+        return newCases.lastEntry().getValue();
+    }
+
+    public LocalDate getLatestDate() {
+        try {
+            return this.totalCases.lastKey();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+    }
+
+    public LocalDate getOldestDate() {
+        return this.totalCases.firstKey();
+    }
+
+    //---------------- Public update methods ----------------
     public void addCase(String newCases, String totalCases, LocalDate date) {
         int newCasesInt;
         int totalCasesInt;
@@ -35,34 +72,13 @@ public class Case {
         }
 
         //Preenche intervalos "vazios", sem datas registadas
-        if (latestDate != null && date.compareTo(latestDate.plusDays(1)) > 0) {
-            for (int numDays = 1; numDays < (int) ChronoUnit.DAYS.between(latestDate, date); numDays++) {
-                this.newCases.put(latestDate.plusDays(numDays), 0);
-                this.totalCases.put(latestDate.plusDays(numDays), this.totalCases.get(latestDate));
-            }
+        while (getLatestDate() != null && date.compareTo(getLatestDate().plusDays(1)) > 0) {
+            this.newCases.put(getLatestDate().plusDays(1), 0);
+            this.totalCases.put(getLatestDate().plusDays(1), getLatestCaseTotal());
         }
 
         this.newCases.put(date, newCasesInt);
         this.totalCases.put(date, totalCasesInt);
-
-        if (latestDate == null || date.compareTo(latestDate) > 0) {
-            this.latestDate = date;
-        }
-    }
-
-    public Map<LocalDate, Integer> getTotalCases() {
-        return totalCases;
-    }
-
-    public Map<LocalDate, Integer> getNewCases() {
-        return newCases;
-    }
-
-    public Map<Integer, Integer> getMonthlyCases() {
-        if (monthlyCases.isEmpty()) {
-            generateMonthlyCases();
-        }
-        return monthlyCases;
     }
 
     public LocalDate lastDateOfMonth(Integer month, Integer year) {
@@ -70,21 +86,20 @@ public class Case {
 
         LocalDate lastDateOfMonth = LocalDate.of(year, month, lastDayOfMonth);
 
-        while (totalCases.get(lastDateOfMonth) == null && lastDateOfMonth != latestDate) {
-            lastDateOfMonth = lastDateOfMonth.minusDays(1);
-            continue;
+        if (totalCases.get(lastDateOfMonth) == null) {
+            return getLatestDate();
         }
 
         return lastDateOfMonth;
     }
 
+    //---------------- Private methods ----------------
     private void generateMonthlyCases() {
-        LocalDate currentDate = newCases.keySet().iterator().next();
+        LocalDate currentDate = newCases.firstKey();
         LocalDate endOfMonthDate = lastDateOfMonth(currentDate.getMonthValue(), currentDate.getYear());
         int casesPerMonth = 0;
         while (newCases.get(currentDate) != null) {
             while (currentDate.compareTo(endOfMonthDate) <= 0) {
-
                 casesPerMonth += newCases.get(currentDate);
                 currentDate = currentDate.plusDays(1);
             }

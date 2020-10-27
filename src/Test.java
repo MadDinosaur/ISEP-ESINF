@@ -34,11 +34,11 @@ public class Test {
 
     }
 
-    public Map<LocalDate, Integer> getTotalTests() {
+    public TreeMap<LocalDate, Integer> getTotalTests() {
         return new TreeMap<>(totalTests);
     }
 
-    public Map<LocalDate, Integer> getNewTests() {
+    public TreeMap<LocalDate, Integer> getNewTests() {
         return new TreeMap<>(newTests);
     }
 }
