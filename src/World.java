@@ -19,7 +19,4 @@ public class World {
         continents.put(c.getName(), c);
     }
 
-   /* public static void newCasesPerMonthPerContinent(int month, String continentName) {
-        return continents.get(continentName).newCasesPerMonth(month);
-    }*/
 }

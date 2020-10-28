@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -12,8 +13,6 @@ public class Country {
     private String location;
     private Case caseLists;
     private Death deathLists;
-    private TreeMap<LocalDate, Integer> totalTests;
-    private TreeMap<LocalDate, Integer> newTests;
     private TreeMap<LocalDate, Float> totalSmokers;
 
     public Country(String isoCode, String location) {
@@ -21,8 +20,6 @@ public class Country {
         this.location = location;
         this.caseLists = new Case();
         this.deathLists = new Death();
-        this.totalTests = new TreeMap<>();
-        this.newTests = new TreeMap<>();
         this.totalSmokers = new TreeMap<>();
     }
 
@@ -52,9 +49,13 @@ public class Country {
     }
 
     public int getNewCases(LocalDate d) {
-        return caseLists.getNewCases().get(d);
+        try {
+            return caseLists.getNewCases().get(d);
+        }catch (NullPointerException e)
+        {
+            return 0;
+        }
     }
-
     public Map<Integer, Integer> getMonthlyCases() {
         return caseLists.getMonthlyCases();
     }
@@ -89,11 +90,9 @@ public class Country {
     }
 
     //---------------- Public update methods ----------------
-    public void addData(Case dailyCases, Death dailyDeaths, Test dailyTests, Smoker dailySmokers) {
+    public void addData(Case dailyCases, Death dailyDeaths, Smoker dailySmokers) {
         this.caseLists = dailyCases;
         this.deathLists = dailyDeaths;
-        this.newTests = dailyTests.getNewTests();
-        this.totalTests = dailyTests.getTotalTests();
         this.totalSmokers = dailySmokers.getTotalSmokers();
     }
 

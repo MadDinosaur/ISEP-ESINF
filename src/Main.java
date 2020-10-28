@@ -31,12 +31,72 @@ public class Main {
     public static void main(String[] args) throws IOException {
         readFile("owid-covid-data.csv");
 
-        //printMinDays();
-        //printMonthlyCasesAndDeaths();
-        //printDailyCases("\"Europe\"", 9);
-        //printDeathsSmokersByCountry();
-    }
+        Scanner sc = new Scanner(System.in);
+        int n = 0;
 
+        do
+        {
+            System.out.println("Bem-Vindo à aplicação COVID-19 ANALISER");
+            System.out.println("--------------------------------------------------------------x----------------------------------------------------------------------");
+            System.out.println("1. Lista de países por ordem crescente do menor números de dias a atingir 50000 casos.");
+            System.out.println("2. Informação do número de novos casos positivos e novas mortes em função do continente por mês.");
+            System.out.println("3. Lista dos países por ordem decrescente do número de novos casos positivos, para um determinado continente e um determinado mês.");
+            System.out.println("4. Informação dos países com mais de 70% de população fumadora, ordenada por ordem decrescente de novas mortes.");
+            System.out.println("0. Sair da aplicação.");
+            System.out.println("--------------------------------------------------------------x----------------------------------------------------------------------");
+            System.out.println("Insira a opção que pretende escolher: ");
+            n = sc.nextInt();
+            sc.nextLine();
+
+            switch (n)
+            {
+                case 0:
+                {
+                    break;
+                }
+
+                case 1: {
+                    printMinDays();
+                    break;
+                }
+
+                case 2: {
+                    printMonthlyCasesAndDeaths();
+                    break;
+                }
+
+                case 3:
+                {
+                    String name;
+                    int month;
+
+                   do
+                   {
+                        System.out.println("Insira o nome do continente que pretende pesquisar:");
+                        name = sc.nextLine();
+
+                        System.out.println("Insira o número do mês que pretende pesquisar:");
+                        month = sc.nextInt();
+                        sc.nextLine();
+
+                   } while (month < 1 || month > 12 && !World.continentList().contains(name));
+
+                    printDailyCases(name, month);
+                    break;
+                }
+
+                case 4: {
+                    printDeathsSmokersByCountry();
+                    break;
+                }
+
+                default: {
+                    System.out.println("Insira uma opção válida!");
+                }
+            }
+
+        }while (n != 0) ;
+    }
     //ex01
 
     public static void readFile(String fileName) throws IOException {
@@ -47,7 +107,6 @@ public class Main {
         Country country = null;
         Case dailyCases = null;
         Death dailyDeaths = null;
-        Test dailyTests = null;
         Smoker dailySmokers = null;
         LocalDate date;
 
@@ -71,7 +130,6 @@ public class Main {
 
                 dailyCases = new Case();
                 dailyDeaths = new Death();
-                dailyTests = new Test();
                 dailySmokers = new Smoker();
             }
 
@@ -79,10 +137,9 @@ public class Main {
 
             dailyCases.addCase(line[NEW_CASES], line[TOTAL_CASES], date);
             dailyDeaths.addDeath(line[NEW_DEATHS], line[TOTAL_DEATHS], date);
-            dailyTests.addTest(line[NEW_TESTS], line[TOTAL_TESTS], date);
             dailySmokers.addSmoker(line[FEMALE_SMOKERS], line[MALE_SMOKERS], date);
 
-            country.addData(dailyCases, dailyDeaths, dailyTests, dailySmokers);
+            country.addData(dailyCases, dailyDeaths, dailySmokers);
         }
         reader.close();
     }
@@ -141,7 +198,10 @@ public class Main {
 
         do {
             System.out.printf("Dia %d --> ", d.getDayOfMonth());
-            c.newCasesPerDay(d).forEach((key, value) -> System.out.printf("%s (%d)\n", value, key));
+            for(Country country : c.newCasesPerDay(d))
+            {
+                System.out.printf("%s (%d)\n", country, country.getNewCases(d));
+            }
             d = d.plusDays(1);
         } while (c.newCasesPerDay(d) != null);
     }

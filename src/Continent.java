@@ -59,39 +59,46 @@ public class Continent {
     }
 
     //---------------- Public statistical methods ----------------
-    public Map<Integer, Country> newCasesPerDay(LocalDate currentDate) {
-        Map<Integer, Country> newCasesPerDay = new TreeMap<>(Collections.reverseOrder());
+
+    public ArrayList<Country> newCasesPerDay(LocalDate currentDate) {
+        ArrayList<Country> newCasesPerDay = new ArrayList<Country>();
+
+        Comparator<Country> byDailyCases = new Comparator<Country>() {
+            @Override
+            public int compare(Country o1, Country o2) {
+                return -Integer.compare(o1.getNewCases(currentDate), o2.getNewCases(currentDate));
+            }
+        };
+
+        if(currentDate == null)
+        {
+            return newCasesPerDay;
+        }
 
         int month = currentDate.getMonthValue();
         int year = currentDate.getYear();
+        LocalDate lastOfAllDates = currentDate;
 
-        for (Country c : countries.values()) {
-            if (currentDate.equals(c.lastDateOfMonth(month, year))) {
-                return null;
+        boolean isInvalidDate = true;
+
+        for (Country c : countries.values())
+        {
+            if(c.lastDateOfMonth(month,year).compareTo(lastOfAllDates) >= 0)
+            {
+                lastOfAllDates = c.lastDateOfMonth(month,year);
+                isInvalidDate = false;
             }
-            newCasesPerDay.put(c.getNewCases(currentDate), c);
+            newCasesPerDay.add(c);
         }
+
+        if(isInvalidDate)
+        {
+            return null;
+        }
+
+        Collections.sort(newCasesPerDay,byDailyCases);
         return newCasesPerDay;
     }
-
-    /*public Map<Integer, String> getDeathsPerSmokerPercentage(Float percentage) {
-
-        Map<Integer, String> mapAux = new HashMap<>();
-
-        for (Country country : countries.values()) {
-            if (country.hasMoreSmokers(percentage) == true) {
-
-                LocalDate date;
-
-                int totalCasesLastDay = country.getTotalCases(date);
-
-                mapAux.put(totalCasesLastDay, country.getLocation());
-            }
-        }
-
-        return mapAux;
-    }*/
-
 //---------------- Override methods ----------------
 @Override
 public boolean equals(Object o){

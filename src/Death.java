@@ -57,20 +57,20 @@ public class Death {
     }
 
     //---------------- Public update methods ----------------
-    public void addDeath(String newCases, String totalCases, LocalDate date) {
-        int newCasesInt;
-        int totalCasesInt;
+    public void addDeath(String newDeath, String totalDeath, LocalDate date) {
+        int newDeathInt;
+        int totalDeathInt;
 
-        if (newCases.equalsIgnoreCase("NA")) {
-            newCasesInt = 0;
+        if (newDeath.equalsIgnoreCase("NA")) {
+            newDeathInt = 0;
         } else {
-            newCasesInt = Integer.parseInt(newCases);
+            newDeathInt = Integer.parseInt(newDeath);
         }
 
-        if (totalCases.equalsIgnoreCase("NA")) {
-            totalCasesInt = 0;
+        if (totalDeath.equalsIgnoreCase("NA")) {
+            totalDeathInt = 0;
         } else {
-            totalCasesInt = Integer.parseInt(totalCases);
+            totalDeathInt = Integer.parseInt(totalDeath);
         }
 
         //Preenche intervalos "vazios", sem datas registadas
@@ -79,8 +79,8 @@ public class Death {
             this.totalDeaths.put(getLatestDate().plusDays(1), getLatestDeathTotal());
         }
 
-        this.newDeaths.put(date, newCasesInt);
-        this.totalDeaths.put(date, totalCasesInt);
+        this.newDeaths.put(date, newDeathInt);
+        this.totalDeaths.put(date, totalDeathInt);
     }
 
     //---------------- Private methods ----------------
