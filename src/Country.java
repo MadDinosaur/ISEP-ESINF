@@ -51,11 +51,11 @@ public class Country {
     public int getNewCases(LocalDate d) {
         try {
             return caseLists.getNewCases().get(d);
-        }catch (NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             return 0;
         }
     }
+
     public Map<Integer, Integer> getMonthlyCases() {
         return caseLists.getMonthlyCases();
     }
@@ -81,7 +81,11 @@ public class Country {
     }
 
     public LocalDate oldestEntry() {
-        return caseLists.getOldestDate();
+        try {
+            return caseLists.getOldestDate();
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     //---------------- Setters ----------------
@@ -125,15 +129,26 @@ public class Country {
     }
 
     public int numCasesReached(LocalDate initialDate, int numCases) {
+        if (initialDate == null || dateCasesReached(numCases) == null) {
+            return 0;
+        }
         return (int) ChronoUnit.DAYS.between(initialDate, dateCasesReached(numCases));
     }
 
     public boolean hasMoreSmokersThan(Float percentage) {
-        return percentage <= totalSmokers.lastEntry().getValue();
+        try {
+            return percentage <= totalSmokers.lastEntry().getValue();
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
     public LocalDate lastDateOfMonth(Integer month, Integer year) {
-        return caseLists.lastDateOfMonth(month, year);
+        try {
+            return caseLists.lastDateOfMonth(month, year);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     //---------------- Override methods ----------------

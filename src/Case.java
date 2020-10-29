@@ -35,7 +35,11 @@ public class Case {
     }
 
     public int getLatestCaseTotal() {
-        return totalCases.lastEntry().getValue();
+        try {
+            return totalCases.lastEntry().getValue();
+        } catch (NullPointerException e) {
+            return 0;
+        }
     }
 
     public int getLatestCase() {
@@ -51,7 +55,11 @@ public class Case {
     }
 
     public LocalDate getOldestDate() {
-        return this.totalCases.firstKey();
+        try {
+            return this.totalCases.firstKey();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
     }
 
     //---------------- Public update methods ----------------

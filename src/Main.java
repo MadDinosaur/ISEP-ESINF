@@ -34,8 +34,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int n = 0;
 
-        do
-        {
+        do {
             System.out.println("Bem-Vindo à aplicação COVID-19 ANALISER");
             System.out.println("--------------------------------------------------------------x----------------------------------------------------------------------");
             System.out.println("1. Lista de países por ordem crescente do menor números de dias a atingir 50000 casos.");
@@ -48,10 +47,8 @@ public class Main {
             n = sc.nextInt();
             sc.nextLine();
 
-            switch (n)
-            {
-                case 0:
-                {
+            switch (n) {
+                case 0: {
                     break;
                 }
 
@@ -65,13 +62,11 @@ public class Main {
                     break;
                 }
 
-                case 3:
-                {
+                case 3: {
                     String name;
                     int month;
 
-                   do
-                   {
+                    do {
                         System.out.println("Insira o nome do continente que pretende pesquisar:");
                         name = sc.nextLine();
 
@@ -79,7 +74,7 @@ public class Main {
                         month = sc.nextInt();
                         sc.nextLine();
 
-                   } while (month < 1 || month > 12 && !World.continentList().contains(name));
+                    } while (month < 1 || month > 12 && !World.continentList().contains(name));
 
                     printDailyCases(name, month);
                     break;
@@ -95,9 +90,13 @@ public class Main {
                 }
             }
 
-        }while (n != 0) ;
+        } while (n != 0);
     }
+
     //ex01
+    private static String removeQuotes(String str) {
+        return str.replace("\"", "");
+    }
 
     public static void readFile(String fileName) throws IOException {
         Scanner reader = new Scanner(new File(fileName));
@@ -118,14 +117,14 @@ public class Main {
         while (reader.hasNextLine()) {
             String[] line = reader.nextLine().split(",");
 
-            if (!World.continentList().contains(line[CONTINENT])) {
-                continent = new Continent(line[CONTINENT]);
+            if (!World.continentList().contains(removeQuotes(line[CONTINENT]))) {
+                continent = new Continent(removeQuotes(line[CONTINENT]));
             } else {
-                continent = World.get(line[CONTINENT]);
+                continent = World.get(removeQuotes(line[CONTINENT]));
             }
 
-            if (continent.getCountries().get(line[ISO_CODE]) == null) {
-                country = new Country(line[ISO_CODE], line[LOCATION]);
+            if (continent.getCountries().get(removeQuotes(line[ISO_CODE])) == null) {
+                country = new Country(removeQuotes(line[ISO_CODE]), removeQuotes(line[LOCATION]));
                 continent.addCountry(country);
 
                 dailyCases = new Case();
@@ -198,8 +197,7 @@ public class Main {
 
         do {
             System.out.printf("Dia %d --> ", d.getDayOfMonth());
-            for(Country country : c.newCasesPerDay(d))
-            {
+            for (Country country : c.newCasesPerDay(d)) {
                 System.out.printf("%s (%d)\n", country, country.getNewCases(d));
             }
             d = d.plusDays(1);

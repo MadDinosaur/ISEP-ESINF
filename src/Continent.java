@@ -70,8 +70,7 @@ public class Continent {
             }
         };
 
-        if(currentDate == null)
-        {
+        if (currentDate == null) {
             return newCasesPerDay;
         }
 
@@ -81,43 +80,41 @@ public class Continent {
 
         boolean isInvalidDate = true;
 
-        for (Country c : countries.values())
-        {
-            if(c.lastDateOfMonth(month,year).compareTo(lastOfAllDates) >= 0)
-            {
-                lastOfAllDates = c.lastDateOfMonth(month,year);
+        for (Country c : countries.values()) {
+            if (c.lastDateOfMonth(month, year).compareTo(lastOfAllDates) >= 0) {
+                lastOfAllDates = c.lastDateOfMonth(month, year);
                 isInvalidDate = false;
             }
             newCasesPerDay.add(c);
         }
 
-        if(isInvalidDate)
-        {
+        if (isInvalidDate) {
             return null;
         }
 
-        Collections.sort(newCasesPerDay,byDailyCases);
+        Collections.sort(newCasesPerDay, byDailyCases);
         return newCasesPerDay;
     }
-//---------------- Override methods ----------------
-@Override
-public boolean equals(Object o){
+
+    //---------------- Override methods ----------------
+    @Override
+    public boolean equals(Object o) {
         // self check
-        if(this==o)
-        return true;
+        if (this == o)
+            return true;
         // null check
-        if(o==null)
-        return false;
+        if (o == null)
+            return false;
         // type check and cast
-        if(getClass()!=o.getClass())
-        return false;
-        Continent c=(Continent)o;
+        if (getClass() != o.getClass())
+            return false;
+        Continent c = (Continent) o;
         // field comparison
         return c.name.equalsIgnoreCase(this.name);
-        }
+    }
 
-@Override
-public int hashCode(){
+    @Override
+    public int hashCode() {
         return name.hashCode();
-        }
-        }
+    }
+}

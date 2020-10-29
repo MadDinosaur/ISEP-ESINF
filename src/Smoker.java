@@ -15,6 +15,12 @@ public class Smoker {
         totalSmokers = new TreeMap<>();
     }
 
+    //---------------- Getters ----------------
+    public TreeMap<LocalDate, Float> getTotalSmokers() {
+        return new TreeMap<>(totalSmokers);
+    }
+
+    //---------------- Public update methods ----------------
     public void addSmoker(String femaleSmokers, String maleSmokers, LocalDate date) {
 
         float femaleSmokersFloat;
@@ -40,7 +46,4 @@ public class Smoker {
         this.totalSmokers.put(date, totalSmokersFloat);
     }
 
-    public TreeMap<LocalDate, Float> getTotalSmokers() {
-        return new TreeMap<>(totalSmokers);
-    }
 }
