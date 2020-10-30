@@ -94,7 +94,7 @@ public class Country {
     }
 
     //---------------- Public update methods ----------------
-    public void addData(Case dailyCases, Death dailyDeaths, Smoker dailySmokers) {
+    public void addData(Case dailyCases, Death dailyDeaths, Smoker dailySmokers, String population, String agedPeople, String cardioVascularRate, String diabetes, String hospitalBeds, String lifeExpectancy) {
         this.caseLists = dailyCases;
         this.deathLists = dailyDeaths;
         this.totalSmokers = dailySmokers.getTotalSmokers();

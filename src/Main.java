@@ -138,7 +138,7 @@ public class Main {
             dailyDeaths.addDeath(line[NEW_DEATHS], line[TOTAL_DEATHS], date);
             dailySmokers.addSmoker(line[FEMALE_SMOKERS], line[MALE_SMOKERS], date);
 
-            country.addData(dailyCases, dailyDeaths, dailySmokers);
+            country.addData(dailyCases, dailyDeaths, dailySmokers, line[POPULATION], line[AGED_65_OLDER],line[CARDIOVASC_DEATH_RATE],line[DIABETES_PREVALENCE],line[HOSPITAL_BEDS_PER_THOUSAND],line[LIFE_EXPECTANCY]);
         }
         reader.close();
     }

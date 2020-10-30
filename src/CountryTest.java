@@ -17,6 +17,13 @@ public class CountryTest {
         emptyCountry = new Country("", "");
         countryWithData = new Country("PRT", "Portugal");
 
+        String population = "10000";
+        String agedPeople = "60%";
+        String cardiovascular = "50%";
+        String diabetes = "90%";
+        String beds = "700";
+        String life = "80";
+
         Case caseList = new Case();
         Death deathList = new Death();
         Smoker smokerList = new Smoker();
@@ -30,7 +37,7 @@ public class CountryTest {
 
         smokerList.addSmoker("30", "20", LocalDate.of(2020, 11, 5));
 
-        countryWithData.addData(caseList, deathList, smokerList);
+        countryWithData.addData(caseList, deathList, smokerList,population,agedPeople,cardiovascular,diabetes,beds,life);
     }
 
     @Test
