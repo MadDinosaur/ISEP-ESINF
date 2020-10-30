@@ -6,12 +6,26 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
+/**
+ * Classe que contém informação acerca dos casos positivos de um país.
+ */
 public class Case {
-
+    /**
+     * Mapa de totais de casos positivos, ordenados por data.
+     */
     private TreeMap<LocalDate, Integer> totalCases;
+    /**
+     * Mapa de novos casos positivos, ordenados por data.
+     */
     private TreeMap<LocalDate, Integer> newCases;
+    /**
+     * Mapa de novos casos positivos, ordenados por mês.
+     */
     private Map<Integer, Integer> monthlyCases;
 
+    /**
+     * Construtor da classe Case.
+     */
     public Case() {
         totalCases = new TreeMap<>();
         newCases = new TreeMap<>();
@@ -19,14 +33,24 @@ public class Case {
     }
 
     //---------------- Getters ----------------
+
+    /**
+     * @return Mapa de totais de casos positivos, ordenados por data.
+     */
     public Map<LocalDate, Integer> getTotalCases() {
         return totalCases;
     }
 
+    /**
+     * @return Mapa de novos casos positivos, ordenados por data.
+     */
     public Map<LocalDate, Integer> getNewCases() {
         return newCases;
     }
 
+    /**
+     * @return Mapa de novos casos positivos, ordenados por mês.
+     */
     public Map<Integer, Integer> getMonthlyCases() {
         if (monthlyCases.isEmpty()) {
             generateMonthlyCases();
@@ -34,6 +58,9 @@ public class Case {
         return monthlyCases;
     }
 
+    /**
+     * @return O total de casos positivos na última data em registo.
+     */
     public int getLatestCaseTotal() {
         try {
             return totalCases.lastEntry().getValue();
@@ -42,10 +69,16 @@ public class Case {
         }
     }
 
+    /**
+     * @return O total de novos casos na última data em registo.
+     */
     public int getLatestCase() {
         return newCases.lastEntry().getValue();
     }
 
+    /**
+     * @return A última data em registo (mais recente).
+     */
     public LocalDate getLatestDate() {
         try {
             return this.totalCases.lastKey();
@@ -54,6 +87,9 @@ public class Case {
         }
     }
 
+    /**
+     * @return A primeira data em registo (mais antiga).
+     */
     public LocalDate getOldestDate() {
         try {
             return this.totalCases.firstKey();
@@ -63,6 +99,14 @@ public class Case {
     }
 
     //---------------- Public update methods ----------------
+
+    /**
+     * Adiciona informação acerca dos casos positivos numa dada data.
+     *
+     * @param newCases   O nº de novos casos, formato String.
+     * @param totalCases O total de casos, formato String.
+     * @param date       A data, formato LocalDate.
+     */
     public void addCase(String newCases, String totalCases, LocalDate date) {
         int newCasesInt;
         int totalCasesInt;
@@ -89,6 +133,11 @@ public class Case {
         this.totalCases.put(date, totalCasesInt);
     }
 
+    /**
+     * @param month O número do mês.
+     * @param year  O ano.
+     * @return A última data do mês e ano indicado em que existe algum registo.
+     */
     public LocalDate lastDateOfMonth(Integer month, Integer year) {
         int lastDayOfMonth = YearMonth.of(year, month).lengthOfMonth();
 
@@ -102,6 +151,10 @@ public class Case {
     }
 
     //---------------- Private methods ----------------
+
+    /**
+     * Gera o mapa de novos casos mensais.
+     */
     private void generateMonthlyCases() {
         LocalDate currentDate = newCases.firstKey();
         LocalDate endOfMonthDate = lastDateOfMonth(currentDate.getMonthValue(), currentDate.getYear());

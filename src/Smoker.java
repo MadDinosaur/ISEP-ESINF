@@ -4,11 +4,26 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Classe que contém informação acerca da percentagem de fumadores de um país.
+ */
 public class Smoker {
+    /**
+     * Mapa de percentagens de fumadores do sexo feminino ordenadas por data.
+     */
     Map<LocalDate, Float> femaleSmokers;
+    /**
+     * Mapa de percentagens de fumadores do sexo masculino ordenados por data.
+     */
     Map<LocalDate, Float> maleSmokers;
+    /**
+     * Mapa de percentagens totais de fumadores ordenados por data.
+     */
     private Map<LocalDate, Float> totalSmokers;
 
+    /**
+     * Construtor da classe Smoker.
+     */
     public Smoker() {
         femaleSmokers = new TreeMap<>();
         maleSmokers = new TreeMap<>();
@@ -16,11 +31,23 @@ public class Smoker {
     }
 
     //---------------- Getters ----------------
+
+    /**
+     * @return Mapa de percentagens totais de fumadores ordenados por data.
+     */
     public TreeMap<LocalDate, Float> getTotalSmokers() {
         return new TreeMap<>(totalSmokers);
     }
 
     //---------------- Public update methods ----------------
+
+    /**
+     * Adiciona informação acerca da percentagem de fumadores numa dada data.
+     *
+     * @param femaleSmokers A % de fumadores do sexo feminino, formato String.
+     * @param maleSmokers   A % de fumadores do sexo masculino, formato String.
+     * @param date          A data, formato LocalDate.
+     */
     public void addSmoker(String femaleSmokers, String maleSmokers, LocalDate date) {
 
         float femaleSmokersFloat;

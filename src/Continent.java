@@ -2,34 +2,68 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 
+/**
+ * Classe que modela um Continente e agrega um conjunto de Países.
+ */
 public class Continent {
+    /**
+     * O nome do Continente.
+     */
     private String name;
+    /**
+     * Mapa de países pertencentes ao Continente ordenados por ordem alfabética do seu código ISO.
+     */
     private Map<String, Country> countries = new TreeMap<>();
 
+    /**
+     * Construtor da classe Continent.
+     *
+     * @param name O nome do Continente.
+     */
     public Continent(String name) {
         this.name = name;
         World.addContinent(this);
     }
 
     //---------------- Getters ----------------
+
+    /**
+     * @return O nome do Continente.
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * @return Mapa de países pertencentes ao Continente.
+     */
     public Map<String, Country> getCountries() {
         return new TreeMap<>(countries);
     }
 
+    /**
+     * @return Mapa dos códigos ISO dos países pertencentes ao Continente.
+     */
     public Set<String> getCountryCodes() {
         return countries.keySet();
     }
 
     //---------------- Public update methods ----------------
+
+    /**
+     * Adiciona um País ao Continente.
+     *
+     * @param c O país, em formato Country.
+     */
     public void addCountry(Country c) {
         countries.put(c.getIsoCode(), c);
         c.setContinent(this);
     }
+    //---------------- Public statistical methods ----------------
 
+    /**
+     * @return Mapa dos novos casos positivos do Continente ordenados por mês.
+     */
     public Map<Integer, Integer> totalCasesPerMonth() {
         Map<Integer, Integer> totalCasesPerMonth = new HashMap<>();
         for (Country c : countries.values()) {
@@ -44,6 +78,9 @@ public class Continent {
         return totalCasesPerMonth;
     }
 
+    /**
+     * @return Mapa das mortes no Continente ordenadas por mês.
+     */
     public Map<Integer, Integer> totalDeathsPerMonth() {
         Map<Integer, Integer> totalDeathsPerMonth = new HashMap<>();
         for (Country c : countries.values()) {
@@ -58,8 +95,10 @@ public class Continent {
         return totalDeathsPerMonth;
     }
 
-    //---------------- Public statistical methods ----------------
-
+    /**
+     * @param currentDate O dia, no formato LocalDate.
+     * @return Mapa de Countries ordenados de forma crescente pelo número de novos casos registados na data.
+     */
     public ArrayList<Country> newCasesPerDay(LocalDate currentDate) {
         ArrayList<Country> newCasesPerDay = new ArrayList<Country>();
 

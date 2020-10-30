@@ -8,12 +8,26 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
+/**
+ * Classe que contém informação acerca das mortes de um país.
+ */
 public class Death {
-
+    /**
+     * Mapa de totais de mortes, ordenadas por data.
+     */
     private TreeMap<LocalDate, Integer> totalDeaths;
+    /**
+     * Mapa de novas mortes, ordenadas por data.
+     */
     private TreeMap<LocalDate, Integer> newDeaths;
+    /**
+     * Mapa de novas mortes, ordenadas por mês.
+     */
     private Map<Integer, Integer> monthlyDeaths;
 
+    /**
+     * Construtor da classe Death.
+     */
     public Death() {
         totalDeaths = new TreeMap<>();
         newDeaths = new TreeMap<>();
@@ -21,14 +35,24 @@ public class Death {
     }
 
     //---------------- Getters ----------------
+
+    /**
+     * @return Mapa de totais de mortes, ordenadas por data.
+     */
     public Map<LocalDate, Integer> getTotalDeaths() {
         return totalDeaths;
     }
 
+    /**
+     * @return Mapa de novas mortes, ordenadas por data.
+     */
     public Map<LocalDate, Integer> getNewDeaths() {
         return newDeaths;
     }
 
+    /**
+     * @return Mapa de novas mortes, ordenadas por mês.
+     */
     public Map<Integer, Integer> getMonthlyDeaths() {
         if (monthlyDeaths.isEmpty()) {
             generateMonthlyDeaths();
@@ -36,14 +60,23 @@ public class Death {
         return monthlyDeaths;
     }
 
+    /**
+     * @return O total de mortes na última data em registo.
+     */
     public int getLatestDeathTotal() {
         return totalDeaths.lastEntry().getValue();
     }
 
+    /**
+     * @return As novas mortes na última data em registo.
+     */
     public int getLatestDeath() {
         return newDeaths.lastEntry().getValue();
     }
 
+    /**
+     * @return A última data em registo (mais recente).
+     */
     public LocalDate getLatestDate() {
         try {
             return this.totalDeaths.lastKey();
@@ -52,11 +85,22 @@ public class Death {
         }
     }
 
+    /**
+     * @return A primeira data em registo (mais antiga).
+     */
     public LocalDate getOldestDate() {
         return this.totalDeaths.firstKey();
     }
 
     //---------------- Public update methods ----------------
+
+    /**
+     * Adiciona informação acerca das mortes numa dada data.
+     *
+     * @param newDeaths   O nº de novas mortes, formato String.
+     * @param totalDeaths O total de mortes, formato String.
+     * @param date        A data, formato LocalDate.
+     */
     public void addDeath(String newDeaths, String totalDeaths, LocalDate date) {
         int newDeathsInt;
         int totalDeathsInt;
@@ -84,6 +128,10 @@ public class Death {
     }
 
     //---------------- Private methods ----------------
+
+    /**
+     * Gera o mapa de mortes mensais.
+     */
     private void generateMonthlyDeaths() {
         LocalDate currentDate = newDeaths.firstKey();
         LocalDate endOfMonthDate = lastDateOfMonth(currentDate.getMonthValue(), currentDate.getYear());
@@ -101,6 +149,11 @@ public class Death {
         }
     }
 
+    /**
+     * @param month O número do mês.
+     * @param year  O ano.
+     * @return A última data do mês e ano indicado em que existe algum registo.
+     */
     private LocalDate lastDateOfMonth(Integer month, Integer year) {
         int lastDayOfMonth = YearMonth.of(year, month).lengthOfMonth();
 

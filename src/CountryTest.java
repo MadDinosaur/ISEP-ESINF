@@ -8,38 +8,46 @@ import java.time.temporal.ChronoUnit;
 import static org.junit.Assert.*;
 
 public class CountryTest {
-
+	/**
+     * Instância 1 da classe Country para teste.
+     * Data: 25/10/2020 | NovosCasos:NA | TotalCasos:NA | NovasMortes:00 | TotalMortes:00 | Fumadores:NA
+	 * Data: 26/10/2020 | NovosCasos:01 | TotalCasos:01 | NovasMortes:NA | TotalMortes:NA | Fumadores:NA
+     * Data: 05/11/2020 | NovosCasos:03 | TotalCasos:04 | NovasMortes:NA | TotalMortes:NA | Fumadores:50%
+     * Data: 06/11/2020 | NovosCasos:05 | TotalCasos:09 | NovasMortes:02 | TotalMortes:02 | Fumadores:NA
+     */
     private Country countryWithData;
+	/**
+     * Instância 1 da classe Country para teste.
+	 * Sem dados.
+	 */
     private Country emptyCountry;
 
     @Before
     public void setUp() throws Exception {
+		//---------------- Inicialização da classe Country ----------------
         emptyCountry = new Country("", "");
         countryWithData = new Country("PRT", "Portugal");
-
-        String population = "10000";
-        String agedPeople = "60%";
-        String cardiovascular = "50%";
-        String diabetes = "90%";
-        String beds = "700";
-        String life = "80";
-
+		//---------------- Inicialização da classe Case ----------------
         Case caseList = new Case();
-        Death deathList = new Death();
-        Smoker smokerList = new Smoker();
-
+      
         caseList.addCase("1", "1", LocalDate.of(2020, 10, 26));
         caseList.addCase("3", "4", LocalDate.of(2020, 11, 5));
         caseList.addCase("5", "9", LocalDate.of(2020, 11, 6));
-
+		//---------------- Inicialização da classe Death ----------------
+		Death deathList = new Death();
+		
         deathList.addDeath("0", "0", LocalDate.of(2020, 10, 25));
         deathList.addDeath("2", "2", LocalDate.of(2020, 11, 6));
-
+		//---------------- Inicialização da classe Smoker ----------------
+		Smoker smokerList = new Smoker();
         smokerList.addSmoker("30", "20", LocalDate.of(2020, 11, 5));
-
-        countryWithData.addData(caseList, deathList, smokerList,population,agedPeople,cardiovascular,diabetes,beds,life);
+		//---------------- Adição à classe Country ----------------
+        countryWithData.addData(caseList, deathList, null, smokerList, null, null);
     }
-
+	
+	/**
+	* Null test para o método dateCasesReached.
+	*/
     @Test
     public void dateCasesReached_NoCases() {
         LocalDate expectedResult = null;
@@ -47,7 +55,10 @@ public class CountryTest {
 
         Assert.assertEquals(expectedResult, result);
     }
-
+	
+	/**
+	* Teste para o método dateCasesReached - parâmetro não alcançãvel.
+	*/
     @Test
     public void dateCasesReached_NotReached() {
         LocalDate expectedResult = null;
@@ -55,7 +66,10 @@ public class CountryTest {
 
         Assert.assertEquals(expectedResult, result);
     }
-
+	
+	/**
+	* Teste para o método dateCasesReached.
+	*/
     @Test
     public void dateCasesReached() {
         LocalDate expectedResult = LocalDate.of(2020, 11, 6);
@@ -63,7 +77,10 @@ public class CountryTest {
 
         Assert.assertEquals(expectedResult, result);
     }
-
+	
+	/**
+	* Null test para o método numCasesReached.
+	*/
     @Test
     public void numCasesReached_NoCases() {
         int expectedResult = 0;
@@ -72,6 +89,9 @@ public class CountryTest {
         Assert.assertEquals(expectedResult, result);
     }
 
+	/**
+	* Teste para o método numCasesReached - parâmetro não alcançãvel.
+	*/
     @Test
     public void numCasesReached_NotReached() {
         int expectedResult = 0;
@@ -79,7 +99,10 @@ public class CountryTest {
 
         Assert.assertEquals(expectedResult, result);
     }
-
+	
+	/**
+	* Teste para o método numCasesReached.
+	*/
     @Test
     public void numCasesReached() {
         int expectedResult = 11; //Nยบ de dias entre 26/10 (a primeira data com casos registados) e 05/11 (data em que ultrapassa 5 casos)
@@ -88,6 +111,9 @@ public class CountryTest {
         Assert.assertEquals(expectedResult, result);
     }
 
+	/**
+	* Null test para o método hasMoreSmokersThan.
+	*/
     @Test
     public void hasMoreSmokersThan_NoData() {
         boolean expectedResult = false;
@@ -95,7 +121,10 @@ public class CountryTest {
 
         Assert.assertEquals(expectedResult, result);
     }
-
+	
+	/**
+	* Teste para o método hasMoreSmokersThan - resultado False.
+	*/
     @Test
     public void hasMoreSmokersThan_False() {
         boolean expectedResult = false;
@@ -103,7 +132,10 @@ public class CountryTest {
 
         Assert.assertEquals(expectedResult, result);
     }
-
+	
+	/**
+	* Teste para o método hasMoreSmokersThan - resultado True.
+	*/
     @Test
     public void hasMoreSmokersThan_True() {
         boolean expectedResult = true;
@@ -111,7 +143,10 @@ public class CountryTest {
 
         Assert.assertEquals(expectedResult, result);
     }
-
+	
+	/**
+	* Null test para o método lastDateOfMonth.
+	*/
     @Test
     public void lastDateOfMonth_NoData() {
         LocalDate expectedResult = null;
@@ -120,6 +155,9 @@ public class CountryTest {
         Assert.assertEquals(expectedResult, result);
     }
 
+	/**
+	* Teste para o método lastDateOfMonth.
+	*/
     @Test
     public void lastDateOfMonth() {
         LocalDate expectedResult = LocalDate.of(2020, 11, 6);

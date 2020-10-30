@@ -1,3 +1,5 @@
+import com.sun.org.apache.bcel.internal.generic.POP;
+
 import javax.naming.Name;
 import java.io.*;
 import java.time.LocalDate;
@@ -5,7 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class Main {
-
+    //---------------- Indices de colunas no ficheiro de texto ----------------
     static final int ISO_CODE = 0;
     static final int CONTINENT = 1;
     static final int LOCATION = 2;
@@ -24,10 +26,11 @@ public class Main {
     static final int MALE_SMOKERS = 15;
     static final int HOSPITAL_BEDS_PER_THOUSAND = 16;
     static final int LIFE_EXPECTANCY = 17;
+    //---------------- Valores definidos no enunciado do trabalho ----------------
     static final float PERCENTAGE_SMOKERS = 70f;
     static final int YEAR = 2020;
 
-
+    //---------------- Menu de navegação ----------------
     public static void main(String[] args) throws IOException {
         readFile("owid-covid-data.csv");
 
@@ -54,11 +57,15 @@ public class Main {
 
                 case 1: {
                     printMinDays();
+                    System.out.println("Pressione qualquer tecla para continuar....");
+                    sc.nextLine();
                     break;
                 }
 
                 case 2: {
                     printMonthlyCasesAndDeaths();
+                    System.out.println("Pressione qualquer tecla para continuar....");
+                    sc.nextLine();
                     break;
                 }
 
@@ -74,14 +81,18 @@ public class Main {
                         month = sc.nextInt();
                         sc.nextLine();
 
-                    } while (month < 1 || month > 12 && !World.continentList().contains(name));
+                    } while (month < 1 || month > 12 || !World.continentList().contains(name));
 
                     printDailyCases(name, month);
+                    System.out.println("Pressione qualquer tecla para continuar....");
+                    sc.nextLine();
                     break;
                 }
 
                 case 4: {
                     printDeathsSmokersByCountry();
+                    System.out.println("Pressione qualquer tecla para continuar....");
+                    sc.nextLine();
                     break;
                 }
 
@@ -93,7 +104,7 @@ public class Main {
         } while (n != 0);
     }
 
-    //ex01
+    //---------------- Exercício 1 ----------------
     private static String removeQuotes(String str) {
         return str.replace("\"", "");
     }
@@ -106,7 +117,10 @@ public class Main {
         Country country = null;
         Case dailyCases = null;
         Death dailyDeaths = null;
+        Tests dailyTests = null;
         Smoker dailySmokers = null;
+        DemographicIndicators dailyIndicators = null;
+        RiskFactors dailyFactors = null;
         LocalDate date;
 
         //Descarta linha do cabeçalho, se o ficheiro não estiver vazio
@@ -129,7 +143,10 @@ public class Main {
 
                 dailyCases = new Case();
                 dailyDeaths = new Death();
+                dailyTests = new Tests();
                 dailySmokers = new Smoker();
+                dailyIndicators = new DemographicIndicators();
+                dailyFactors = new RiskFactors();
             }
 
             date = LocalDate.parse(line[DATE]);
@@ -137,13 +154,15 @@ public class Main {
             dailyCases.addCase(line[NEW_CASES], line[TOTAL_CASES], date);
             dailyDeaths.addDeath(line[NEW_DEATHS], line[TOTAL_DEATHS], date);
             dailySmokers.addSmoker(line[FEMALE_SMOKERS], line[MALE_SMOKERS], date);
+            dailyIndicators.addIndicators(line[POPULATION], line[AGED_65_OLDER], line[HOSPITAL_BEDS_PER_THOUSAND], line[LIFE_EXPECTANCY], date);
+            dailyFactors.addFactors(line[CARDIOVASC_DEATH_RATE], line[DIABETES_PREVALENCE], date);
 
-            country.addData(dailyCases, dailyDeaths, dailySmokers, line[POPULATION], line[AGED_65_OLDER],line[CARDIOVASC_DEATH_RATE],line[DIABETES_PREVALENCE],line[HOSPITAL_BEDS_PER_THOUSAND],line[LIFE_EXPECTANCY]);
+            country.addData(dailyCases, dailyDeaths, dailyTests, dailySmokers, dailyIndicators, dailyFactors);
         }
         reader.close();
     }
 
-    //ex02
+    //---------------- Exercício 2 ----------------
 
     public static void printMinDays() {
         int numCases = 50000;
@@ -175,7 +194,7 @@ public class Main {
         }
     }
 
-    // ex03
+    //---------------- Exercício 3 ----------------
 
     public static void printMonthlyCasesAndDeaths() {
         for (Continent continent : World.getContinents()) {
@@ -189,7 +208,7 @@ public class Main {
         }
     }
 
-    //ex04
+    //---------------- Exercício 4 ----------------
 
     public static void printDailyCases(String continent, int month) {
         Continent c = World.get(continent);
@@ -204,7 +223,7 @@ public class Main {
         } while (c.newCasesPerDay(d) != null);
     }
 
-    //ex05
+    //---------------- Exercício 5 ----------------
 
     public static void printDeathsSmokersByCountry() {
         ArrayList<Country> countries = new ArrayList<>();
