@@ -9,8 +9,9 @@ public class Main {
     static final String COUNTRY_FILE = "/small-network/scountries.txt";
     static final String BORDERS_FILE = "/small-network/sborders.txt";
 
-    static final Graph<User, String> friendNetwork = new Graph<User, String>();
-    static final Graph<Country, Float> cityNetwork = new Graph<Country, Float>();
+    //Inicializar objetos das classes
+    static FriendNetwork friendNetwork = new FriendNetwork();
+    static CityNetwork cityNetwork = new CityNetwork();
 
     public static void readFile(String fileName) throws IOException {
         Scanner reader = new Scanner(new File(fileName));

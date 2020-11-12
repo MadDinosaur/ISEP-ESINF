@@ -257,4 +257,6 @@ public class Graph<V, E> {
 
         return true;
     }
+    //implementar BFS
+    //implementar ShortestPath
 }
