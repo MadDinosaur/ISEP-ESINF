@@ -1,11 +1,13 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
 
-    static final String USER_FILE = "/small-network/susers.txt";
-    static final String RELATIONSHIP_FILE = "/small-network/srelationships.txt";
+    static final String USER_FILE = "1dl_tp2_1191430_1191507\\small-network\\susers.txt";
+    static final String RELATIONSHIP_FILE = "1dl_tp2_1191430_1191507\\small-network\\srelationships.txt";
     static final String COUNTRY_FILE = "/small-network/scountries.txt";
     static final String BORDERS_FILE = "/small-network/sborders.txt";
 
@@ -76,6 +78,20 @@ public class Main {
         while (reader.hasNextLine()) {
             String[] line = reader.nextLine().split(",");
             cityNetwork.insertEdge(new Country(line[country1]), new Country(line[country2]), null, 0);
+        }
+    }
+
+    // método para responder ao exercício 2
+
+    public static void printMostPopularCommonFriends(int n)
+    {
+        LinkedList<User> usersByPopularity = friendNetwork.usersByPopularity();
+        Set<User> commonFriends = friendNetwork.friendsInCommon(usersByPopularity,n);
+
+        System.out.println("Amigos em comum dos users mais populares: \n");
+        for(User user : commonFriends)
+        {
+            System.out.println(user.getName());
         }
     }
 }

@@ -239,7 +239,7 @@ public class Graph<V, E> {
         return true;
     }
 
-    private List<V> getAdjacentVertices(V v) {
+    public List<V> getAdjacentVertices(V v) {
         int index = vertices.get(v);
         List<V> result = new ArrayList<>();
         for (int i = 0; i < adj.get(index).size(); i++) {
@@ -257,6 +257,99 @@ public class Graph<V, E> {
 
         return true;
     }
+
+    public int getKey(V vert) {return vertices.get(vert);}
+
+    public V[] allKeyVerts()
+    {
+        V vertElem = null;
+
+        for(Vertex<V,E> vert : vertices.values())
+        {
+            vertElem = vert.getElement();
+        }
+
+        V[] keyverts = (V [])Array.newInstance(vertElem.getClass(), numVert);
+
+        for (Vertex<V,E> vert : vertices.values())
+        {
+            keyverts[vert.getKey()] = vert.getElement();
+        }
+
+        return keyverts;
+    }
+
     //implementar BFS
+
+    public static <V,E> LinkedList<V> BreadthFirstSearch(Graph<V,E> g, V vert)
+    {
+        if(!g.validVertex(vert))
+        {
+            return null;
+        }
+
+        LinkedList<V> qbfs = new LinkedList<>();
+        LinkedList<V> qaux = new LinkedList<>();
+
+        boolean[] visited = new boolean[g.numVertices()];
+
+        qbfs.add(vert);
+        qaux.add(vert);
+
+        int vKey = g.getKey(vert);
+        visited[vKey] = true;
+
+        while (!qaux.isEmpty())
+        {
+            vert = qaux.remove();
+
+            for (V vAdj : g.getAdjacentVertices(vert))
+            {
+                vKey = g.getKey(vAdj);
+                if (!visited[vKey])
+                {
+                    qbfs.add(vAdj);
+                    qaux.add(vAdj);
+                    visited[vKey]=true;
+                }
+            }
+        }
+
+        return qbfs;
+    }
+
     //implementar ShortestPath
+
+    public static <V,E> double shortestPath(Graph<V,E> g, V vOrig, V vDest, LinkedList<V> shortPath)
+    {
+        if(!g.validVertex(vOrig) || !g.validVertex(vDest))
+        {
+            return 0;
+        }
+
+        int nVerts = g.numVertices();
+        boolean[] visited = new boolean[nVerts];
+        int[] pathKeys = new int[nVerts];
+        double[] dist = new double[nVerts];
+        V[] vertices = g.allkeyVerts();
+
+        for (int i = 0; i< nVerts; i++)
+        {
+            dist[i] = Double.MAX_VALUE;
+            pathKeys[i] = -1;
+        }
+
+        shortestPathLength(g,vOrig,vertices,visited,pathKeys,dist);
+
+        double lengthPath = dist[g.getKey(vDest)];
+
+        if (lengthPath != Double.MAX_VALUE)
+        {
+            getPath(g,vOrig,vDest,vertices,pathKeys,shortPath);
+            return lengthPath;
+        }
+
+        return 0;
+    }
+
 }
