@@ -1,21 +1,19 @@
 import java.util.*;
 
 public class FriendNetwork extends Graph<User, String> {
-    private Graph<User, String> friendNetwork;
 
     public FriendNetwork() {
-        friendNetwork = new Graph<User, String>();
+        super();
     }
 
     public LinkedList<User> usersByPopularity()
     {
-        LinkedList<User> friendships = new LinkedList<>();
+        LinkedList<User> friendships = new LinkedList<>(Collections.nCopies(this.numVertices(), null));
 
-        for(User vertex : friendNetwork.vertices())
-        {
-            int connections = friendNetwork.outDegree(vertex);
+        for (User vertex : this.vertices()) {
+            int connections = this.outDegree(vertex);
 
-            friendships.add(connections,vertex);
+            friendships.add(connections, vertex);
         }
 
         Collections.reverse(friendships);
