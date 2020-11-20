@@ -55,8 +55,14 @@ public class Graph<V, E> {
     }
 
     // Returns all the vertices of the graph as an iterable collection
-    public Iterable<V> vertices() {
+    public Set<V> vertices() {
         return vertices.keySet();
+    }
+
+    //Returns a vertice, gets a reference as parameter
+    public V getVertex(V v_copy) {
+        int origIndex = vertices.get(v_copy);
+        return verticesLookup.get(origIndex);
     }
 
     // Returns the number of edges of the graph
@@ -65,7 +71,7 @@ public class Graph<V, E> {
     }
 
     // Returns the information of all the edges of the graph as an iterable collection
-    public Iterable<E> edges() {
+    public Set<E> edges() {
         return (HashSet) edges.keySet();
     }
 
@@ -267,33 +273,29 @@ public class Graph<V, E> {
         return true;
     }
 
-    public int getKey(V vert) {
-        return vertices.get(vert);
-    }
-
     //implementar BFS
 
-    public static <V, E> LinkedList<V> BreadthFirstSearch(Graph<V, E> g, V vert) {
-        if (!g.validVertex(vert)) {
+    public LinkedList<V> BreadthFirstSearch(V vert) {
+        if (!validVertex(vert)) {
             return null;
         }
 
         LinkedList<V> qbfs = new LinkedList<>();
         LinkedList<V> qaux = new LinkedList<>();
 
-        boolean[] visited = new boolean[g.numVertices()];
+        boolean[] visited = new boolean[numVertices()];
 
         qbfs.add(vert);
         qaux.add(vert);
 
-        int vKey = g.getKey(vert);
+        int vKey = vertices.get(vert);
         visited[vKey] = true;
 
         while (!qaux.isEmpty()) {
             vert = qaux.remove();
 
-            for (V vAdj : g.getAdjacentVertices(vert)) {
-                vKey = g.getKey(vAdj);
+            for (V vAdj : getAdjacentVertices(vert)) {
+                vKey = vertices.get(vAdj);
                 if (!visited[vKey]) {
                     qbfs.add(vAdj);
                     qaux.add(vAdj);
@@ -304,18 +306,19 @@ public class Graph<V, E> {
 
         return qbfs;
     }
-   /* //Algortimo de Dijkstra que retorna o nº mínimo de arestas entre 2 vértices em O(log(n))
-   public int shortestPath(V vOrig, V vDest) {
+
+    //Algortimo de Dijkstra que retorna o nº mínimo de arestas entre 2 vértices em O(n)
+    public int shortestPath(V vOrig, V vDest) {
         if (!validVertex(vOrig) || !validVertex(vDest)) {
             return 0;
         }
         int fromIndex = vertices.get(vOrig);
         int toIndex = vertices.get(vDest);
-        return shortestPath(fromIndex, toIndex).size();
-   }
-    //Algortimo de Dijkstra que retorna o caminho (vértices a percorrer) mais curto entre 2 vértices em O(n)
-   private List<V> shortestPath(int vOrig, int vDest, boolean isWeighted) {
+        return (int) shortestDistance(fromIndex, toIndex, false);
+    }
 
+    //Algortimo de Dijkstra que retorna o caminho (vértices a percorrer) mais curto entre 2 vértices em O(n)
+    private List<V> shortestPath(int vOrig, int vDest, boolean isWeighted) {
         boolean[] visited = new boolean[numVertices()];
         List<V> previous = new ArrayList<V>(numVertices());
         double[] distance = new double[numVertices()];
@@ -323,23 +326,47 @@ public class Graph<V, E> {
         PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue();
         pq.add(new Pair<>(vOrig, 0.0));
         while (pq.size() != 0) {
-             Pair<Integer, Double> p = pq.poll();
-             int index = p.getKey();
-             double minValue = p.getValue();
+            Pair<Integer, Double> p = pq.poll();
+            int index = p.getKey();
+            double minValue = p.getValue();
             visited[index] = true;
             if (distance[index] < minValue) continue;
             for (int edge : adj.get(index)) {
                 if (visited[edge]) continue;
-                double newDist = distance[index] + (double)(isWeighted ? edgesLookup.get(index).get(edge) : 1);
+                double newDist = distance[index] + (double) (isWeighted ? edgesLookup.get(index).get(edge) : 1);
                 if (newDist < distance[edge]) {
                     previous.set(edge, verticesLookup.get(index));
                     distance[edge] = newDist;
                     pq.add(new Pair<>(edge, newDist));
                 }
             }
+            if (index == vDest) return previous;
+        }
+        return null;
+    }
+
+    private double shortestDistance(int vOrig, int vDest, boolean isWeighted) {
+        boolean[] visited = new boolean[numVertices()];
+        double[] distance = new double[numVertices()];
+        distance[vOrig] = 0;
+        PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue();
+        pq.add(new Pair<>(vOrig, 0.0));
+        while (pq.size() != 0) {
+            Pair<Integer, Double> p = pq.poll();
+            int index = p.getKey();
+            double minValue = p.getValue();
+            visited[index] = true;
+            if (distance[index] < minValue) continue;
+            for (int edge : adj.get(index)) {
+                if (visited[edge]) continue;
+                double newDist = distance[index] + (double) (isWeighted ? edgesLookup.get(index).get(edge) : 1);
+                if (newDist < distance[edge]) {
+                    distance[edge] = newDist;
+                    pq.add(new Pair<>(edge, newDist));
+                }
+            }
             if (index == vDest) return distance[index];
         }
-        return previous;
-   }*/
-
+        return -1;
+    }
 }

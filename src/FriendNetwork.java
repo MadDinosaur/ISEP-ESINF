@@ -6,25 +6,22 @@ public class FriendNetwork extends Graph<User, String> {
         super();
     }
 
-    public LinkedList<User> usersByPopularity()
-    {
-        LinkedList<User> friendships = new LinkedList<>(Collections.nCopies(this.numVertices(), null));
+    public List<User> usersByPopularity() {
+        Comparator<User> byPopularity = new Comparator<User>() {
+            @Override
+            public int compare(User u1, User u2) {
+                return -Integer.compare(u1.getNumFriends(), u2.getNumFriends());
+            }
+        };
+        List<User> userList = new ArrayList<>();
+        userList.addAll(this.vertices());
 
-        for (User vertex : this.vertices()) {
-            int connections = this.outDegree(vertex);
+        Collections.sort(userList, byPopularity);
 
-            friendships.add(connections, vertex);
-        }
-
-        Collections.reverse(friendships);
-
-        friendships.removeAll(Arrays.asList(null,""));
-
-        return friendships;
+        return userList;
     }
 
-    public Set<User> friendsInCommon(User vOrig,User vDest)
-    {
+    public Set<User> friendsInCommon(User vOrig, User vDest) {
         Set<User> vOrigFriends = new HashSet<>(this.getAdjacentVertices(vOrig));
 
         Set<User> vDestFriends = new HashSet<>(this.getAdjacentVertices(vDest));
@@ -34,35 +31,36 @@ public class FriendNetwork extends Graph<User, String> {
         return vOrigFriends;
     }
 
-    public Set<User> friendsInCommon(List<User> auxList,int size)
-    {
+    public Set<User> friendsInCommon(List<User> auxList, int size) {
         Set<Set<User>> vFinalFriends = new HashSet<>();
 
         ListIterator<User> i = auxList.listIterator();
 
-        while(i.hasNext() && i.nextIndex()<size)
-        {
+        while (i.hasNext() && i.nextIndex() < size - 1) {
             User vOrig = i.next();
             User vDest = i.next();
 
-            vFinalFriends.add(friendsInCommon(vOrig,vDest));
+            vFinalFriends.add(friendsInCommon(vOrig, vDest));
+        }
+        //Se o número de utilizadores for ímpar, será adicionado no final
+        if (size % 2 != 0) {
+            User vFinal = i.next();
+            Set<User> vFriends = new HashSet<>(this.getAdjacentVertices(vFinal));
+            vFinalFriends.add(vFriends);
         }
 
         return intersections(vFinalFriends).iterator().next();
     }
 
-    public Set<Set<User>> intersections(Set<Set<User>> auxSet)
-    {
+    public Set<Set<User>> intersections(Set<Set<User>> auxSet) {
         Set<Set<User>> newAuxSet = new HashSet<>();
         Iterator<Set<User>> i = auxSet.iterator();
 
-        if(auxSet.size() %2 != 0)
-        {
+        if (auxSet.size() % 2 != 0) {
             newAuxSet.add(i.next());
         }
 
-        while(i.hasNext())
-        {
+        while (i.hasNext()) {
             Set<User> firstCommonFriends = i.next();
             Set<User> secondCommonFriends = i.next();
 
@@ -71,10 +69,30 @@ public class FriendNetwork extends Graph<User, String> {
             newAuxSet.add(firstCommonFriends);
         }
 
-        if(auxSet.size()<=1) {
+        if (auxSet.size() <= 1) {
             return newAuxSet;
         }
 
         return intersections(newAuxSet);
+    }
+
+    @Override
+    public boolean insertEdge(User vOrig, User vDest, String edge) {
+        boolean inserted = super.insertEdge(vOrig, vDest, edge);
+        if (inserted) {
+            this.getVertex(vOrig).addFriend();
+            this.getVertex(vDest).addFriend();
+        }
+        return inserted;
+    }
+
+    @Override
+    public boolean removeEdge(User vOrig, User vDest) {
+        boolean removed = super.removeEdge(vOrig, vDest);
+        if (removed) {
+            vOrig.removeFriend();
+            vDest.removeFriend();
+        }
+        return removed;
     }
 }

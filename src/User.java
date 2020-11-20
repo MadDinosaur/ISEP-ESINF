@@ -4,6 +4,7 @@ public class User {
     private String name;
     private int age;
     private String city;
+    int numFriends;
 
     public User(String name, String age, String city) {
         this.setName(name.trim());
@@ -11,7 +12,7 @@ public class User {
         this.setCity(city.trim());
     }
 
-    public User (String name) {
+    public User(String name) {
         this.setName(name.trim());
         this.setAge(0);
         this.setCity(null);
@@ -19,11 +20,11 @@ public class User {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj){
+        if (this == obj) {
             return true;
         }
 
-        if (obj == null || this.getClass() != obj.getClass()){
+        if (obj == null || this.getClass() != obj.getClass()) {
             return false;
         }
         return getName().equalsIgnoreCase(((User) obj).getName());
@@ -57,5 +58,17 @@ public class User {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public void addFriend() {
+        numFriends++;
+    }
+
+    public void removeFriend() {
+        numFriends--;
+    }
+
+    public int getNumFriends() {
+        return numFriends;
     }
 }

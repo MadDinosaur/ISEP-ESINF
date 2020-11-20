@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -113,7 +114,7 @@ public class Main {
     // método para responder ao exercício 2
 
     public static void printMostPopularCommonFriends(int n) {
-        LinkedList<User> usersByPopularity = friendNetwork.usersByPopularity();
+        List<User> usersByPopularity = friendNetwork.usersByPopularity();
         Set<User> commonFriends = friendNetwork.friendsInCommon(usersByPopularity, n);
 
         System.out.println("Amigos em comum dos users mais populares: \n");
