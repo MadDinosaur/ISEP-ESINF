@@ -1,9 +1,6 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class Main {
     //Definição dos nomes de ficheiros
@@ -11,6 +8,7 @@ public class Main {
     static final String RELATIONSHIP_FILE = "small-network/srelationships.txt";
     static final String COUNTRY_FILE = "small-network/scountries.txt";
     static final String BORDERS_FILE = "small-network/sborders.txt";
+
     //Inicialização dos grafos
     static FriendNetwork friendNetwork = new FriendNetwork();
     static CityNetwork cityNetwork = new CityNetwork();
@@ -24,8 +22,11 @@ public class Main {
 
         //2
         printMostPopularCommonFriends(3);
-    }
 
+        //4
+        printNearestFriends(2,"u1");
+
+    }
 
     public static void readFile(String fileName) throws IOException {
         Scanner reader = new Scanner(new File(fileName));
@@ -122,4 +123,27 @@ public class Main {
             System.out.println(user.getName());
         }
     }
+
+    // método para responder ao exercicio 4
+
+    public static void printNearestFriends(int n, String userName)
+    {
+        User userAux = friendNetwork.getUser(userName);
+
+        Country countryAux = cityNetwork.getCountry(userAux.getCity());
+
+        List<Country> countryList = cityNetwork.getCountriesByBorders(countryAux,n);
+
+        List<User> userFriends = friendNetwork.getClosestFriends(userAux,countryList);
+
+        Comparator<User> byCity = new Comparator<User>() {
+            @Override
+            public int compare(User u1, User u2) {
+                return u1.getCity().compareTo(u2.getCity());
+            }
+            };
+
+        Collections.sort(userFriends,byCity);
+    }
+
 }

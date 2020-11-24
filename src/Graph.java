@@ -307,6 +307,45 @@ public class Graph<V, E> {
         return qbfs;
     }
 
+    //  Bfs mas para um determinado n
+    public LinkedList<V> breadthFirstSearch_Layers(V vert, int n)
+    {
+        if (!validVertex(vert)) {
+            return null;
+        }
+
+        LinkedList<V> qbfs = new LinkedList<>();
+        LinkedList<V> qaux = new LinkedList<>();
+
+        boolean[] visited = new boolean[numVertices()];
+        int[] level = new int[numVertices()];
+
+        qaux.add(vert);
+
+        int vKey = vertices.get(vert);
+        visited[vKey] = true;
+        level[vKey] = 0;
+
+        while (!qaux.isEmpty()) {
+            vert = qaux.remove();
+
+            for (V vAdj : getAdjacentVertices(vert)) {
+                vKey = vertices.get(vAdj);
+                if (!visited[vKey]) {
+                    qaux.add(vAdj);
+                    visited[vKey] = true;
+                    level[vKey] = level[vertices.get(vert)] + 1;
+                }
+                if (level[vKey] == n){
+                    qbfs.add(verticesLookup.get(vKey));
+                } else if (level[vKey] > n) {
+                    return qbfs;
+                }
+            }
+        }
+        return qbfs;
+    }
+
     //Algortimo de Dijkstra que retorna o nº mínimo de arestas entre 2 vértices em O(n)
     public int shortestPath(V vOrig, V vDest) {
         if (!validVertex(vOrig) || !validVertex(vDest)) {

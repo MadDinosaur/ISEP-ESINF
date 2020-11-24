@@ -76,6 +76,35 @@ public class FriendNetwork extends Graph<User, String> {
         return intersections(newAuxSet);
     }
 
+    // implementado para o exercício 4
+
+    public List<User> getClosestFriends(User u,List<Country> countryList)
+    {
+        List<User> friendsList = new ArrayList<>();
+
+        for(User friends : this.getAdjacentVertices(u))
+        {
+            if(countryList.contains(friends.getCity()))
+            {
+                friendsList.add(friends);
+            }
+        }
+
+        return friendsList;
+    }
+
+    public User getUser (String userName)
+    {
+        for(User userU : vertices())
+        {
+            if (userU.getName().equalsIgnoreCase(userName))
+            {
+                return userU;
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean insertEdge(User vOrig, User vDest, String edge) {
         boolean inserted = super.insertEdge(vOrig, vDest, edge);

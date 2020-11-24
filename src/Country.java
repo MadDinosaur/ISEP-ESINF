@@ -9,7 +9,7 @@ public class Country {
     private float longitude;
 
     public Country(String country, String continent, String population, String capital, String latitude, String longitude) {
-        this.country = country.trim();
+        this.setCountry(country.trim());
         this.continent = continent.trim();
         this.population = Float.parseFloat(population.trim());
         this.capital = capital.trim();
@@ -18,7 +18,7 @@ public class Country {
     }
 
     public Country(String name) {
-        this.country = name.trim();
+        this.setCountry(name.trim());
         this.continent = "";
         this.population = 0;
         this.capital = "";
@@ -45,6 +45,8 @@ public class Country {
         return distance;
     }
 
+
+
     @Override
 
     public boolean equals(Object obj) {
@@ -55,11 +57,19 @@ public class Country {
         if (obj == null || this.getClass() != obj.getClass()) {
             return false;
         }
-        return country.equalsIgnoreCase(((Country) obj).country);
+        return getCountry().equalsIgnoreCase(((Country) obj).getCountry());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.country);
+        return Objects.hash(this.getCountry());
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }
