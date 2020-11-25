@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class Country {
+public class City {
     private String country;
     private String continent;
     private float population;
@@ -8,8 +8,8 @@ public class Country {
     private float latitude;
     private float longitude;
 
-    public Country(String country, String continent, String population, String capital, String latitude, String longitude) {
-        this.setCountry(country.trim());
+    public City(String country, String continent, String population, String capital, String latitude, String longitude) {
+        this.country = country.trim();
         this.continent = continent.trim();
         this.population = Float.parseFloat(population.trim());
         this.capital = capital.trim();
@@ -17,8 +17,8 @@ public class Country {
         this.longitude = Float.parseFloat(longitude.trim());
     }
 
-    public Country(String name) {
-        this.setCountry(name.trim());
+    public City(String name) {
+        this.country = name.trim();
         this.continent = "";
         this.population = 0;
         this.capital = "";
@@ -26,11 +26,11 @@ public class Country {
         this.longitude = 0;
     }
 
-    public double distanceFrom(Country otherCountry) {
+    public double distanceFrom(City otherCity) {
         double lat1 = this.latitude;
         double lon1 = this.longitude;
-        double lat2 = otherCountry.latitude;
-        double lon2 = otherCountry.longitude;
+        double lat2 = otherCity.latitude;
+        double lon2 = otherCity.longitude;
 
         final int R = 6371; // Radius of the earth
 
@@ -57,19 +57,19 @@ public class Country {
         if (obj == null || this.getClass() != obj.getClass()) {
             return false;
         }
-        return getCountry().equalsIgnoreCase(((Country) obj).getCountry());
+        return getCountry().equalsIgnoreCase(((City) obj).getCountry());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getCountry());
+        return Objects.hash(country, continent, capital);
     }
 
     public String getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public String getCity() {
+        return capital;
     }
 }

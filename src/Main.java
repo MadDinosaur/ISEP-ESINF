@@ -10,8 +10,8 @@ public class Main {
     static final String BORDERS_FILE = "small-network/sborders.txt";
 
     //Inicialização dos grafos
-    static FriendNetwork friendNetwork = new FriendNetwork();
-    static CityNetwork cityNetwork = new CityNetwork();
+    static final FriendNetwork friendNetwork = new FriendNetwork();
+    static final CityNetwork cityNetwork = new CityNetwork();
 
     public static void main(String[] args) throws IOException {
         //1
@@ -23,10 +23,13 @@ public class Main {
         //2
         printMostPopularCommonFriends(3);
 
-        //4
-        printNearestFriends(2,"u1");
+        //3
+        printMinimumNumberOfConnections();
 
+        //4
+        printNearestFriends(2, "u1");
     }
+
 
     public static void readFile(String fileName) throws IOException {
         Scanner reader = new Scanner(new File(fileName));
@@ -89,7 +92,7 @@ public class Main {
         //Leitura do ficheiro linha a linha e atribuição dos valores das colunas aos respetivos objetos
         while (reader.hasNextLine()) {
             String[] line = reader.nextLine().split(",");
-            Country c = new Country(line[country], line[continent], line[population], line[capital], line[latitude], line[longitude]);
+            City c = new City(line[country], line[continent], line[population], line[capital], line[latitude], line[longitude]);
             cityNetwork.insertVertex(c);
         }
     }
@@ -99,16 +102,16 @@ public class Main {
         int country1 = 0;
         int country2 = 1;
         //Declaração dos objetos
-        Country country;
-        Country otherCountry;
+        City city;
+        City otherCity;
         //Leitura do ficheiro linha a linha e atribuição dos valores das colunas aos respetivos objetos
         while (reader.hasNextLine()) {
             String[] line = reader.nextLine().split(",");
 
-            country = new Country(line[country1]);
-            otherCountry = new Country(line[country2]);
+            city = new City(line[country1]);
+            otherCity = new City(line[country2]);
 
-            cityNetwork.insertEdge(country, otherCountry, country.distanceFrom(otherCountry));
+            cityNetwork.insertEdge(city, otherCity, city.distanceFrom(otherCity));
         }
     }
 
@@ -118,32 +121,40 @@ public class Main {
         List<User> usersByPopularity = friendNetwork.usersByPopularity();
         Set<User> commonFriends = friendNetwork.friendsInCommon(usersByPopularity, n);
 
-        System.out.println("Amigos em comum dos users mais populares: \n");
+        System.out.println("Amigos em comum dos users mais populares:");
         for (User user : commonFriends) {
             System.out.println(user.getName());
         }
     }
 
-    // método para responder ao exercicio 4
+    public static void printMinimumNumberOfConnections() {
+        if (friendNetwork.isConnected()) {
+            System.out.println("A rede de amizades é conectada.");
+            System.out.println("O número mínimo de ligações necessário para nesta rede qualquer utilizador conseguir contactar um qualquer outro utilizador é:");
+            System.out.println(friendNetwork.longestPath());
+        }
+    }
 
-    public static void printNearestFriends(int n, String userName)
-    {
+    public static void printNearestFriends(int n, String userName) {
         User userAux = friendNetwork.getUser(userName);
 
-        Country countryAux = cityNetwork.getCountry(userAux.getCity());
+        City cityAux = cityNetwork.getCity(userAux.getCity());
 
-        List<Country> countryList = cityNetwork.getCountriesByBorders(countryAux,n);
+        List<City> cityList = cityNetwork.getCitiesByBorders(cityAux, n);
 
-        List<User> userFriends = friendNetwork.getClosestFriends(userAux,countryList);
+        List<User> userFriends = friendNetwork.getNearestFriends(userAux, cityList);
 
         Comparator<User> byCity = new Comparator<User>() {
             @Override
             public int compare(User u1, User u2) {
                 return u1.getCity().compareTo(u2.getCity());
             }
-            };
+        };
 
-        Collections.sort(userFriends,byCity);
+        Collections.sort(userFriends, byCity);
+        for (User friend : userFriends) {
+            System.out.printf("%s, %s\n", friend.getCity(), friend.getName());
+        }
     }
 
 }

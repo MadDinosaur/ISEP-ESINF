@@ -185,10 +185,10 @@ public class Graph<V, E> {
      */
     public boolean insertEdge(V vOrig, V vDest, E edge) {
         if (!validVertex(vOrig))
-            insertVertex(vOrig);
+            return false;
 
         if (!validVertex(vDest))
-            insertVertex(vDest);
+            return false;
 
         if (getEdge(vOrig, vDest) != null)
             return false;
@@ -266,16 +266,31 @@ public class Graph<V, E> {
     }
 
     public boolean validVertex(V vert) {
-
-        if (vertices.get(vert) == null)
-            return false;
+        if (vert == null) return false;
+        if (vertices.get(vert) == null) return false;
 
         return true;
     }
 
-    //implementar BFS
+    public boolean isConnected() {
+        List<V> connectedVertices = breadthFirstSearch(verticesLookup.get(0));
+        return connectedVertices.containsAll(vertices());
+    }
 
-    public LinkedList<V> BreadthFirstSearch(V vert) {
+    public int longestPath() {
+        /*
+         * First BFS to find an endpoint of the longest path and
+         * second BFS from this endpoint to find the actual longest path.
+         */
+        //Gets furthest vertex from initial vertex (index 0)
+        V firstSearch = breadthFirstSearch(verticesLookup.get(0)).getLast();
+        //Gets furthest vertex from the vertex returned above - garantees
+        V secondSearch = breadthFirstSearch(firstSearch).getLast();
+
+        return (int) shortestDistance(vertices.get(firstSearch), vertices.get(secondSearch), false);
+    }
+
+    private LinkedList<V> breadthFirstSearch(V vert) {
         if (!validVertex(vert)) {
             return null;
         }
@@ -307,9 +322,7 @@ public class Graph<V, E> {
         return qbfs;
     }
 
-    //  Bfs mas para um determinado n
-    public LinkedList<V> breadthFirstSearch_Layers(V vert, int n)
-    {
+    public LinkedList<V> searchByLayers(V vert, int n) {
         if (!validVertex(vert)) {
             return null;
         }
@@ -336,7 +349,7 @@ public class Graph<V, E> {
                     visited[vKey] = true;
                     level[vKey] = level[vertices.get(vert)] + 1;
                 }
-                if (level[vKey] == n){
+                if (level[vKey] == n) {
                     qbfs.add(verticesLookup.get(vKey));
                 } else if (level[vKey] > n) {
                     return qbfs;
@@ -344,16 +357,6 @@ public class Graph<V, E> {
             }
         }
         return qbfs;
-    }
-
-    //Algortimo de Dijkstra que retorna o nº mínimo de arestas entre 2 vértices em O(n)
-    public int shortestPath(V vOrig, V vDest) {
-        if (!validVertex(vOrig) || !validVertex(vDest)) {
-            return 0;
-        }
-        int fromIndex = vertices.get(vOrig);
-        int toIndex = vertices.get(vDest);
-        return (int) shortestDistance(fromIndex, toIndex, false);
     }
 
     //Algortimo de Dijkstra que retorna o caminho (vértices a percorrer) mais curto entre 2 vértices em O(n)
@@ -384,27 +387,36 @@ public class Graph<V, E> {
         return null;
     }
 
+    //Algortimo de Dijkstra que retorna o nº mínimo de arestas entre 2 vértices em O(n)
     private double shortestDistance(int vOrig, int vDest, boolean isWeighted) {
-        boolean[] visited = new boolean[numVertices()];
+        boolean[] visitedVertices = new boolean[numVertices()];
+        boolean[] visitedEdges = new boolean[numEdges()];
         double[] distance = new double[numVertices()];
+        Arrays.fill(distance, -1);
         distance[vOrig] = 0;
-        PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue();
+        PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue<>(Comparator.comparing(Pair::getValue));
         pq.add(new Pair<>(vOrig, 0.0));
         while (pq.size() != 0) {
             Pair<Integer, Double> p = pq.poll();
-            int index = p.getKey();
-            double minValue = p.getValue();
-            visited[index] = true;
-            if (distance[index] < minValue) continue;
-            for (int edge : adj.get(index)) {
-                if (visited[edge]) continue;
-                double newDist = distance[index] + (double) (isWeighted ? edgesLookup.get(index).get(edge) : 1);
-                if (newDist < distance[edge]) {
-                    distance[edge] = newDist;
-                    pq.add(new Pair<>(edge, newDist));
+            int vIndex = p.getKey();
+            double minDistance = p.getValue();
+            visitedVertices[vIndex] = true;
+            for (int adjIndex = 0; adjIndex < adj.get(vIndex).size(); adjIndex++) {
+                if (adj.get(vIndex).get(adjIndex) == 0 || visitedVertices[adjIndex]) continue;
+                double edgeWeight;
+                if (isWeighted) {
+                    edgeWeight = (Double) edgesLookup.get(vIndex).get(adjIndex);
+                } else {
+                    edgeWeight = 1;
+                }
+                double newDist = minDistance + 1;
+                if (distance[adjIndex] == -1 || newDist < distance[adjIndex]) {
+                    distance[adjIndex] = newDist;
+                    pq.add(new Pair<>(adjIndex, newDist));
                 }
             }
-            if (index == vDest) return distance[index];
+            if (vIndex == vDest) return distance[vIndex];
+
         }
         return -1;
     }

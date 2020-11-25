@@ -1,9 +1,11 @@
 import java.util.*;
 
 public class FriendNetwork extends Graph<User, String> {
+    Map<String, User> userList;
 
     public FriendNetwork() {
         super();
+        userList = new HashMap<>();
     }
 
     public List<User> usersByPopularity() {
@@ -76,37 +78,26 @@ public class FriendNetwork extends Graph<User, String> {
         return intersections(newAuxSet);
     }
 
-    // implementado para o exercício 4
-
-    public List<User> getClosestFriends(User u,List<Country> countryList)
-    {
+    public List<User> getNearestFriends(User u, List<City> cityList) {
         List<User> friendsList = new ArrayList<>();
 
-        for(User friends : this.getAdjacentVertices(u))
-        {
-            if(countryList.contains(friends.getCity()))
-            {
-                friendsList.add(friends);
+        for (User friend : getAdjacentVertices(u)) {
+            if (cityList.contains(CityNetwork.getCity(friend.getCity()))) {
+                friendsList.add(friend);
             }
         }
 
         return friendsList;
     }
 
-    public User getUser (String userName)
-    {
-        for(User userU : vertices())
-        {
-            if (userU.getName().equalsIgnoreCase(userName))
-            {
-                return userU;
-            }
-        }
-        return null;
+    public User getUser(String userName) {
+        return userList.get(userName);
     }
 
     @Override
     public boolean insertEdge(User vOrig, User vDest, String edge) {
+        vOrig = getUser(vOrig.getName());
+        vDest = getUser(vDest.getName());
         boolean inserted = super.insertEdge(vOrig, vDest, edge);
         if (inserted) {
             this.getVertex(vOrig).addFriend();
@@ -122,6 +113,20 @@ public class FriendNetwork extends Graph<User, String> {
             vOrig.removeFriend();
             vDest.removeFriend();
         }
+        return removed;
+    }
+
+    @Override
+    public boolean insertVertex(User newVert) {
+        boolean inserted = super.insertVertex(newVert);
+        if (inserted) userList.put(newVert.getName(), newVert);
+        return inserted;
+    }
+
+    @Override
+    public boolean removeVertex(User vert) {
+        boolean removed = super.removeVertex(vert);
+        if (removed) userList.remove(vert.getName());
         return removed;
     }
 }

@@ -32,7 +32,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName());
+        return Objects.hash(name, age, city);
     }
 
 
