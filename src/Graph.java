@@ -349,9 +349,9 @@ public class Graph<V, E> {
                     visited[vKey] = true;
                     level[vKey] = level[vertices.get(vert)] + 1;
                 }
-                if (level[vKey] == n) {
+                if (level[vKey] <= n) {
                     qbfs.add(verticesLookup.get(vKey));
-                } else if (level[vKey] > n) {
+                } else {
                     return qbfs;
                 }
             }
