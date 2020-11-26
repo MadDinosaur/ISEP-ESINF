@@ -15,6 +15,7 @@ public class FriendNetwork extends Graph<User, String> {
                 return -Integer.compare(u1.getNumFriends(), u2.getNumFriends());
             }
         };
+
         List<User> userList = new ArrayList<>();
         userList.addAll(this.vertices());
 
@@ -119,7 +120,11 @@ public class FriendNetwork extends Graph<User, String> {
     @Override
     public boolean insertVertex(User newVert) {
         boolean inserted = super.insertVertex(newVert);
-        if (inserted) userList.put(newVert.getName(), newVert);
+        if (inserted) {
+            userList.put(newVert.getName(), newVert);
+            City newCity = CityNetwork.getCity(newVert.getCity());
+          //  newCity.addUser(); --> Origem do erro, não percebo o porquê.
+        }
         return inserted;
     }
 

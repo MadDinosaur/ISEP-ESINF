@@ -1,6 +1,4 @@
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CityNetwork extends Graph<City, Double> {
     private static Map<String, City> cityList;
@@ -24,12 +22,61 @@ public class CityNetwork extends Graph<City, Double> {
         return countryList.get(country);
     }
 
+    public List<City> getCentralities(int n)
+    {
+        Comparator<City> byCentrality = new Comparator<City>() {
+            @Override
+            public int compare(City o1, City o2) {
+                return Double.compare(o1.getCentrality(), o2.getCentrality());
+            }
+        };
+            List<City> centralityList = new ArrayList<City>(vertices());
+
+            Collections.sort(centralityList,byCentrality);
+
+            return centralityList.subList(0,n-1);
+    }
+
+    public List<City> getUserPercentage(float p,List<City> centralityList) {
+
+        if(centralityList.isEmpty())
+        {
+            return centralityList;
+        }
+
+        p = p/100 * numVertices();
+
+        Comparator<City> byNumUsers = new Comparator<City>() {
+            @Override
+            public int compare(City o1, City o2) {
+                return -Integer.compare(o1.getNumUsers(),o2.getNumUsers());
+            }
+        };
+
+        Collections.sort(centralityList,byNumUsers);
+
+        for(int i = 0; i<centralityList.size(); i++)
+        {
+            if(centralityList.get(i).getNumUsers() < p)
+            {
+                return centralityList.subList(0,i-1);
+            }
+        }
+
+        return centralityList;
+    }
+
     @Override
     public boolean insertVertex(City newVert) {
         boolean inserted = super.insertVertex(newVert);
         if (inserted) {
             cityList.put(newVert.getCity(), newVert);
             countryList.put(newVert.getCountry(), newVert);
+
+            for(City city : vertices())
+            {
+                city.updateCentrality(city.distanceFrom(newVert),numVertices());
+            }
         }
         return inserted;
     }
@@ -37,7 +84,13 @@ public class CityNetwork extends Graph<City, Double> {
     @Override
     public boolean removeVertex(City vert) {
         boolean removed = super.removeVertex(vert);
-        if (removed) cityList.remove(vert.getCity());
+        if (removed) {
+            cityList.remove(vert.getCity());
+            for(City city : vertices())
+            {
+                city.updateCentrality(-city.distanceFrom(vert),numVertices());
+            }
+        }
         return removed;
     }
 
