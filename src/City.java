@@ -18,7 +18,7 @@ public class City {
         this.latitude = Float.parseFloat(latitude.trim());
         this.longitude = Float.parseFloat(longitude.trim());
         numUsers = 0;
-        centrality = 0;
+        setCentrality(0);
     }
 
     public City(String name) {
@@ -29,7 +29,7 @@ public class City {
         this.latitude = 0;
         this.longitude = 0;
         numUsers = 0;
-        centrality = 0;
+        setCentrality(0);
     }
 
     public double distanceFrom(City otherCity) {
@@ -56,10 +56,6 @@ public class City {
         numUsers++;
     }
 
-    public void updateCentrality(double distance, int numCities)
-    {
-        centrality = ((centrality * (numCities-1)) + distance) / numCities;
-    }
 
     @Override
 
@@ -87,7 +83,13 @@ public class City {
         return capital;
     }
 
-    public Double getCentrality(){return centrality;}
-
     public int getNumUsers(){return numUsers;}
+
+    public double getCentrality() {
+        return centrality;
+    }
+
+    public void setCentrality(double centrality) {
+        this.centrality = centrality;
+    }
 }

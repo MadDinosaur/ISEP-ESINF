@@ -70,4 +70,11 @@ public class User {
     public int getNumFriends() {
         return numFriends;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

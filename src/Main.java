@@ -5,89 +5,77 @@ import java.util.*;
 
 public class Main {
     //Definição dos nomes de ficheiros
-    static final String USER_FILE = "small-network/susers.txt";
-    static final String RELATIONSHIP_FILE = "small-network/srelationships.txt";
-    static final String COUNTRY_FILE = "small-network/scountries.txt";
-    static final String BORDERS_FILE = "small-network/sborders.txt";
+    static String USER_FILE;
+    static String RELATIONSHIP_FILE;
+    static String COUNTRY_FILE;
+    static String BORDERS_FILE;
 
     //Inicialização dos grafos
     static final FriendNetwork friendNetwork = new FriendNetwork();
     static final CityNetwork cityNetwork = new CityNetwork();
+    static Scanner sc = new Scanner(System.in);
+
+    public Main() {
+    }
 
     public static void main(String[] args) throws IOException {
 
         System.out.println("Bem-vindo a Rede Social");
-        System.out.println("Escolha a opção que deseja: ");
-        System.out.println("1-Construir os grafos a partir da informação fornecida nos ficheiros de texto.");
-        System.out.println("2-Devolver os amigos comuns entre os n utilizadores mais populares da rede.");
-        System.out.println("3-Verificar se a rede de amizades é conectada e em caso positivo devolver o número mínimo de ligações necessário para nesta rede qualquer utilizador conseguir contactar um qualquer outro utilizador");
-        System.out.println("4-Devolver para um utilizador os amigos que se encontrem nas proximidades, isto é, amigos que habitem em cidades que distam um dado número de fronteiras da cidade desse utilizador.");
-        System.out.println("5-Devolver as n cidades com maior centralidade ou seja, as cidades que em média estão mais próximas de todas as outras cidades e onde habitem pelo menos p% dos utilizadores da rede de amizades, onde p% é a percentagem relativa de utilizadores em cada cidade.");
-        System.out.println("6-Devolver o caminho terrestre mais curto entre dois utilizadores, passando obrigatoriamente pelas n cidade(s) intermédias onde cada utilizador tenha o maior número de amigos.");
-        System.out.println("0-Sair");
+        menu();
 
-        Scanner sc = new Scanner(System.in);
+        readFile(COUNTRY_FILE,3);
+        readFile(BORDERS_FILE,4);
+        readFile(USER_FILE,1);
+        readFile(RELATIONSHIP_FILE,2);
+
+        System.out.println("1-Os amigos comuns entre os n utilizadores mais populares da rede.");
+        System.out.println("2-Grafo é conectado? Número mínimo de ligações dos users mais distantes caso se confirme!");
+        System.out.println("3-Amigos entre fronteiras.");
+        System.out.println("4-Centralidade relativa das cidades onde habitam %p de users.");
+        System.out.println("5-Caminho terrestre mais curto entre utilizadores que decidem viajar pelas cidades onde possuem mais amigos.");
+        System.out.println("0-Sair");
         int op = 99;
 
         while (op != 0)
         {
             op = sc.nextInt();
-
             switch (op)
             {
                 case 1:
                 {
-                    readFile(COUNTRY_FILE);
-                    readFile(BORDERS_FILE);
-                    readFile(USER_FILE);
-                    readFile(RELATIONSHIP_FILE);
-
-                    System.out.println("Ficheiro lido com sucesso");
-                    sc.nextLine();
-                    break;
-                }
-
-                case 2:
-                {
                     System.out.println("Insira o numero de utilizadores populares que pretende saber os amigos em comum: ");
                     int numero = sc.nextInt();
-
                     printMostPopularCommonFriends(numero);
+                    System.out.println("Printe o comando que necessita realizar a seguir: ");
                     break;
                 }
-
-                case 3:
+                case 2:
                 {
                     printMinimumNumberOfConnections();
-
+                    System.out.println("Printe o comando que necessita realizar a seguir: ");
+                    break;
+                }
+                case 3:
+                {
+                    sc.nextLine();
+                    System.out.println("Insira o utilizador que pretende analisar: ");
+                    String utilizador = sc.nextLine();
+                    System.out.println("Insira a quantas fronteiras pretende aceder: ");
+                    int fronteiras = sc.nextInt();
+                    printNearestFriends(fronteiras, utilizador);
+                    System.out.println("Printe o comando que necessita realizar a seguir: ");
                     break;
                 }
 
                 case 4:
                 {
                     sc.nextLine();
-
-                    System.out.println("Insira o utilizador que pretende analisar: ");
-                    String utilizador = sc.nextLine();
-
-                    System.out.println("Insira a quantas fronteiras pretende aceder: ");
-                    int fronteiras = sc.nextInt();
-
-                    printNearestFriends(fronteiras, utilizador);
-                    break;
-                }
-
-                case 5:
-                {
-                    sc.nextLine();
-
                     System.out.println("Insira o numero de cidades que pretende conhecer a maior centralidade: ");
                     int cidades = sc.nextInt();
-
                     System.out.println("Insira a percentagem de utilizadores: ");
                     float percentagem = sc.nextFloat();
-
                     printCitiesGreaterCentrality(cidades,percentagem);
+                    System.out.println("Printe o comando que necessita realizar a seguir: ");
                     break;
                 }
 
@@ -100,25 +88,31 @@ public class Main {
                 default:
                 {
                     System.out.println("Opção Inválida");
+                    System.out.println("1-Os amigos comuns entre os n utilizadores mais populares da rede.");
+                    System.out.println("2-Grafo é conectado? Número mínimo de ligações dos users mais distantes caso se confirme!");
+                    System.out.println("3-Amigos entre fronteiras.");
+                    System.out.println("4-Centralidade relativa das cidades onde habitam %p de users.");
+                    System.out.println("5-Caminho terrestre mais curto entre utilizadores que decidem viajar pelas cidades onde possuem mais amigos.");
+                    System.out.println("0-Sair");
                 }
             }
 
         }
     }
 
-        public static void readFile (String fileName) throws IOException {
+        public static void readFile (String fileName,int identifier) throws IOException {
             Scanner reader = new Scanner(new File(fileName));
-            switch (fileName) {
-                case USER_FILE:
+            switch (identifier) {
+                case 1:
                     processUsers(reader);
                     break;
-                case RELATIONSHIP_FILE:
+                case 2:
                     processRelationships(reader);
                     break;
-                case COUNTRY_FILE:
+                case 3:
                     processCountry(reader);
                     break;
-                case BORDERS_FILE:
+                case 4:
                     processBorders(reader);
                     break;
             }
@@ -186,7 +180,7 @@ public class Main {
                 city = new City(line[country1]);
                 otherCity = new City(line[country2]);
 
-                cityNetwork.insertEdge(city, otherCity, city.distanceFrom(otherCity));
+                cityNetwork.insertEdge(city, otherCity);
             }
         }
 
@@ -252,17 +246,57 @@ public class Main {
 
         public static void printCitiesGreaterCentrality (int n, float p)
         {
-            List<City> centralityCity = cityNetwork.getCentralities(n);
+            List<City> centralityCity = cityNetwork.getCentralities();
 
-            List<City> percentageCity = cityNetwork.getUserPercentage(p, centralityCity);
+            float x = p * friendNetwork.userList.size() / 100;
 
-            System.out.printf("Das %d cidades com maior centralidade, com uma percentagem de utilizadores acima de %.2f%%: \n", n, p);
+            List<City> percentageCity = cityNetwork.getUserPercentage(x,centralityCity,n);
+
+            System.out.printf("As %d cidades com maior centralidade, com uma percentagem de utilizadores acima de %.2f%%: \n", n, p);
+
+            System.out.println("===================");
 
             for(City city : percentageCity)
             {
                 System.out.printf("%s \n",city.getCity());
             }
 
+            System.out.println("===================");
+        }
+
+        public static void menu()
+        {
+            int ficheiro = 99;
+
+            while (ficheiro!=0)
+            {
+                System.out.println("Qual ficheiro deseja escolher? 1.Big 2.Small");
+                ficheiro = sc.nextInt();
+
+                switch (ficheiro)
+                {
+                    case 1:
+                    {
+                        USER_FILE = "big-network/busers.txt";
+                        RELATIONSHIP_FILE = "big-network/brelationships.txt";
+                        COUNTRY_FILE = "big-network/bcountries.txt";
+                        BORDERS_FILE = "big-network/bborders.txt";
+                        return;
+                    }
+                    case 2:
+                    {
+                        USER_FILE = "small-network/susers.txt";
+                        RELATIONSHIP_FILE = "small-network/srelationships.txt";
+                        COUNTRY_FILE = "small-network/scountries.txt";
+                        BORDERS_FILE = "small-network/sborders.txt";
+                        return;
+                    }
+                    default:
+                    {
+                        System.out.println("Opção inválida");
+                    }
+                }
+            }
         }
 
     }

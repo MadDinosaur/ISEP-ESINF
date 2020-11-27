@@ -360,7 +360,7 @@ public class Graph<V, E> {
     }
 
     //Algortimo de Dijkstra que retorna o caminho (vértices a percorrer) mais curto entre 2 vértices em O(n)
-    private List<V> shortestPath(int vOrig, int vDest, boolean isWeighted) {
+    public List<V> shortestPath(int vOrig, int vDest, boolean isWeighted) {
         boolean[] visited = new boolean[numVertices()];
         List<V> previous = new ArrayList<V>(numVertices());
         double[] distance = new double[numVertices()];
@@ -388,7 +388,7 @@ public class Graph<V, E> {
     }
 
     //Algortimo de Dijkstra que retorna o nº mínimo de arestas entre 2 vértices em O(n)
-    private double shortestDistance(int vOrig, int vDest, boolean isWeighted) {
+    public double shortestDistance(int vOrig, int vDest, boolean isWeighted) {
         boolean[] visitedVertices = new boolean[numVertices()];
         boolean[] visitedEdges = new boolean[numEdges()];
         double[] distance = new double[numVertices()];
@@ -420,4 +420,47 @@ public class Graph<V, E> {
         }
         return -1;
     }
+
+    public double shortestDistance(V vertOrig, V vertDest, boolean isWeighted) {
+
+        if(!validVertex(vertOrig) || (!validVertex(vertDest)))
+        {
+            return 0;
+        }
+
+        int vOrig = vertices.get(vertOrig);
+        int vDest = vertices.get(vertDest);
+
+        boolean[] visitedVertices = new boolean[numVertices()];
+        boolean[] visitedEdges = new boolean[numEdges()];
+        double[] distance = new double[numVertices()];
+        Arrays.fill(distance, -1);
+        distance[vOrig] = 0;
+        PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue<>(Comparator.comparing(Pair::getValue));
+        pq.add(new Pair<>(vOrig, 0.0));
+        while (pq.size() != 0) {
+            Pair<Integer, Double> p = pq.poll();
+            int vIndex = p.getKey();
+            double minDistance = p.getValue();
+            visitedVertices[vIndex] = true;
+            for (int adjIndex = 0; adjIndex < adj.get(vIndex).size(); adjIndex++) {
+                if (adj.get(vIndex).get(adjIndex) == 0 || visitedVertices[adjIndex]) continue;
+                double edgeWeight;
+                if (isWeighted) {
+                    edgeWeight = (Double) edgesLookup.get(vIndex).get(adjIndex);
+                } else {
+                    edgeWeight = 1;
+                }
+                double newDist = minDistance + edgeWeight;
+                if (distance[adjIndex] == -1 || newDist < distance[adjIndex]) {
+                    distance[adjIndex] = newDist;
+                    pq.add(new Pair<>(adjIndex, newDist));
+                }
+            }
+            if (vIndex == vDest) return distance[vIndex];
+
+        }
+        return -1;
+    }
+
 }
