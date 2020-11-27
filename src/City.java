@@ -61,7 +61,6 @@ public class City {
         centrality = ((centrality * (numCities-1)) + distance) / numCities;
     }
 
-
     @Override
 
     public boolean equals(Object obj) {

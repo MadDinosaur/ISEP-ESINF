@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import java.util.*;
 
 public class CityNetwork extends Graph<City, Double> {
@@ -34,7 +36,7 @@ public class CityNetwork extends Graph<City, Double> {
 
             Collections.sort(centralityList,byCentrality);
 
-            return centralityList.subList(0,n-1);
+            return centralityList.subList(0,n);
     }
 
     public List<City> getUserPercentage(float p,List<City> centralityList) {
@@ -65,6 +67,29 @@ public class CityNetwork extends Graph<City, Double> {
 
         return centralityList;
     }
+
+    /*  public Map<City,Integer> getNumFriendsByCity(List<User> friendsList)
+    {
+        PriorityQueue<Pair<City,Integer>> pqNumFriendsByCity = new PriorityQueue<>(Comparator.comparing(Pair::getValue));
+
+        for(User user : friendsList)
+        {
+            City userCity = getCity(user.getCity());
+
+            if(pqNumFriendsByCity.)
+            {
+                mapNumFriendsByCity.put(userCity,mapNumFriendsByCity.get(userCity) + 1);
+            }
+
+            else
+            {
+                mapNumFriendsByCity.put(userCity,1);
+            }
+
+        }
+        return mapNumFriendsByCity;
+    }
+    */
 
     @Override
     public boolean insertVertex(City newVert) {

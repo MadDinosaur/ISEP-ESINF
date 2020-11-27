@@ -123,7 +123,7 @@ public class FriendNetwork extends Graph<User, String> {
         if (inserted) {
             userList.put(newVert.getName(), newVert);
             City newCity = CityNetwork.getCity(newVert.getCity());
-          //  newCity.addUser(); --> Origem do erro, não percebo o porquê.
+            newCity.addUser();
         }
         return inserted;
     }

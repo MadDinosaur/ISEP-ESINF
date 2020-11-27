@@ -35,7 +35,6 @@ public class User {
         return Objects.hash(name, age, city);
     }
 
-
     public String getName() {
         return name;
     }

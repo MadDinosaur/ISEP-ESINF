@@ -37,10 +37,10 @@ public class Main {
             {
                 case 1:
                 {
-                    readFile(USER_FILE);
-                    readFile(RELATIONSHIP_FILE);
                     readFile(COUNTRY_FILE);
                     readFile(BORDERS_FILE);
+                    readFile(USER_FILE);
+                    readFile(RELATIONSHIP_FILE);
 
                     System.out.println("Ficheiro lido com sucesso");
                     sc.nextLine();
@@ -59,6 +59,7 @@ public class Main {
                 case 3:
                 {
                     printMinimumNumberOfConnections();
+
                     break;
                 }
 
@@ -86,13 +87,13 @@ public class Main {
                     System.out.println("Insira a percentagem de utilizadores: ");
                     float percentagem = sc.nextFloat();
 
-                    // printCitiesGreaterCentrality(3,20.5f);
+                    printCitiesGreaterCentrality(cidades,percentagem);
                     break;
                 }
 
                 case 0:
                 {
-                    System.out.println("Espero que tenha gostado. Volte sempre! :D ");
+                    System.out.println("Espero que tenha gostado. Volte sempre! :D");
                     break;
                 }
 
@@ -249,14 +250,19 @@ public class Main {
             System.out.println("==========================================");
         }
 
-        public static void printCitiesGreaterCentrality ( int n, float p)
+        public static void printCitiesGreaterCentrality (int n, float p)
         {
             List<City> centralityCity = cityNetwork.getCentralities(n);
 
             List<City> percentageCity = cityNetwork.getUserPercentage(p, centralityCity);
 
-            System.out.printf("As cidade com maior centralidade %d com uma percentagem de utilizadores de %.2f :", n, p);
-            System.out.println(percentageCity);
+            System.out.printf("Das %d cidades com maior centralidade, com uma percentagem de utilizadores acima de %.2f%%: \n", n, p);
+
+            for(City city : percentageCity)
+            {
+                System.out.printf("%s \n",city.getCity());
+            }
+
         }
 
     }
