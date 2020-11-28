@@ -1,7 +1,9 @@
+import javafx.util.Pair;
+
 import java.util.*;
 
 public class FriendNetwork extends Graph<User, String> {
-    Map<String, User> userList;
+    private static Map<String, User> userList;
 
     public FriendNetwork() {
         super();
@@ -91,7 +93,41 @@ public class FriendNetwork extends Graph<User, String> {
         return friendsList;
     }
 
-    public User getUser(String userName) {
+    public List<User> getFriendsByCity(User u) {
+        Comparator<User> byCity = new Comparator<User>() {
+            @Override
+            public int compare(User o1, User o2) {
+                return o1.getCity().compareTo(o2.getCity());
+            }
+        };
+        List<User> friendList = getAdjacentVertices(u);
+        Collections.sort(friendList, byCity);
+        return friendList;
+    }
+
+    public List<String> getTopCitiesByNumFriends(User u, int n) {
+        PriorityQueue<Pair<String, Integer>> citiesByNumFriends = new PriorityQueue<>(Comparator.comparing(Pair::getValue));
+        String city = "";
+        int citySum = 0;
+        for (User friend : getFriendsByCity(u)) {
+            if (friend.getCity().equals(city)) {
+                citySum++;
+            } else {
+                if (!city.isEmpty()) citiesByNumFriends.add(new Pair<>(city, citySum));
+                city = friend.getCity();
+                citySum = 1;
+            }
+        }
+        List<String> topCities = new ArrayList<>();
+        //Copiar a priority queue para uma lista
+        List<Pair<String, Integer>> citiesByNumFriendsCopy = new ArrayList<>(citiesByNumFriends);
+        for (int i = citiesByNumFriends.size() - 1; i > citiesByNumFriends.size() - 1 - n; i--) {
+            topCities.add(citiesByNumFriendsCopy.get(i).getKey());
+        }
+        return topCities;
+    }
+
+    public static User getUser(String userName) {
         return userList.get(userName);
     }
 

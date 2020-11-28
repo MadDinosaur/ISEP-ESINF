@@ -1,6 +1,7 @@
 import javafx.util.Pair;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * NOTA: Gráfico não direcionado
@@ -423,8 +424,7 @@ public class Graph<V, E> {
 
     public double shortestDistance(V vertOrig, V vertDest, boolean isWeighted) {
 
-        if(!validVertex(vertOrig) || (!validVertex(vertDest)))
-        {
+        if (!validVertex(vertOrig) || (!validVertex(vertDest))) {
             return 0;
         }
 
@@ -463,4 +463,60 @@ public class Graph<V, E> {
         return -1;
     }
 
+    private double pathLength(List<V> path) {
+        double length = 0;
+        Iterator<V> i = path.listIterator();
+        V vOrig = i.next();
+        while (i.hasNext()) {
+            V vDest = i.next();
+            length += (Double) getEdge(vOrig, vDest);
+            vOrig = vDest;
+        }
+        return length;
+    }
+
+    public Pair<List<V>, Double> getPathAcrossAllVertices(List<V> vertexList) {
+        vertexList.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        V vOrig = vertexList.get(0);
+        V vDest = vertexList.get(vertexList.size() - 1);
+        List<V> shortestPath = new ArrayList<>();
+        for (List<V> path : allPaths(vOrig, vDest)) {
+            if (path.containsAll(vertexList) && (shortestPath.isEmpty() || pathLength(path) < pathLength(shortestPath))) {
+                shortestPath = path;
+            }
+        }
+        return new Pair<List<V>, Double>(shortestPath, pathLength(shortestPath));
+    }
+
+    private List<List<V>> allPaths(V vOrig, V vDest) {
+        List<List<V>> allPaths = new ArrayList<>();
+        depthFirstSearch(vOrig, vDest, new HashSet<>(), new LinkedList<>(), allPaths);
+        return allPaths;
+    }
+
+    private void depthFirstSearch(V vOrig, V vDest, Set visited, List<V> pathList, List<List<V>> allPaths) {
+        if (vOrig.equals(vDest)) {
+            //Criar cópia da pathList para impedir alterações
+            List<V> pathListCopy = new ArrayList<>(pathList);
+            pathListCopy.add(vOrig);
+            //Adicionar a allPaths
+            allPaths.add(pathListCopy);
+            return;
+        }
+
+        if (!visited.contains(vOrig)) {
+            visited.add(vOrig);
+            pathList.add(vOrig);
+            Iterable<V> neighbours = getAdjacentVertices(vOrig);
+            Iterator<V> i = neighbours.iterator();
+            while (i.hasNext()) {
+                depthFirstSearch(i.next(), vDest, visited, pathList, allPaths);
+            }
+            pathList.remove(vOrig);
+            visited.remove(vOrig);
+        }
+        return;
+    }
 }

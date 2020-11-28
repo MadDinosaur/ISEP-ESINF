@@ -4,14 +4,13 @@ import java.util.*;
 
 public class CityNetwork extends Graph<City, Double> {
     private static Map<String, City> cityList;
-    private Map<String, City> countryList;
+    private static Map<String, City> countryList;
 
     public CityNetwork() {
         super();
         cityList = new HashMap<>();
         countryList = new HashMap<>();
     }
-
     public List<City> getCitiesByBorders(City newCity, int n) {
         return this.searchByLayers(newCity, n);
     }
@@ -20,7 +19,7 @@ public class CityNetwork extends Graph<City, Double> {
         return cityList.get(city);
     }
 
-    public City getCountry(String country) {
+    public static City getCountry(String country) {
         return countryList.get(country);
     }
 
@@ -57,9 +56,8 @@ public class CityNetwork extends Graph<City, Double> {
         List<City> centralityListAux = new ArrayList<>();
         int count = 0;
 
-        if(centralityList.isEmpty())
-        {
-            return centralityList;
+        if (centralityList.isEmpty() || n == 0) {
+            return centralityListAux;
         }
 
         for(int i = 0; i<centralityList.size(); i++)
@@ -127,7 +125,15 @@ public class CityNetwork extends Graph<City, Double> {
 
         Double edge = vOrig.distanceFrom(vDest);
 
-        return super.insertEdge(vOrig, vDest,edge);
+        return super.insertEdge(vOrig, vDest, edge);
+    }
+
+    public List<City> convert(List<String> cityList) {
+        List<City> newCityList = new ArrayList<>();
+        for (String cityName : cityList) {
+            newCityList.add(getCity(cityName));
+        }
+        return newCityList;
     }
 }
 
