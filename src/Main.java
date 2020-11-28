@@ -273,14 +273,19 @@ public class Main {
         User user2 = FriendNetwork.getUser(userName2);
         List<City> user1Cities = cityNetwork.convert(friendNetwork.getTopCitiesByNumFriends(user1, n));
         List<City> user2Cities = cityNetwork.convert(friendNetwork.getTopCitiesByNumFriends(user2, n));
-        user1Cities.addAll(user2Cities);
-        user1Cities.add(CityNetwork.getCity(user1.getCity()));
-        user1Cities.add(CityNetwork.getCity(user2.getCity()));
-        Pair<List<City>, Double> path = cityNetwork.getPathAcrossAllVertices(user1Cities);
+
+        List<City> usersCities = new ArrayList<>();
+        usersCities.add(CityNetwork.getCity(user1.getCity()));
+        usersCities.addAll(user1Cities);
+        usersCities.addAll(user2Cities);
+        usersCities.add(CityNetwork.getCity(user2.getCity()));
+
+        Pair<List<City>, Double> path = cityNetwork.getPathAcrossAllVertices(usersCities);
+        System.out.printf("O caminho terrestre mais curto é: ");
         for (City c : path.getKey()) {
-            System.out.printf("%s,", c.getCity());
+            System.out.printf("%s, ", c.getCity());
         }
-        System.out.printf("%.2fkm\n", path.getValue() / 1000);
+        System.out.printf("\nDistância total: %.2fkm\n", path.getValue() / 1000);
     }
 
     public static void menu() {

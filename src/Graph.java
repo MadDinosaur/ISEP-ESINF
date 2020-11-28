@@ -472,7 +472,7 @@ public class Graph<V, E> {
     }
 
     public Pair<List<V>, Double> getPathAcrossAllVertices(List<V> vertexList) {
-        vertexList.stream()
+        vertexList = vertexList.stream()
                 .distinct()
                 .collect(Collectors.toList());
         V vOrig = vertexList.get(0);

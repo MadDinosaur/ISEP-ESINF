@@ -106,7 +106,7 @@ public class FriendNetwork extends Graph<User, String> {
     }
 
     public List<String> getTopCitiesByNumFriends(User u, int n) {
-        PriorityQueue<Pair<String, Integer>> citiesByNumFriends = new PriorityQueue<>(Comparator.comparing(Pair::getValue));
+        List<Pair<String, Integer>> citiesByNumFriends = new LinkedList<>();
         String city = "";
         int citySum = 0;
         for (User friend : getFriendsByCity(u)) {
@@ -118,12 +118,15 @@ public class FriendNetwork extends Graph<User, String> {
                 citySum = 1;
             }
         }
+        citiesByNumFriends.add(new Pair<>(city, citySum));
+        Collections.sort(citiesByNumFriends, new Comparator<Pair<String, Integer>>() {
+            @Override
+            public int compare(Pair<String, Integer> o1, Pair<String, Integer> o2) {
+                return -Integer.compare(o1.getValue(), o2.getValue());
+            }
+        });
         List<String> topCities = new ArrayList<>();
-        //Copiar a priority queue para uma lista
-        List<Pair<String, Integer>> citiesByNumFriendsCopy = new ArrayList<>(citiesByNumFriends);
-        for (int i = citiesByNumFriends.size() - 1; i > citiesByNumFriends.size() - 1 - n; i--) {
-            topCities.add(citiesByNumFriendsCopy.get(i).getKey());
-        }
+        citiesByNumFriends.subList(0, n).forEach(p -> topCities.add(p.getKey()));
         return topCities;
     }
 
