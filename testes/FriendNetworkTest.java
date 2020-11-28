@@ -63,9 +63,9 @@ class FriendNetworkTest {
     void friendsInCommon()
     {
         Set<User> expected = Main.friendNetwork.friendsInCommon(Main.friendNetwork.usersByPopularity(),3);
-        Set<User> atual = new HashSet<>();
-        atual.add(Main.friendNetwork.getUser("u9"));
+        Set<User> actual = new HashSet<>();
+        actual.add(Main.friendNetwork.getUser("u9"));
 
-        assertEquals(atual,expected);
+        assertEquals(actual,expected);
     }
 }
