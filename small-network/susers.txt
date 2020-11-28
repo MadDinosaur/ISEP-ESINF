@@ -22,5 +22,5 @@ u28,29,caracas
 u29,13,santiago
 u30,34,santiago
 u31,52,buenosaires
-ou32,55,brasilia
+u32,55,brasilia
 u33,48,brasilia
