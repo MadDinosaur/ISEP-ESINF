@@ -14,4 +14,15 @@ class CityTest {
 
         assertEquals(2236888.7384291743,expected);
     }
+
+    @org.junit.jupiter.api.Test
+    void distanceFromNull()
+    {
+        City firstCity = new City("argentina","americasul","41.67","buenosaires","0","0");
+        City secondCity = new City("bolivia","americasul","9.70","lapaz","0","0");
+
+        Double expected = firstCity.distanceFrom(secondCity);
+
+        assertEquals(0,expected);
+    }
 }

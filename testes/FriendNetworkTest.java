@@ -60,11 +60,53 @@ class FriendNetworkTest {
     }
 
     @Test
-    void friendsInCommon()
+    void friendsInCommonSize1()
+    {
+        Set<User> expected = Main.friendNetwork.friendsInCommon(Main.friendNetwork.usersByPopularity(),1);
+        Set<User> actual = new HashSet<>();
+        actual.add(Main.friendNetwork.getUser("u19"));
+        actual.add(Main.friendNetwork.getUser("u24"));
+        actual.add(Main.friendNetwork.getUser("u15"));
+        actual.add(Main.friendNetwork.getUser("u16"));
+        actual.add(Main.friendNetwork.getUser("u30"));
+        actual.add(Main.friendNetwork.getUser("u31"));
+        actual.add(Main.friendNetwork.getUser("u32"));
+        actual.add(Main.friendNetwork.getUser("u23"));
+        actual.add(Main.friendNetwork.getUser("u3"));
+        actual.add(Main.friendNetwork.getUser("u21"));
+        actual.add(Main.friendNetwork.getUser("u9"));
+
+        assertEquals(actual,expected);
+    }
+
+    @Test
+    void friendsInCommonSize2()
+    {
+        Set<User> expected = Main.friendNetwork.friendsInCommon(Main.friendNetwork.usersByPopularity(),2);
+        Set<User> actual = new HashSet<>();
+        actual.add(Main.friendNetwork.getUser("u32"));
+        actual.add(Main.friendNetwork.getUser("u3"));
+        actual.add(Main.friendNetwork.getUser("u9"));
+
+        assertEquals(actual,expected);
+    }
+
+    @Test
+    void friendsInCommonSize3()
     {
         Set<User> expected = Main.friendNetwork.friendsInCommon(Main.friendNetwork.usersByPopularity(),3);
         Set<User> actual = new HashSet<>();
         actual.add(Main.friendNetwork.getUser("u9"));
+
+        assertEquals(actual,expected);
+    }
+    
+    //Este teste assemelha-se a um teste para testar o valor null, isto porque não faz sentido inserir o size 0, então decidimos inserir um size tão grande de maneira a receber uma lista vazia, para testar a possibilidade de ela dar vazia.
+    @Test
+    void friendsInCommonSizeNull()
+    {
+        Set<User> expected = Main.friendNetwork.friendsInCommon(Main.friendNetwork.usersByPopularity(),5);
+        Set<User> actual = new HashSet<>();
 
         assertEquals(actual,expected);
     }
