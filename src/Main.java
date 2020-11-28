@@ -37,71 +37,72 @@ public class Main {
         System.out.println("5-Caminho terrestre mais curto entre utilizadores que decidem viajar pelas cidades onde possuem mais amigos.");
         System.out.println("0-Sair");
         int op = 99;
-
         while (op != 0) {
-            op = sc.nextInt();
-            switch (op) {
-                case 1: {
-                    System.out.println("Insira o numero de utilizadores populares que pretende saber os amigos em comum: ");
-                    int numero = sc.nextInt();
-                    printMostPopularCommonFriends(numero);
-                    System.out.println("Printe o comando que necessita realizar a seguir: ");
-                    break;
-                }
-                case 2: {
-                    printMinimumNumberOfConnections();
-                    System.out.println("Printe o comando que necessita realizar a seguir: ");
-                    break;
-                }
-                case 3: {
-                    sc.nextLine();
-                    System.out.println("Insira o utilizador que pretende analisar: ");
-                    String utilizador = sc.nextLine();
-                    System.out.println("Insira a quantas fronteiras pretende aceder: ");
-                    int fronteiras = sc.nextInt();
-                    printNearestFriends(fronteiras, utilizador);
-                    System.out.println("Printe o comando que necessita realizar a seguir: ");
-                    break;
+            try {
+                op = sc.nextInt();
+                switch (op) {
+                    case 1: {
+                        System.out.println("Insira o numero de utilizadores populares que pretende saber os amigos em comum: ");
+                        int numero = sc.nextInt();
+                        printMostPopularCommonFriends(numero);
+                        System.out.println("Printe o comando que necessita realizar a seguir: ");
+                        break;
+                    }
+                    case 2: {
+                        printMinimumNumberOfConnections();
+                        System.out.println("Printe o comando que necessita realizar a seguir: ");
+                        break;
+                    }
+                    case 3: {
+                        sc.nextLine();
+                        System.out.println("Insira o utilizador que pretende analisar: ");
+                        String utilizador = sc.nextLine();
+                        System.out.println("Insira a quantas fronteiras pretende aceder: ");
+                        int fronteiras = sc.nextInt();
+                        printNearestFriends(fronteiras, utilizador);
+                        System.out.println("Printe o comando que necessita realizar a seguir: ");
+                        break;
+                    }
+                    case 4: {
+                        sc.nextLine();
+                        System.out.println("Insira o numero de cidades que pretende conhecer a maior centralidade: ");
+                        int cidades = sc.nextInt();
+                        System.out.println("Insira a percentagem de utilizadores: ");
+                        float percentagem = sc.nextFloat();
+                        printCitiesGreaterCentrality(cidades, percentagem);
+                        System.out.println("Printe o comando que necessita realizar a seguir: ");
+                        break;
+                    }
+                    case 5:
+                        sc.nextLine();
+                        System.out.println("Insira o nome do primeiro utilizador:");
+                        String user1 = sc.nextLine();
+                        System.out.println("Insira o nome do segundo utilizador:");
+                        String user2 = sc.nextLine();
+                        System.out.println("Insira o número de cidades intermédias:");
+                        int n = sc.nextInt();
+                        printShortestPathAcrossCitiesWithMostFriends(user1, user2, n);
+                        System.out.println("Printe o comando que necessita realizar a seguir: ");
+                        break;
+                    case 0: {
+                        System.out.println("Espero que tenha gostado. Volte sempre! :D");
+                        break;
+                    }
+                    default: {
+                        System.out.println("Opção Inválida");
+                        System.out.println("1-Os amigos comuns entre os n utilizadores mais populares da rede.");
+                        System.out.println("2-Grafo é conectado? Número mínimo de ligações dos users mais distantes caso se confirme!");
+                        System.out.println("3-Amigos entre fronteiras.");
+                        System.out.println("4-Centralidade relativa das cidades onde habitam %p de users.");
+                        System.out.println("5-Caminho terrestre mais curto entre utilizadores que decidem viajar pelas cidades onde possuem mais amigos.");
+                        System.out.println("0-Sair");
+                    }
                 }
 
-                case 4: {
-                    sc.nextLine();
-                    System.out.println("Insira o numero de cidades que pretende conhecer a maior centralidade: ");
-                    int cidades = sc.nextInt();
-                    System.out.println("Insira a percentagem de utilizadores: ");
-                    float percentagem = sc.nextFloat();
-                    printCitiesGreaterCentrality(cidades, percentagem);
-                    System.out.println("Printe o comando que necessita realizar a seguir: ");
-                    break;
-                }
-                case 5:
-                    sc.nextLine();
-                    System.out.println("Insira o nome do primeiro utilizador:");
-                    String user1 = sc.nextLine();
-                    System.out.println("Insira o nome do segundo utilizador:");
-                    String user2 = sc.nextLine();
-                    System.out.println("Insira o número de cidades intermédias:");
-                    int n = sc.nextInt();
-                    printShortestPathAcrossCitiesWithMostFriends(user1, user2, n);
-                    System.out.println("Printe o comando que necessita realizar a seguir: ");
-                    break;
-
-                case 0: {
-                    System.out.println("Espero que tenha gostado. Volte sempre! :D");
-                    break;
-                }
-
-                default: {
-                    System.out.println("Opção Inválida");
-                    System.out.println("1-Os amigos comuns entre os n utilizadores mais populares da rede.");
-                    System.out.println("2-Grafo é conectado? Número mínimo de ligações dos users mais distantes caso se confirme!");
-                    System.out.println("3-Amigos entre fronteiras.");
-                    System.out.println("4-Centralidade relativa das cidades onde habitam %p de users.");
-                    System.out.println("5-Caminho terrestre mais curto entre utilizadores que decidem viajar pelas cidades onde possuem mais amigos.");
-                    System.out.println("0-Sair");
-                }
+            }catch (NullPointerException | InputMismatchException error){
+                System.out.println("Erro, inseriu valores inválidos!");
+                System.out.println("Printe o comando que necessita realizar a seguir: ");
             }
-
         }
     }
 

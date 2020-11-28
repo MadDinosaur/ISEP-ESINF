@@ -330,19 +330,15 @@ public class Graph<V, E> {
 
         LinkedList<V> qbfs = new LinkedList<>();
         LinkedList<V> qaux = new LinkedList<>();
-
         boolean[] visited = new boolean[numVertices()];
         int[] level = new int[numVertices()];
-
         qaux.add(vert);
-
         int vKey = vertices.get(vert);
         visited[vKey] = true;
         level[vKey] = 0;
 
         while (!qaux.isEmpty()) {
             vert = qaux.remove();
-
             for (V vAdj : getAdjacentVertices(vert)) {
                 vKey = vertices.get(vAdj);
                 if (!visited[vKey]) {
