@@ -472,11 +472,18 @@ public class Graph<V, E> {
     }
 
     public Pair<List<V>, Double> getPathAcrossAllVertices(List<V> vertexList) {
+        V vOrig = vertexList.remove(0);
+        V vDest = vertexList.remove(vertexList.size() - 1);
+        //Remover cidades duplicadas
         vertexList = vertexList.stream()
                 .distinct()
                 .collect(Collectors.toList());
-        V vOrig = vertexList.get(0);
-        V vDest = vertexList.get(vertexList.size() - 1);
+        vertexList.remove(vOrig);
+        vertexList.remove(vDest);
+        //Adicionar os vértices de origem e destino novamente na lista
+        vertexList.add(0, vOrig);
+        vertexList.add(vDest);
+
         List<V> shortestPath = new ArrayList<>();
         for (List<V> path : allPaths(vOrig, vDest)) {
             if (path.containsAll(vertexList) && (shortestPath.isEmpty() || pathLength(path) < pathLength(shortestPath))) {
