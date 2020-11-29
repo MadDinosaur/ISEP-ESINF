@@ -140,8 +140,8 @@ public class FriendNetwork extends Graph<User, String> {
         vDest = getUser(vDest.getName());
         boolean inserted = super.insertEdge(vOrig, vDest, edge);
         if (inserted) {
-            this.getVertex(vOrig).addFriend();
-            this.getVertex(vDest).addFriend();
+            vOrig.addFriend();
+            vDest.addFriend();
         }
         return inserted;
     }

@@ -60,12 +60,6 @@ public class Graph<V, E> {
         return vertices.keySet();
     }
 
-    //Returns a vertice, gets a reference as parameter
-    public V getVertex(V v_copy) {
-        int origIndex = vertices.get(v_copy);
-        return verticesLookup.get(origIndex);
-    }
-
     // Returns the number of edges of the graph
     public int numEdges() {
         return edges.size();
@@ -73,7 +67,7 @@ public class Graph<V, E> {
 
     // Returns the information of all the edges of the graph as an iterable collection
     public Set<E> edges() {
-        return (HashSet) edges.keySet();
+        return edges.keySet();
     }
 
     /* Returns the edge from vorig to vdest, or null if vertices are not adjacent
@@ -90,26 +84,6 @@ public class Graph<V, E> {
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
-    }
-
-    /* Returns the vertices of edge e as an array of length two
-     * If the graph is directed, the first vertex is the origin, and
-     * the second is the destination.  If the graph is undirected, the
-     * order is arbitrary.
-     * @param e
-     * @return array of two vertices or null if edge doesn't exist
-     */
-    public V[] endVertices(E edge) {
-        Pair<Integer, Integer> coordenates = edges.get(edge);
-        V vOrig = verticesLookup.get(coordenates.getKey());
-        V vDest = verticesLookup.get(coordenates.getValue());
-
-        //Adicionar a array
-        List endVertices = new ArrayList();
-        endVertices.add(vOrig);
-        endVertices.add(vDest);
-
-        return (V[]) endVertices.toArray();
     }
 
     /* Returns the vertex that is opposite vertex v on edge e.
@@ -146,7 +120,11 @@ public class Graph<V, E> {
      */
     public Iterable<E> outgoingEdges(V vert) {
         int vertIndex = vertices.get(vert);
-        return edgesLookup.get(vertIndex);
+
+        List<E> outEdges = (List<E>) edgesLookup.get(vertIndex).clone();
+        outEdges.removeAll(Collections.singleton(null));
+
+        return outEdges;
     }
 
     /* Inserts a new vertex with some specific comparable type
@@ -407,47 +385,6 @@ public class Graph<V, E> {
                     edgeWeight = 1;
                 }
                 double newDist = minDistance + 1;
-                if (distance[adjIndex] == -1 || newDist < distance[adjIndex]) {
-                    distance[adjIndex] = newDist;
-                    pq.add(new Pair<>(adjIndex, newDist));
-                }
-            }
-            if (vIndex == vDest) return distance[vIndex];
-
-        }
-        return -1;
-    }
-
-    public double shortestDistance(V vertOrig, V vertDest, boolean isWeighted) {
-
-        if (!validVertex(vertOrig) || (!validVertex(vertDest))) {
-            return 0;
-        }
-
-        int vOrig = vertices.get(vertOrig);
-        int vDest = vertices.get(vertDest);
-
-        boolean[] visitedVertices = new boolean[numVertices()];
-        boolean[] visitedEdges = new boolean[numEdges()];
-        double[] distance = new double[numVertices()];
-        Arrays.fill(distance, -1);
-        distance[vOrig] = 0;
-        PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue<>(Comparator.comparing(Pair::getValue));
-        pq.add(new Pair<>(vOrig, 0.0));
-        while (pq.size() != 0) {
-            Pair<Integer, Double> p = pq.poll();
-            int vIndex = p.getKey();
-            double minDistance = p.getValue();
-            visitedVertices[vIndex] = true;
-            for (int adjIndex = 0; adjIndex < adj.get(vIndex).size(); adjIndex++) {
-                if (adj.get(vIndex).get(adjIndex) == 0 || visitedVertices[adjIndex]) continue;
-                double edgeWeight;
-                if (isWeighted) {
-                    edgeWeight = (Double) edgesLookup.get(vIndex).get(adjIndex);
-                } else {
-                    edgeWeight = 1;
-                }
-                double newDist = minDistance + edgeWeight;
                 if (distance[adjIndex] == -1 || newDist < distance[adjIndex]) {
                     distance[adjIndex] = newDist;
                     pq.add(new Pair<>(adjIndex, newDist));

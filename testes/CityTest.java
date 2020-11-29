@@ -12,7 +12,7 @@ class CityTest {
 
         Double expected = firstCity.distanceFrom(secondCity);
 
-        assertEquals(2236888.7384291743,expected);
+        assertEquals(2236.8887384291743, expected);
     }
 
     @org.junit.jupiter.api.Test
