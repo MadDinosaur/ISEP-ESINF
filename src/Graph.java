@@ -380,8 +380,13 @@ public class Graph<V, E> {
     }
 
     public Pair<List<V>, Double> getPathAcrossAllVertices(List<V> vertexList) {
+        if (vertexList.size() < 2) return new Pair<List<V>, Double>(new ArrayList<>(), 0.0);
+
         V vOrig = vertexList.remove(0);
         V vDest = vertexList.remove(vertexList.size() - 1);
+
+        if (vOrig.equals(vDest)) return new Pair<List<V>, Double>(new ArrayList<>(), 0.0);
+
         //Remover cidades duplicadas
         vertexList = vertexList.stream()
                 .distinct()

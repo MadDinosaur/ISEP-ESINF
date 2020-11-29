@@ -30,27 +30,30 @@ public class Main {
         readFile(USER_FILE, 1);
         readFile(RELATIONSHIP_FILE, 2);
 
-        System.out.println("1-Os amigos comuns entre os n utilizadores mais populares da rede.");
-        System.out.println("2-Grafo é conectado? Número mínimo de ligações dos users mais distantes caso se confirme!");
-        System.out.println("3-Amigos entre fronteiras.");
-        System.out.println("4-Centralidade relativa das cidades onde habitam %p de users.");
-        System.out.println("5-Caminho terrestre mais curto entre utilizadores que decidem viajar pelas cidades onde possuem mais amigos.");
-        System.out.println("0-Sair");
+
         int op = 99;
         while (op != 0) {
             try {
+                System.out.println("1-Os amigos comuns entre os n utilizadores mais populares da rede.");
+                System.out.println("2-Grafo é conectado? Número mínimo de ligações dos users mais distantes caso se confirme!");
+                System.out.println("3-Amigos entre fronteiras.");
+                System.out.println("4-Centralidade relativa das cidades onde habitam %p de users.");
+                System.out.println("5-Caminho terrestre mais curto entre utilizadores que decidem viajar pelas cidades onde possuem mais amigos.");
+                System.out.println("0-Sair");
                 op = sc.nextInt();
                 switch (op) {
                     case 1: {
                         System.out.println("Insira o numero de utilizadores populares que pretende saber os amigos em comum: ");
                         int numero = sc.nextInt();
                         printMostPopularCommonFriends(numero);
-                        System.out.println("Printe o comando que necessita realizar a seguir: ");
+                        System.out.println("0-Retornar ao menu.");
+                        sc.next();
                         break;
                     }
                     case 2: {
                         printMinimumNumberOfConnections();
-                        System.out.println("Printe o comando que necessita realizar a seguir: ");
+                        System.out.println("0-Retornar ao menu.");
+                        sc.next();
                         break;
                     }
                     case 3: {
@@ -60,7 +63,8 @@ public class Main {
                         System.out.println("Insira a quantas fronteiras pretende aceder: ");
                         int fronteiras = sc.nextInt();
                         printNearestFriends(fronteiras, utilizador);
-                        System.out.println("Printe o comando que necessita realizar a seguir: ");
+                        System.out.println("0-Retornar ao menu.");
+                        sc.next();
                         break;
                     }
                     case 4: {
@@ -70,7 +74,8 @@ public class Main {
                         System.out.println("Insira a percentagem de utilizadores: ");
                         float percentagem = sc.nextFloat();
                         printCitiesGreaterCentrality(cidades, percentagem);
-                        System.out.println("Printe o comando que necessita realizar a seguir: ");
+                        System.out.println("0-Retornar ao menu.");
+                        sc.next();
                         break;
                     }
                     case 5:
@@ -82,10 +87,11 @@ public class Main {
                         System.out.println("Insira o número de cidades intermédias:");
                         int n = sc.nextInt();
                         printShortestPathAcrossCitiesWithMostFriends(user1, user2, n);
-                        System.out.println("Printe o comando que necessita realizar a seguir: ");
+                        System.out.println("0-Retornar ao menu.");
+                        sc.next();
                         break;
                     case 0: {
-                        System.out.println("Espero que tenha gostado. Volte sempre! :D");
+                        System.out.println("Esperamos que tenha gostado. Volte sempre! :D");
                         break;
                     }
                     default: {
@@ -99,9 +105,9 @@ public class Main {
                     }
                 }
 
-            }catch (NullPointerException | InputMismatchException error){
+            } catch (NullPointerException | InputMismatchException error) {
                 System.out.println("Erro, inseriu valores inválidos!");
-                System.out.println("Printe o comando que necessita realizar a seguir: ");
+                System.out.println("Insira novamente a opção: ");
             }
         }
     }
@@ -210,6 +216,8 @@ public class Main {
             System.out.println("A rede de amizades é conectada.");
             System.out.printf("O número mínimo de ligações necessário para nesta rede qualquer utilizador conseguir contactar um qualquer outro utilizador é: %d \n", friendNetwork.longestPath());
             System.out.println("=================================================================================================================================");
+        } else {
+            System.out.println("A rede de amizades não é conectada.");
         }
     }
 

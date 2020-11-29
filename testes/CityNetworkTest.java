@@ -164,24 +164,20 @@ class CityNetworkTest {
     @Test
     void getPathAcrossAllVertices() {
         List<City> vertexList = new ArrayList<>();
-        vertexList.add(CityNetwork.getCity("quito"));
-        vertexList.add(CityNetwork.getCity("assuncao"));
-        vertexList.add(CityNetwork.getCity("paramaribo"));
-        vertexList.add(CityNetwork.getCity("bogota"));
-        vertexList.add(CityNetwork.getCity("lapaz"));
         vertexList.add(CityNetwork.getCity("brasilia"));
+        vertexList.add(CityNetwork.getCity("quito"));
+        vertexList.add(CityNetwork.getCity("paramaribo"));
+        vertexList.add(CityNetwork.getCity("lapaz"));
 
         Pair<List<City>, Double> actual = Main.cityNetwork.getPathAcrossAllVertices(vertexList);
         List<City> expected = new ArrayList<>();
-        expected.add(CityNetwork.getCity("quito"));
-        expected.add(CityNetwork.getCity("bogota"));
-        expected.add(CityNetwork.getCity("caracas"));
-        expected.add(CityNetwork.getCity("georgetwon"));
+        expected.add(CityNetwork.getCity("brasilia"));
         expected.add(CityNetwork.getCity("paramaribo"));
-        expected.add(CityNetwork.getCity("brasilia"));
-        expected.add(CityNetwork.getCity("assuncao"));
+        expected.add(CityNetwork.getCity("georgetwon"));
+        expected.add(CityNetwork.getCity("caracas"));
+        expected.add(CityNetwork.getCity("bogota"));
+        expected.add(CityNetwork.getCity("lima"));
         expected.add(CityNetwork.getCity("lapaz"));
-        expected.add(CityNetwork.getCity("brasilia"));
 
         assertArrayEquals(expected.toArray(), actual.getKey().toArray());
         assertEquals(10770.62, actual.getValue());
