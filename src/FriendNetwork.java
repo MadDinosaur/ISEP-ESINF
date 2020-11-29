@@ -173,4 +173,5 @@ public class FriendNetwork extends Graph<User, String> {
         if (removed) userList.remove(vert.getName());
         return removed;
     }
+
 }

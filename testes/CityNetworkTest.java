@@ -58,39 +58,6 @@ class CityNetworkTest {
         assertEquals(expected, actual);
     }
 
-    //TODO Confirmar valores das distâncias com coordenadas
-    @Test
-    void edges() {
-        Set<Double> expected = new HashSet<>();
-        expected.add(1037951.0260178599);
-        expected.add(2160365.597442246);
-        expected.add(346348.20645409526);
-        expected.add(1028103.4680938737);
-        expected.add(1902063.9490390944);
-        expected.add(2467779.598965711);
-        expected.add(2236888.7384291743);
-        expected.add(330381.1594867405);
-        expected.add(1323925.8491831454);
-        expected.add(2353640.710252978);
-        expected.add(1137301.5364568012);
-        expected.add(3589294.1832363578);
-        expected.add(3165425.5955088856);
-        expected.add(1077171.159246151);
-        expected.add(2280256.99168126);
-        expected.add(2752138.7939006393);
-        expected.add(1462395.4121815956);
-        expected.add(202561.19155364987);
-        expected.add(2339523.615233598);
-        expected.add(1465164.8959404975);
-        expected.add(1880155.7568462044);
-        expected.add(3663813.116663118);
-        expected.add(2535399.5646110806);
-        expected.add(1042653.1170816979);
-        expected.add(730193.861870057);
-        Set<Double> actual = Main.cityNetwork.edges();
-        assertEquals(expected, actual);
-    }
-
     @Test
     void getEdge() {
         double actual = Main.cityNetwork.getEdge(CityNetwork.getCity("buenosaires"), CityNetwork.getCity("lapaz"));
@@ -153,6 +120,7 @@ class CityNetworkTest {
 
         Main.cityNetwork.insertVertex(new City("portugal", "europa", "10", "lisboa", "0", "0"));
         assertFalse(Main.cityNetwork.isConnected());
+        Main.cityNetwork.removeVertex(new City("portugal", "europa", "10", "lisboa", "0", "0"));
     }
 
     @Test
@@ -183,18 +151,6 @@ class CityNetworkTest {
     }
 
     @Test
-    void shortestPath() {
-        List<City> actual = Main.cityNetwork.shortestPath(0, 0, true);
-        assertTrue(actual.isEmpty());
-
-        actual = Main.cityNetwork.shortestPath(0, 1, true);
-        List<City> expected = new ArrayList<>();
-        expected.add(CityNetwork.getCity("buenosaires"));
-        expected.add(CityNetwork.getCity("lapaz"));
-        assertArrayEquals(expected.toArray(), actual.toArray());
-    }
-
-    @Test
     void shortestDistance() {
         double actual = Main.cityNetwork.shortestDistance(0, 0, true);
         double expected = 0;
@@ -215,7 +171,7 @@ class CityNetworkTest {
         vertexList.add(CityNetwork.getCity("lapaz"));
         vertexList.add(CityNetwork.getCity("brasilia"));
 
-        Pair<List<City>, Double> actual = Main.cityNetwork.getPathAcrossAllVertices();
+        Pair<List<City>, Double> actual = Main.cityNetwork.getPathAcrossAllVertices(vertexList);
         List<City> expected = new ArrayList<>();
         expected.add(CityNetwork.getCity("quito"));
         expected.add(CityNetwork.getCity("bogota"));
@@ -232,38 +188,60 @@ class CityNetworkTest {
     }
 
     @Test
-    void getCitiesByBorders() {
-    }
-
-    @Test
     void getCity() {
+        City actual = CityNetwork.getCity("buenosaires");
+        City expected = new City("argentina", "americasul", "41.67", "buenosaires", "-34.6131500", "-58.3772300");
+        assertEquals(expected, actual);
     }
 
     @Test
     void getCountry() {
+        City actual = CityNetwork.getCountry("argentina");
+        City expected = new City("argentina", "americasul", "41.67", "buenosaires", "-34.6131500", "-58.3772300");
+        assertEquals(expected, actual);
     }
 
     @Test
     void getCentralities() {
+        List<City> actual = Main.cityNetwork.getCentralities();
+        List<City> expected = new ArrayList<>();
+        expected.add(CityNetwork.getCity("lapaz"));
+        expected.add(CityNetwork.getCity("assuncao"));
+        expected.add(CityNetwork.getCity("lima"));
+        expected.add(CityNetwork.getCity("georgetwon"));
+        expected.add(CityNetwork.getCity("paramaribo"));
+        expected.add(CityNetwork.getCity("brasilia"));
+        expected.add(CityNetwork.getCity("bogota"));
+        expected.add(CityNetwork.getCity("caiena"));
+        expected.add(CityNetwork.getCity("quito"));
+        expected.add(CityNetwork.getCity("caracas"));
+        expected.add(CityNetwork.getCity("buenosaires"));
+        expected.add(CityNetwork.getCity("santiago"));
+        expected.add(CityNetwork.getCity("montevideu"));
+
+        assertArrayEquals(expected.toArray(), actual.toArray());
     }
 
     @Test
     void getUserPercentage() {
-    }
+        List<City> actual = Main.cityNetwork.getUserPercentage(100, Main.cityNetwork.getCentralities(), 2);
+        assertTrue(actual.isEmpty());
 
-    @Test
-    void insertVertex() {
-    }
+        actual = Main.cityNetwork.getUserPercentage(5, Main.cityNetwork.getCentralities(), 0);
+        assertTrue(actual.isEmpty());
 
-    @Test
-    void removeVertex() {
+        actual = Main.cityNetwork.getUserPercentage(1.3f, Main.cityNetwork.getCentralities(), 3);
+        List<City> expected = new ArrayList<>();
+        expected.add(CityNetwork.getCity("lapaz"));
+        expected.add(CityNetwork.getCity("assuncao"));
+        expected.add(CityNetwork.getCity("georgetwon"));
+        assertArrayEquals(expected.toArray(), actual.toArray());
     }
 
     @Test
     void insertEdge() {
-    }
-
-    @Test
-    void convert() {
+        assertFalse(Main.cityNetwork.insertEdge(null, null));
+        assertFalse(Main.cityNetwork.insertEdge(new City("portugal"), new City("brasilia")));
+        assertTrue(Main.cityNetwork.insertEdge(new City("paraguai"), new City("venezuela")));
     }
 }

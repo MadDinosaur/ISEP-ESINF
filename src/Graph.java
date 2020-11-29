@@ -334,38 +334,9 @@ public class Graph<V, E> {
         return qbfs;
     }
 
-    //Algortimo de Dijkstra que retorna o caminho (vértices a percorrer) mais curto entre 2 vértices em O(n)
-    public List<V> shortestPath(int vOrig, int vDest, boolean isWeighted) {
-        boolean[] visited = new boolean[numVertices()];
-        List<V> previous = new ArrayList<V>(numVertices());
-        double[] distance = new double[numVertices()];
-        distance[vOrig] = 0;
-        PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue();
-        pq.add(new Pair<>(vOrig, 0.0));
-        while (pq.size() != 0) {
-            Pair<Integer, Double> p = pq.poll();
-            int index = p.getKey();
-            double minValue = p.getValue();
-            visited[index] = true;
-            if (distance[index] < minValue) continue;
-            for (int edge : adj.get(index)) {
-                if (visited[edge]) continue;
-                double newDist = distance[index] + (double) (isWeighted ? edgesLookup.get(index).get(edge) : 1);
-                if (newDist < distance[edge]) {
-                    previous.set(edge, verticesLookup.get(index));
-                    distance[edge] = newDist;
-                    pq.add(new Pair<>(edge, newDist));
-                }
-            }
-            if (index == vDest) return previous;
-        }
-        return null;
-    }
-
     //Algortimo de Dijkstra que retorna o nº mínimo de arestas entre 2 vértices em O(n)
     public double shortestDistance(int vOrig, int vDest, boolean isWeighted) {
         boolean[] visitedVertices = new boolean[numVertices()];
-        boolean[] visitedEdges = new boolean[numEdges()];
         double[] distance = new double[numVertices()];
         Arrays.fill(distance, -1);
         distance[vOrig] = 0;
@@ -384,7 +355,7 @@ public class Graph<V, E> {
                 } else {
                     edgeWeight = 1;
                 }
-                double newDist = minDistance + 1;
+                double newDist = minDistance + edgeWeight;
                 if (distance[adjIndex] == -1 || newDist < distance[adjIndex]) {
                     distance[adjIndex] = newDist;
                     pq.add(new Pair<>(adjIndex, newDist));

@@ -120,9 +120,10 @@ public class CityNetwork extends Graph<City, Double> {
     }
 
     public boolean insertEdge(City vOrig, City vDest) {
+        if (vOrig == null || vDest == null) return false;
         vOrig = getCountry(vOrig.getCountry());
         vDest = getCountry(vDest.getCountry());
-
+        if (!validVertex(vOrig) || !validVertex(vDest)) return false;
         Double edge = vOrig.distanceFrom(vDest);
 
         return super.insertEdge(vOrig, vDest, edge);

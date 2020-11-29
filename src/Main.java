@@ -285,7 +285,7 @@ public class Main {
         for (City c : path.getKey()) {
             System.out.printf("%s, ", c.getCity());
         }
-        System.out.printf("\nDistância total: %.2fkm\n", path.getValue() / 1000);
+        System.out.printf("\nDistância total: %.2fkm\n", path.getValue());
     }
 
     public static void menu() {
