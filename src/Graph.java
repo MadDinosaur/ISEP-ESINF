@@ -4,13 +4,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * NOTA: Gráfico não direcionado
+ * Classe que modela um grafo não direcionado, com vértices e arestas.
  *
- * @param <V>
- * @param <E>
+ * @param <V>: Tipo de dados dos vértices.
+ * @param <E>: Tipo de dados nas arestas.
  */
 public class Graph<V, E> {
-
     /**
      * Mapa de vértices com o respetivo índice na matriz de adjacências.
      *
@@ -41,7 +40,11 @@ public class Graph<V, E> {
      * Matriz de adjacências
      */
     private List<List<Integer>> adj;
+    //------------------------------- Construtores ---------------------------------
 
+    /**
+     * Construtor da classe Graph
+     */
     public Graph() {
         adj = new ArrayList<>();
         vertices = new HashMap<>();
@@ -49,33 +52,47 @@ public class Graph<V, E> {
         verticesLookup = new ArrayList<>();
         edgesLookup = new ArrayList<ArrayList<E>>();
     }
+    //------------------------------- Métodos do grafo ---------------------------------
 
-    // Returns the number of vertices of the graph
+    /**
+     * @return número de vértices do grafo.
+     */
     public int numVertices() {
         return vertices.size();
     }
 
-    // Returns all the vertices of the graph as an iterable collection
+    /**
+     * @return conjunto com todos os vértices do grafo.
+     */
     public Set<V> vertices() {
         return vertices.keySet();
     }
 
-    // Returns the number of edges of the graph
+    /**
+     * @return número de arestas do grafo.
+     */
     public int numEdges() {
         return edges.size();
     }
 
-    // Returns the information of all the edges of the graph as an iterable collection
+    /**
+     * @return conjunto com todas as arestas do grafo.
+     */
     public Set<E> edges() {
         return edges.keySet();
     }
 
-    /* Returns the edge from vorig to vdest, or null if vertices are not adjacent
-     * @param vorig
-     * @param vdest
-     * @return the edge or null if vertices are not adjacent or don't exist
+    /**
+     * Método para obter a aresta de @vOrig a @vDest.
+     *
+     * @param vOrig: vértice de origem.
+     * @param vDest: vértice de destino.
+     * @return a aresta entre @vOrig e @vDest ou null se os vértices não forem adjacentes ou não existerem.
      */
     public E getEdge(V vOrig, V vDest) {
+        if (vOrig == null || vDest == null) {
+            return null;
+        }
         int vOrigIndex = vertices.get(vOrig);
         int vDestIndex = vertices.get(vDest);
 
@@ -86,25 +103,32 @@ public class Graph<V, E> {
         }
     }
 
-    /* Returns the vertex that is opposite vertex v on edge e.
-     * @param v
-     * @param e
-     * @return opposite vertex, or null if vertex or edge don't exist
+    /**
+     * Método para obter o vértice oposto ao @vert, pela aresta @edge.
+     *
+     * @param vert: vértice de origem.
+     * @param edge: aresta entre os vértices.
+     * @return vértice oposto, ou null se o vértice ou aresta não existirem.
      */
     public V opposite(V vert, E edge) {
+        if (vert == null || edge == null) {
+            return null;
+        }
         int vertIndex = vertices.get(vert);
         int oppositeIndex = edges.get(edge).getKey() == vertIndex ? edges.get(edge).getValue() : edges.get(edge).getKey();
         return verticesLookup.get(oppositeIndex);
     }
 
     /**
-     * Returns the number of edges leaving vertex v
-     * Since this is an undirected graph, this result is the same as the number of edges entering vertex v (indegree)
+     * Método para obter o número de arestas que saem do vértice @vert.
+     * Sendo este um grafo não direcionado, o resultado é o mesmo que o nº de arestas que entram no vértice @vert (indegree).
      *
      * @param vert
-     * @return number of edges leaving vertex v, -1 if vertex doesn't exist
+     * @return número de arestas do vértice ou -1 se o vértice não existir.
      */
     public int outDegree(V vert) {
+        if (vert == null) return 0;
+
         int vertIndex = vertices.get(vert);
         int sum = 0;
         for (int cell : adj.get(vertIndex)) {
@@ -113,10 +137,12 @@ public class Graph<V, E> {
         return sum;
     }
 
-    /* Returns an iterable collection of edges for which vertex v is the origin
-     * Since this is an undirected graph, this result is the same as the edges for which vertex v is the destination (incomingEdges)
-     * @param v
-     * @return iterable collection of edges, null if vertex doesn't exist
+    /**
+     * Método para obter as arestas que saem do vértice @vert.
+     * Sendo este um grafo não direcionado, o resultado é o mesmo que as arestas que entram no vértice @vert (indegree).
+     *
+     * @param vert
+     * @return lista de arestas do vértice ou null se o vértice não existir.
      */
     public Iterable<E> outgoingEdges(V vert) {
         int vertIndex = vertices.get(vert);
@@ -127,16 +153,36 @@ public class Graph<V, E> {
         return outEdges;
     }
 
-    /* Inserts a new vertex with some specific comparable type
-     * @param element the vertex contents
-     * @return a true if insertion suceeds, false otherwise
+    /**
+     * Retorna os vértices adjacentes ao vértice @v.
+     * Os vértices adjacentes são todos aqueles aos quais @v está ligado por uma aresta.
+     *
+     * @param v: vértice de origem.
+     * @return lista com os vértices adjacentes.
+     */
+    public List<V> getAdjacentVertices(V v) {
+        int index = vertices.get(v);
+        List<V> result = new ArrayList<>();
+        for (int i = 0; i < adj.get(index).size(); i++) {
+            if (adj.get(index).get(i) == 1) {
+                result.add(verticesLookup.get(i));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Insere um vértice no grafo.
+     *
+     * @param newVert: conteúdo do novo vértice.
+     * @return true se a inserção for bem sucedida, false caso contrário.
      */
     public boolean insertVertex(V newVert) {
         if (!vertices.containsKey(newVert)) {
             vertices.put(newVert, verticesLookup.size());
             verticesLookup.add(newVert);
 
-            //Adicionar uma linha e coluna à matriz de adjacências
+            //Adiciona uma linha e coluna à matriz de adjacências
             ArrayList<Integer> emptyLine = new ArrayList<>(Collections.nCopies(adj.size() + 1, 0));
             for (List<Integer> lines : adj) {
                 lines.add(0);
@@ -153,14 +199,13 @@ public class Graph<V, E> {
         return false;
     }
 
-    /* Adds a new edge between vertices u and v, with some
-     * specific comparable type. If vertices u, v don't exist in the graph they
-     * are inserted
-     * @param vorigInf Information of vertex source
-     * @param vdestInf Information of vertex destination
-     * @param eInf edge information
-     * @param eWeight edge weight
-     * @return true if suceeds, or false if an edge already exists between the two verts.
+    /**
+     * Insere uma aresta entre dois vértices.
+     *
+     * @param vOrig: vértice de origem.
+     * @param vDest: vértice de destino.
+     * @param edge:  conteúdo da aresta.
+     * @return true se a inserção for bem sucedida, false caso contrário (se um dos vértices não existir ou se já existir uma aresta entre eles).
      */
     public boolean insertEdge(V vOrig, V vDest, E edge) {
         if (!validVertex(vOrig))
@@ -184,14 +229,17 @@ public class Graph<V, E> {
         return true;
     }
 
-    /* Removes a vertex and all its incident edges from the graph
-     * @param vInf Information of vertex source
+    /**
+     * Elimina um vértice e todas as suas arestas incidentes do grafo.
+     *
+     * @param vert: vértice a remover.
+     * @return true se a remoção for bem sucedida, false caso contrário.
      */
     public boolean removeVertex(V vert) {
         if (!validVertex(vert))
             return false;
 
-        //Remove all edges that point to vert
+        //Remove todas as arestas de @vert
         for (E edge : outgoingEdges(vert)) {
             V vAdj = opposite(vert, edge);
             removeEdge(vAdj, vert);
@@ -201,7 +249,7 @@ public class Graph<V, E> {
         verticesLookup.remove(vertIndex);
         vertices.remove(vert);
 
-        //Clear line and column from adjency matrix
+        //Elimina a linha e coluna da matriz de adjacências correspondente ao vértice
         adj.remove(vert);
         for (List<Integer> line : adj) {
             line.remove(vertIndex);
@@ -210,10 +258,12 @@ public class Graph<V, E> {
         return true;
     }
 
-    /* Removes the edge between two vertices
+    /**
+     * Elimina uma aresta entre dois vértices.
      *
-     * @param vA Information of vertex source
-     * @param vB Information of vertex destination
+     * @param vOrig: vértice de origem.
+     * @param vDest: vértice de destino.
+     * @return true se a remoção for bem sucedida, false caso contrário.
      */
     public boolean removeEdge(V vOrig, V vDest) {
         if (!validVertex(vOrig) || !validVertex(vDest))
@@ -233,17 +283,12 @@ public class Graph<V, E> {
         return true;
     }
 
-    public List<V> getAdjacentVertices(V v) {
-        int index = vertices.get(v);
-        List<V> result = new ArrayList<>();
-        for (int i = 0; i < adj.get(index).size(); i++) {
-            if (adj.get(index).get(i) == 1) {
-                result.add(verticesLookup.get(i));
-            }
-        }
-        return result;
-    }
-
+    /**
+     * Verifica se um vértice existe ou é nulo.
+     *
+     * @param vert: vértice a verificar.
+     * @return true se o vértice for válido, false caso não exista ou seja null.
+     */
     public boolean validVertex(V vert) {
         if (vert == null) return false;
         if (vertices.get(vert) == null) return false;
@@ -251,24 +296,63 @@ public class Graph<V, E> {
         return true;
     }
 
+    /**
+     * Verifica se o grafo é conexo.
+     *
+     * @return true, se o grafo é conexo, false caso contrário.
+     */
     public boolean isConnected() {
         List<V> connectedVertices = breadthFirstSearch(verticesLookup.get(0));
         return connectedVertices.containsAll(vertices());
     }
+    //------------------------------- Métodos de pesquisa ---------------------------------
 
-    public int longestPath() {
-        /*
-         * First BFS to find an endpoint of the longest path and
-         * second BFS from this endpoint to find the actual longest path.
-         */
-        //Gets furthest vertex from initial vertex (index 0)
-        V firstSearch = breadthFirstSearch(verticesLookup.get(0)).getLast();
-        //Gets furthest vertex from the vertex returned above - garantees
-        V secondSearch = breadthFirstSearch(firstSearch).getLast();
+    /**
+     * Algoritmo de Dijkstra que retorna a distância (ou o nº de arestas) entre 2 vértices em O(n).
+     *
+     * @param vOrig:      vértice de origem.
+     * @param vDest:      vértice de destino.
+     * @param isWeighted: true, caso as arestas tenham valores númericos (sejam ponderadas), false caso contrário.
+     * @return a distância ou o número de arestas mínimas entre dois vértices.
+     */
+    public double shortestDistance(int vOrig, int vDest, boolean isWeighted) {
+        boolean[] visitedVertices = new boolean[numVertices()];
+        double[] distance = new double[numVertices()];
+        Arrays.fill(distance, -1);
+        distance[vOrig] = 0;
+        PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue<>(Comparator.comparing(Pair::getValue));
+        pq.add(new Pair<>(vOrig, 0.0));
+        while (pq.size() != 0) {
+            Pair<Integer, Double> p = pq.poll();
+            int vIndex = p.getKey();
+            double minDistance = p.getValue();
+            visitedVertices[vIndex] = true;
+            for (int adjIndex = 0; adjIndex < adj.get(vIndex).size(); adjIndex++) {
+                if (adj.get(vIndex).get(adjIndex) == 0 || visitedVertices[adjIndex]) continue;
+                double edgeWeight;
+                if (isWeighted) {
+                    edgeWeight = (Double) edgesLookup.get(vIndex).get(adjIndex);
+                } else {
+                    edgeWeight = 1;
+                }
+                double newDist = minDistance + edgeWeight;
+                if (distance[adjIndex] == -1 || newDist < distance[adjIndex]) {
+                    distance[adjIndex] = newDist;
+                    pq.add(new Pair<>(adjIndex, newDist));
+                }
+            }
+            if (vIndex == vDest) return distance[vIndex];
 
-        return (int) shortestDistance(vertices.get(firstSearch), vertices.get(secondSearch), false);
+        }
+        return -1;
     }
 
+    /**
+     * Percorre todos os vértices do grafo através círculos concêntricos (ou camadas).
+     *
+     * @param vert: vértice de ínicio.
+     * @return lista com os vértices percorridos, pela ordem em que foram acedidos.
+     */
     private LinkedList<V> breadthFirstSearch(V vert) {
         if (!validVertex(vert)) {
             return null;
@@ -301,6 +385,13 @@ public class Graph<V, E> {
         return qbfs;
     }
 
+    /**
+     * Efetua uma @breadthFirstSearch, até um dado número de camada.
+     *
+     * @param vert: vértice de início.
+     * @param n:    camada de paragem.
+     * @return lista com os vértices percorridos, pela ordem em que foram acedidos.
+     */
     public LinkedList<V> searchByLayers(V vert, int n) {
         if (!validVertex(vert)) {
             return null;
@@ -334,51 +425,59 @@ public class Graph<V, E> {
         return qbfs;
     }
 
-    //Algortimo de Dijkstra que retorna o nº mínimo de arestas entre 2 vértices em O(n)
-    public double shortestDistance(int vOrig, int vDest, boolean isWeighted) {
-        boolean[] visitedVertices = new boolean[numVertices()];
-        double[] distance = new double[numVertices()];
-        Arrays.fill(distance, -1);
-        distance[vOrig] = 0;
-        PriorityQueue<Pair<Integer, Double>> pq = new PriorityQueue<>(Comparator.comparing(Pair::getValue));
-        pq.add(new Pair<>(vOrig, 0.0));
-        while (pq.size() != 0) {
-            Pair<Integer, Double> p = pq.poll();
-            int vIndex = p.getKey();
-            double minDistance = p.getValue();
-            visitedVertices[vIndex] = true;
-            for (int adjIndex = 0; adjIndex < adj.get(vIndex).size(); adjIndex++) {
-                if (adj.get(vIndex).get(adjIndex) == 0 || visitedVertices[adjIndex]) continue;
-                double edgeWeight;
-                if (isWeighted) {
-                    edgeWeight = (Double) edgesLookup.get(vIndex).get(adjIndex);
-                } else {
-                    edgeWeight = 1;
-                }
-                double newDist = minDistance + edgeWeight;
-                if (distance[adjIndex] == -1 || newDist < distance[adjIndex]) {
-                    distance[adjIndex] = newDist;
-                    pq.add(new Pair<>(adjIndex, newDist));
-                }
+    /**
+     * Percorre todos os vértices do grafo em profundidade, de forma recursiva, originando caminhos.
+     *
+     * @param vOrig:    vértice de origem.
+     * @param vDest:    vértice de destino.
+     * @param visited:  lista de vértices visitados.
+     * @param pathList: lista de vértices de um dado caminho.
+     * @param allPaths: lista de todos os caminhos possíveis.
+     */
+    private void depthFirstSearch(V vOrig, V vDest, Set visited, List<V> pathList, List<List<V>> allPaths) {
+        if (vOrig.equals(vDest)) {
+            //Criar cópia da pathList para impedir alterações
+            List<V> pathListCopy = new ArrayList<>(pathList);
+            pathListCopy.add(vOrig);
+            //Adicionar a allPaths
+            allPaths.add(pathListCopy);
+            return;
+        }
+
+        if (!visited.contains(vOrig)) {
+            visited.add(vOrig);
+            pathList.add(vOrig);
+            Iterable<V> neighbours = getAdjacentVertices(vOrig);
+            Iterator<V> i = neighbours.iterator();
+            while (i.hasNext()) {
+                depthFirstSearch(i.next(), vDest, visited, pathList, allPaths);
             }
-            if (vIndex == vDest) return distance[vIndex];
-
+            pathList.remove(vOrig);
+            visited.remove(vOrig);
         }
-        return -1;
+        return;
     }
 
-    private double pathLength(List<V> path) {
-        double length = 0;
-        Iterator<V> i = path.listIterator();
-        V vOrig = i.next();
-        while (i.hasNext()) {
-            V vDest = i.next();
-            length += (Double) getEdge(vOrig, vDest);
-            vOrig = vDest;
-        }
-        return length;
+    /**
+     * Obtém todos os caminhos possíves entre o vértice de origem e de destino.
+     *
+     * @param vOrig: vértice de origem.
+     * @param vDest: vértice de destino.
+     * @return lista de todos os caminhos entre o vértice de origem e de destino.
+     */
+    private List<List<V>> allPaths(V vOrig, V vDest) {
+        List<List<V>> allPaths = new ArrayList<>();
+        depthFirstSearch(vOrig, vDest, new HashSet<>(), new LinkedList<>(), allPaths);
+        return allPaths;
     }
 
+    /**
+     * Obtém o caminho mais curto que passe em todos os vértices de @vertexList, com origem no primeiro índice da lista e destino no último.
+     * Apenas são considerados caminhos em que os vértices origem, destino e intermédios são todos distintos.
+     *
+     * @param vertexList: lista de vértices a percorrer.
+     * @return: Pair, com a key: lista de vértices no caminho mais curto, e com o value: distância total do caminho.
+     */
     public Pair<List<V>, Double> getPathAcrossAllVertices(List<V> vertexList) {
         if (vertexList.size() < 2) return new Pair<List<V>, Double>(new ArrayList<>(), 0.0);
 
@@ -406,33 +505,38 @@ public class Graph<V, E> {
         return new Pair<List<V>, Double>(shortestPath, pathLength(shortestPath));
     }
 
-    private List<List<V>> allPaths(V vOrig, V vDest) {
-        List<List<V>> allPaths = new ArrayList<>();
-        depthFirstSearch(vOrig, vDest, new HashSet<>(), new LinkedList<>(), allPaths);
-        return allPaths;
+    /**
+     * Obtém o caminho mais curto entre os vértices mais afastados do grafo.
+     * O primeiro BFS encontra o vértice limite do caminho mais longo a partir do vértice inicial (índice 0).
+     * O segundo BFS encontra o vértice limite do caminho mais longo a partir da primeira busca para encontrar o verdadeiro caminho mais longo.
+     *
+     * @return o número de arestas do caminho mais comprido do grafo.
+     */
+    public int longestPath() {
+        //firstSearch -> vértice mais distante do vértice inicial
+        V firstSearch = breadthFirstSearch(verticesLookup.get(0)).getLast();
+        //secondSearch -> vértice mais distante do vértice obtido acima
+        V secondSearch = breadthFirstSearch(firstSearch).getLast();
+
+        return (int) shortestDistance(vertices.get(firstSearch), vertices.get(secondSearch), false);
     }
 
-    private void depthFirstSearch(V vOrig, V vDest, Set visited, List<V> pathList, List<List<V>> allPaths) {
-        if (vOrig.equals(vDest)) {
-            //Criar cópia da pathList para impedir alterações
-            List<V> pathListCopy = new ArrayList<>(pathList);
-            pathListCopy.add(vOrig);
-            //Adicionar a allPaths
-            allPaths.add(pathListCopy);
-            return;
+    /**
+     * Calcula a distância de um dado caminho.
+     * Apenas se aplica a grafos com valores ponderados nas arestas.
+     *
+     * @param path: caminho de vértices.
+     * @return distância total de @path.
+     */
+    private double pathLength(List<V> path) {
+        double length = 0;
+        Iterator<V> i = path.listIterator();
+        V vOrig = i.next();
+        while (i.hasNext()) {
+            V vDest = i.next();
+            length += (Double) getEdge(vOrig, vDest);
+            vOrig = vDest;
         }
-
-        if (!visited.contains(vOrig)) {
-            visited.add(vOrig);
-            pathList.add(vOrig);
-            Iterable<V> neighbours = getAdjacentVertices(vOrig);
-            Iterator<V> i = neighbours.iterator();
-            while (i.hasNext()) {
-                depthFirstSearch(i.next(), vDest, visited, pathList, allPaths);
-            }
-            pathList.remove(vOrig);
-            visited.remove(vOrig);
-        }
-        return;
+        return length;
     }
 }

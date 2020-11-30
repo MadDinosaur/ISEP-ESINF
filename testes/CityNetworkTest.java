@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+//TODO reforçar não repetição das cidades
 //TODO Code coverage check
 class CityNetworkTest {
     String USER_FILE = "small-network/susers.txt";
@@ -60,8 +60,13 @@ class CityNetworkTest {
 
     @Test
     void getEdge() {
-        double actual = Main.cityNetwork.getEdge(CityNetwork.getCity("buenosaires"), CityNetwork.getCity("lapaz"));
-        double expected = 2236.8887384291743;
+        Double actual = Main.cityNetwork.getEdge(CityNetwork.getCity("buenosaires"), CityNetwork.getCity("lapaz"));
+        Double expected = 2236.8887384291743;
+        assertEquals(expected, actual);
+
+        //Null check
+        actual = Main.cityNetwork.getEdge(CityNetwork.getCity("barcelona"), CityNetwork.getCity("dublin"));
+        expected = null;
         assertEquals(expected, actual);
     }
 
@@ -70,12 +75,22 @@ class CityNetworkTest {
         City actual = Main.cityNetwork.opposite(CityNetwork.getCity("buenosaires"), 2236.8887384291743);
         City expected = CityNetwork.getCity("lapaz");
         assertEquals(expected, actual);
+
+        //Null check
+        actual = Main.cityNetwork.opposite(CityNetwork.getCity("lisboa"), 0.0);
+        expected = null;
+        assertEquals(expected, actual);
     }
 
     @Test
     void outDegree() {
         int actual = Main.cityNetwork.outDegree(CityNetwork.getCity("buenosaires"));
         int expected = 5;
+        assertEquals(expected, actual);
+
+        //Null check
+        actual = Main.cityNetwork.outDegree(CityNetwork.getCity("lisboa"));
+        expected = 0;
         assertEquals(expected, actual);
     }
 
@@ -165,7 +180,6 @@ class CityNetworkTest {
     void getPathAcrossAllVertices() {
         List<City> vertexList = new ArrayList<>();
         vertexList.add(CityNetwork.getCity("brasilia"));
-        vertexList.add(CityNetwork.getCity("quito"));
         vertexList.add(CityNetwork.getCity("paramaribo"));
         vertexList.add(CityNetwork.getCity("lapaz"));
 
@@ -180,7 +194,7 @@ class CityNetworkTest {
         expected.add(CityNetwork.getCity("lapaz"));
 
         assertArrayEquals(expected.toArray(), actual.getKey().toArray());
-        assertEquals(10770.62, actual.getValue());
+        assertEquals(7909.831272333104, actual.getValue());
     }
 
     @Test

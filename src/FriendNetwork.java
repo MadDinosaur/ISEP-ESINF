@@ -2,14 +2,40 @@ import javafx.util.Pair;
 
 import java.util.*;
 
+/**
+ * Classe que modela uma rede de utilizadores, ligadas por amizades.
+ */
 public class FriendNetwork extends Graph<User, String> {
+    /**
+     * Mapa dos objetos User que compõem o grafo, indexados pelo seu nome.
+     * Permite a pesquisa de utilizadores pelo nome em O(1).
+     */
     private static Map<String, User> userList;
+    //------------------------------- Construtores ---------------------------------
 
+    /**
+     * Construtor da classe FriendNetwork.
+     */
     public FriendNetwork() {
         super();
         userList = new HashMap<>();
     }
+    //------------------------------- Métodos estáticos ---------------------------------
 
+    /**
+     * Método para obter o objeto User correspondente a partir do nome do utilizador.
+     *
+     * @param userName o nome do utilizador.
+     * @return o objeto User correspondente.
+     */
+    public static User getUser(String userName) {
+        return userList.get(userName);
+    }
+    //------------------------------- Métodos de instância ---------------------------------
+
+    /**
+     * @return a lista de utilizadores da rede, ordenados de forma decrescente pelo número de amigos.
+     */
     public List<User> usersByPopularity() {
         Comparator<User> byPopularity = new Comparator<User>() {
             @Override
@@ -26,6 +52,13 @@ public class FriendNetwork extends Graph<User, String> {
         return userList;
     }
 
+    /**
+     * Método para obter os amigos em comum entre dois utilizadores.
+     *
+     * @param vOrig o utilizador de origem.
+     * @param vDest o utilizador de destino.
+     * @return lista de amigos em comum (Users) dos utilizadores @vOrig e @vDest.
+     */
     public Set<User> friendsInCommon(User vOrig, User vDest) {
         Set<User> vOrigFriends = new HashSet<>(this.getAdjacentVertices(vOrig));
 
@@ -36,6 +69,13 @@ public class FriendNetwork extends Graph<User, String> {
         return vOrigFriends;
     }
 
+    /**
+     * Método para obter os amigos em comum de um dado conjunto de utilizadores.
+     *
+     * @param auxList: lista de utilizadores.
+     * @param size:    número de utilizadores a considerar na lista.
+     * @return lista de amigos em comum entre os @size primeiros utilizadores da @auxList.
+     */
     public Set<User> friendsInCommon(List<User> auxList, int size) {
         Set<Set<User>> vFinalFriends = new HashSet<>();
 
@@ -57,6 +97,12 @@ public class FriendNetwork extends Graph<User, String> {
         return intersections(vFinalFriends).iterator().next();
     }
 
+    /**
+     * Método para calcular interseções entre conjuntos de utilizadores.
+     *
+     * @param auxSet conjunto de conjuntos de utilizadores (p.ex. agregação do conjunto de amigos de vários utilizadores).
+     * @return um conjunto de conjuntos com os amigos em comum a todos os utilizadores.
+     */
     public Set<Set<User>> intersections(Set<Set<User>> auxSet) {
         Set<Set<User>> newAuxSet = new HashSet<>();
         Iterator<Set<User>> i = auxSet.iterator();
@@ -81,6 +127,13 @@ public class FriendNetwork extends Graph<User, String> {
         return intersections(newAuxSet);
     }
 
+    /**
+     * Método para obter os amigos de um dado user que habitam num dado conjunto de cidades.
+     *
+     * @param u:        utilizador de origem.
+     * @param cityList: lista das cidades onde se pretendem localizar amigos.
+     * @return Lista de amigos de @u que habitem numa das cidades em @cityList.
+     */
     public List<User> getNearestFriends(User u, List<City> cityList) {
         List<User> friendsList = new ArrayList<>();
 
@@ -93,6 +146,12 @@ public class FriendNetwork extends Graph<User, String> {
         return friendsList;
     }
 
+    /**
+     * Método para obter o lista de amigos de um utilizador, ordenados pela cidade em que habitam (por ordem alfabética).
+     *
+     * @param u: utilizador de origem.
+     * @return lista de amigos ordenada por local de habitação.
+     */
     public List<User> getFriendsByCity(User u) {
         Comparator<User> byCity = new Comparator<User>() {
             @Override
@@ -105,6 +164,13 @@ public class FriendNetwork extends Graph<User, String> {
         return friendList;
     }
 
+    /**
+     * Método para obter uma lista de @n cidades ordenadas pelo nº de amigos de um dado utilizador.
+     *
+     * @param u: utilizador de origem.
+     * @param n: número de cidades a retornar.
+     * @return lista de @n cidades ordenadas, de forma decrescente, pelo nº de amigos de @u.
+     */
     public List<String> getTopCitiesByNumFriends(User u, int n) {
         List<Pair<String, Integer>> citiesByNumFriends = new LinkedList<>();
         String city = "";
@@ -130,10 +196,7 @@ public class FriendNetwork extends Graph<User, String> {
         return topCities;
     }
 
-    public static User getUser(String userName) {
-        return userList.get(userName);
-    }
-
+    //------------------------------- Métodos herdados ---------------------------------
     @Override
     public boolean insertEdge(User vOrig, User vDest, String edge) {
         vOrig = getUser(vOrig.getName());
@@ -173,5 +236,4 @@ public class FriendNetwork extends Graph<User, String> {
         if (removed) userList.remove(vert.getName());
         return removed;
     }
-
 }

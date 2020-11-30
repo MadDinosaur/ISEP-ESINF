@@ -15,10 +15,8 @@ public class Main {
     static final FriendNetwork friendNetwork = new FriendNetwork();
     static final CityNetwork cityNetwork = new CityNetwork();
 
+    //Inicialização do input
     static Scanner sc = new Scanner(System.in);
-
-    public Main() {
-    }
 
     public static void main(String[] args) throws IOException {
 
@@ -112,6 +110,43 @@ public class Main {
         }
     }
 
+    public static void menu() {
+        int ficheiro = 99;
+
+        while (ficheiro == 99) {
+            System.out.println("Qual ficheiro deseja escolher? 1.Big 2.Small");
+            ficheiro = sc.nextInt();
+
+            switch (ficheiro) {
+                case 1: {
+                    USER_FILE = "big-network/busers.txt";
+                    RELATIONSHIP_FILE = "big-network/brelationships.txt";
+                    COUNTRY_FILE = "big-network/bcountries.txt";
+                    BORDERS_FILE = "big-network/bborders.txt";
+                    return;
+                }
+                case 2: {
+                    USER_FILE = "small-network/susers.txt";
+                    RELATIONSHIP_FILE = "small-network/srelationships.txt";
+                    COUNTRY_FILE = "small-network/scountries.txt";
+                    BORDERS_FILE = "small-network/sborders.txt";
+                    return;
+                }
+                default: {
+                    System.out.println("Opção inválida");
+                    ficheiro = 99;
+                }
+            }
+        }
+    }
+
+    /**
+     * Lê um dado ficheiro de texto e processa a informação de acordo com o tipo de ficheiro.
+     *
+     * @param fileName   o nome do ficheiro.
+     * @param identifier o tipo de ficheiro.
+     * @throws IOException
+     */
     public static void readFile(String fileName, int identifier) throws IOException {
         Scanner reader = new Scanner(new File(fileName));
         switch (identifier) {
@@ -131,6 +166,12 @@ public class Main {
         reader.close();
     }
 
+    /**
+     * Lê um ficheiro de texto com a informação acerca dos utilizaores.
+     * Guarda a informação como objetos da classe User e como vértices do grafo FriendNetwork.
+     *
+     * @param reader: Scanner criado no @readFile
+     */
     private static void processUsers(Scanner reader) {
         //Índices do ficheiro de texto
         int name = 0;
@@ -144,6 +185,12 @@ public class Main {
         }
     }
 
+    /**
+     * Lê um ficheiro de texto com a informação acerca das amizades.
+     * Guarda a informação como arestas do grafo FriendNetwork.
+     *
+     * @param reader: Scanner criado no @readFile
+     */
     private static void processRelationships(Scanner reader) {
         //Índices do ficheiro de texto
         int user1 = 0;
@@ -162,6 +209,12 @@ public class Main {
         }
     }
 
+    /**
+     * Lê um ficheiro de texto com a informação acerca dos países e cidades.
+     * Guarda a informação como objetos da classe City e como vértices do grafo CityNetwork.
+     *
+     * @param reader: Scanner criado no @readFile
+     */
     private static void processCountry(Scanner reader) {
         //Índices do ficheiro de texto
         int country = 0;
@@ -178,6 +231,12 @@ public class Main {
         }
     }
 
+    /**
+     * Lê um ficheiro de texto com a informação acerca das fronteiras.
+     * Guarda a informação como objetos da classe City e como vértices do grafo CityNetwork.
+     *
+     * @param reader: Scanner criado no @readFile
+     */
     private static void processBorders(Scanner reader) {
         //Índices do ficheiro de texto
         int country1 = 0;
@@ -196,8 +255,12 @@ public class Main {
         }
     }
 
-    // método para responder ao exercício 2
-
+    /**
+     * Devolve, como output, os amigos comuns entre os @n utilizadores mais populares da rede. A popularidade de um
+     * utilizador é dada pelo seu número de amizades
+     *
+     * @param n: número de utilizadores mais populares a considerar.
+     */
     public static void printMostPopularCommonFriends(int n) {
         List<User> usersByPopularity = friendNetwork.usersByPopularity();
         Set<User> commonFriends = friendNetwork.friendsInCommon(usersByPopularity, n);
@@ -210,6 +273,10 @@ public class Main {
         System.out.println("==========================================");
     }
 
+    /**
+     * Verifica se a rede de amizades é conectada e em caso positivo devolve, como output, o número mínimo de ligações
+     * necessário para nesta rede qualquer utilizador conseguir contactar um qualquer outro utilizador.
+     */
     public static void printMinimumNumberOfConnections() {
         if (friendNetwork.isConnected()) {
             System.out.println("=================================================================================================================================");
@@ -221,6 +288,14 @@ public class Main {
         }
     }
 
+    /**
+     * Devolve, como output, para um utilizador os amigos que se encontrem nas proximidades, isto é, amigos que habitem
+     * em cidades que distam um dado número de fronteiras da cidade desse utilizador. Devolve para cada
+     * cidade os respetivos amigos.
+     *
+     * @param n:        número de fronteiras a considerar.
+     * @param userName: nome do utilizador de partida.
+     */
     public static void printNearestFriends(int n, String userName) {
         User userAux = FriendNetwork.getUser(userName);
 
@@ -258,6 +333,13 @@ public class Main {
         System.out.println("==========================================");
     }
 
+    /**
+     * Devolve, como output, as @n cidades com maior centralidade ou seja, as cidades que em média estão mais próximas de
+     * todas as outras cidades e onde habitem pelo menos @p% dos utilizadores da rede de amizades.
+     *
+     * @param n: número de cidades a considerar.
+     * @param p: percentagem relativa de utilizadores em cada cidade (ex.: 20% -> p = 20).
+     */
     public static void printCitiesGreaterCentrality(int n, float p) {
         List<City> centralityCity = cityNetwork.getCentralities();
 
@@ -276,6 +358,15 @@ public class Main {
         System.out.println("===================");
     }
 
+    /**
+     * Devolve, como output, o caminho terrestre mais curto entre dois utilizadores, passando obrigatoriamente pelas @n
+     * cidade(s) intermédias onde cada utilizador tenha o maior número de amigos.
+     * Considera-se apenas o caminho em que as cidades de origem, intermédias e de destino são distintas.
+     *
+     * @param userName1: nome do utilizador de partida.
+     * @param userName2: nome do utilizador de destino.
+     * @param n:         número de cidades intermédias.
+     */
     public static void printShortestPathAcrossCitiesWithMostFriends(String userName1, String userName2, int n) {
         User user1 = FriendNetwork.getUser(userName1);
         User user2 = FriendNetwork.getUser(userName2);
@@ -295,35 +386,4 @@ public class Main {
         }
         System.out.printf("\nDistância total: %.2fkm\n", path.getValue());
     }
-
-    public static void menu() {
-        int ficheiro = 99;
-
-        while (ficheiro == 99) {
-            System.out.println("Qual ficheiro deseja escolher? 1.Big 2.Small");
-            ficheiro = sc.nextInt();
-
-            switch (ficheiro) {
-                case 1: {
-                    USER_FILE = "big-network/busers.txt";
-                    RELATIONSHIP_FILE = "big-network/brelationships.txt";
-                    COUNTRY_FILE = "big-network/bcountries.txt";
-                    BORDERS_FILE = "big-network/bborders.txt";
-                    return;
-                }
-                case 2: {
-                    USER_FILE = "small-network/susers.txt";
-                    RELATIONSHIP_FILE = "small-network/srelationships.txt";
-                    COUNTRY_FILE = "small-network/scountries.txt";
-                    BORDERS_FILE = "small-network/sborders.txt";
-                    return;
-                }
-                default: {
-                    System.out.println("Opção inválida");
-                    ficheiro = 99;
-                }
-            }
-        }
-    }
-
 }
