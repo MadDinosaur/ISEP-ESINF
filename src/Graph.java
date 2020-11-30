@@ -296,6 +296,9 @@ public class Graph<V, E> {
         return true;
     }
 
+
+    //------------------------------- Métodos de pesquisa ---------------------------------
+
     /**
      * Verifica se o grafo é conexo.
      *
@@ -305,7 +308,6 @@ public class Graph<V, E> {
         List<V> connectedVertices = breadthFirstSearch(verticesLookup.get(0));
         return connectedVertices.containsAll(vertices());
     }
-    //------------------------------- Métodos de pesquisa ---------------------------------
 
     /**
      * Algoritmo de Dijkstra que retorna a distância (ou o nº de arestas) entre 2 vértices em O(n).

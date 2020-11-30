@@ -1,4 +1,3 @@
-import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -8,9 +7,10 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Testes unitários à classe FriendNetwork, assim como aos métodos utilizados da classe-mãe Graph.
+ */
 class FriendNetworkTest {
-    //TODO os testes unitários da classe Graph foram criados conforme necessário
     String USER_FILE = "small-network/susers.txt";
     String RELATIONSHIP_FILE = "small-network/srelationships.txt";
     String COUNTRY_FILE = "small-network/scountries.txt";

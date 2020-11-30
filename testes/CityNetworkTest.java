@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-//TODO reforçar não repetição das cidades
-//TODO Code coverage check
+
+/**
+ * Testes unitários à classe CityNetwork, assim como aos métodos utilizados da classe-mãe Graph.
+ */
 class CityNetworkTest {
     String USER_FILE = "small-network/susers.txt";
     String RELATIONSHIP_FILE = "small-network/srelationships.txt";
