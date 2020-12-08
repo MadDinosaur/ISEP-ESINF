@@ -3,8 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BinaryTree<E extends Comparable<E>> {
-
+public class BinaryTree<E extends Comparable<E>>{
 
     /**
      * Nested static class for a binary search tree node.
@@ -337,5 +336,4 @@ public class BinaryTree<E extends Comparable<E>> {
         toStringRec(root.getLeft(), level + 1, sb);
     }
 
-} //----------- end of BST class -----------
-
+} //----------- end of BinaryTree class -----------
