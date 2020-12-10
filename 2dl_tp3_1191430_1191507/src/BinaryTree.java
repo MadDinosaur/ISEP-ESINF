@@ -1,9 +1,6 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class BinaryTree<E extends Comparable<E>>{
+public class BinaryTree<E> {
 
     /**
      * Nested static class for a binary search tree node.
@@ -58,9 +55,13 @@ public class BinaryTree<E extends Comparable<E>>{
 
     protected Node<E> root = null;     // root of the tree
 
+    private Comparator comparator;
+
     /* Constructs an empty binary search tree. */
-    public BinaryTree() {
+    public BinaryTree(Comparator compare) {
         root = null;
+
+        this.comparator = compare;
     }
 
     /*
@@ -89,8 +90,8 @@ public class BinaryTree<E extends Comparable<E>>{
         if (node == null) {
             return new Node<>(element, null, null);
         }
-        boolean isLesser = element.compareTo(node.element) < 0;
-        boolean isGreater = element.compareTo(node.element) > 0;
+        boolean isLesser = comparator.compare(element,node.element) < 0;
+        boolean isGreater = comparator.compare(element,node.element) > 0;
 
         if (isLesser) {
             node.setLeft(insert(element, node.left));
@@ -114,7 +115,7 @@ public class BinaryTree<E extends Comparable<E>>{
         if (node == null) {
             return null;    //throw new IllegalArgumentException("Element does not exist");
         }
-        if (element.compareTo(node.getElement()) == 0) {
+        if (comparator.compare(element,node.element) == 0) {
             // node is the Node to be removed
             if (node.getLeft() == null && node.getRight() == null) { //node is a leaf (has no childs)
                 return null;
@@ -128,7 +129,7 @@ public class BinaryTree<E extends Comparable<E>>{
             E min = smallestElement(node.getRight());
             node.setElement(min);
             node.setRight(remove(min, node.getRight()));
-        } else if (element.compareTo(node.getElement()) < 0)
+        } else if (comparator.compare(element,node.element) < 0)
             node.setLeft(remove(element, node.getLeft()));
         else
             node.setRight(remove(element, node.getRight()));
@@ -202,9 +203,9 @@ public class BinaryTree<E extends Comparable<E>>{
      */
     protected Node<E> find(Node<E> node, E element) {
         if (node == null) return null;
-        if (node.element.compareTo(element) == 0) {
+        if (comparator.compare(node.element,element) == 0) {
             return node;
-        } else if (node.element.compareTo(element) < 0) {
+        } else if (comparator.compare(node.element,element) < 0) {
             return find(node.left, element);
         } else {
             return find(node.right, element);
@@ -219,7 +220,7 @@ public class BinaryTree<E extends Comparable<E>>{
     public Iterable<E> inOrder() {
         List<E> snapshot = new ArrayList<>();
         if (root != null)
-            inOrderSubtree(root, snapshot);   // fill the snapshot recursively
+            inOrderSubtree(root, snapshot,null);   // fill the snapshot recursively
         return snapshot;
     }
 
@@ -227,15 +228,15 @@ public class BinaryTree<E extends Comparable<E>>{
      * Adds elements of the subtree rooted at Node node to the given
      * snapshot using an in-order traversal
      *
-     * @param node     Node serving as the root of a subtree
+     * @param nodeMax Node serving as the root of a subtree
      * @param snapshot a list to which results are appended
      */
-    private void inOrderSubtree(Node<E> node, List<E> snapshot) {
-        if (node == null)
+    protected void inOrderSubtree(Node<E> nodeMax, List<E> snapshot, Node<E> nodeMin) {
+        if (nodeMax == nodeMin || nodeMax == null)
             return;
-        inOrderSubtree(node.getLeft(), snapshot);
-        snapshot.add(node.getElement());
-        inOrderSubtree(node.getRight(), snapshot);
+        inOrderSubtree(nodeMax.getLeft(), snapshot, nodeMin);
+        snapshot.add(nodeMax.getElement());
+        inOrderSubtree(nodeMax.getRight(), snapshot, nodeMin);
     }
 
     /**
@@ -310,6 +311,8 @@ public class BinaryTree<E extends Comparable<E>>{
         processBstByLevel(node.left, result, level + 1);
         processBstByLevel(node.right, result, level + 1);
     }
+
+
 
 //#########################################################################
 

@@ -1,3 +1,5 @@
+import java.util.Comparator;
+
 public class ChemicalElement implements Comparable<ChemicalElement> {
     private int atomicNumber;
     private String element;
@@ -23,6 +25,35 @@ public class ChemicalElement implements Comparable<ChemicalElement> {
     String electronConfiguration;
     int displayRow;
     int displayColumn;
+
+    static Comparator byAtomicNumber = new Comparator<ChemicalElement>() {
+        @Override
+        public int compare(ChemicalElement o1, ChemicalElement o2) {
+            return Integer.compare(o1.getAtomicNumber(),o2.getAtomicNumber());
+        }
+    };
+
+    static Comparator byElement = new Comparator<ChemicalElement>() {
+        @Override
+        public int compare(ChemicalElement o1, ChemicalElement o2) {
+            return (o1.getElement().compareTo(o2.getElement()));
+        }
+    };
+
+    static Comparator bySymbol = new Comparator<ChemicalElement>() {
+        @Override
+        public int compare(ChemicalElement o1, ChemicalElement o2) {
+            return (o1.getSymbol().compareTo(o2.getSymbol()));
+        }
+    };
+
+    static Comparator byAtomicMass = new Comparator<ChemicalElement>() {
+        @Override
+        public int compare(ChemicalElement o1, ChemicalElement o2) {
+            return Float.compare(o1.getAtomicMass(),o2.getAtomicMass());
+        }
+    };
+
 
     public ChemicalElement(String atomicNumber, String element, String symbol, String atomicWeight, String atomicMass, String period, String group, String phase, String mostStableCrystal, String type, String ionicRadius, String atomicRadius, String electronegativity, String firstIonizationPotential, String density, String meltingPoint, String boilingPoint, String isotopes, String discoverer, String yearOfDiscovery, String specificHeatCapacity, String electronConfiguration, String displayRow, String displayColumn) {
         this.atomicNumber = Integer.parseInt(atomicNumber);
@@ -74,5 +105,21 @@ public class ChemicalElement implements Comparable<ChemicalElement> {
 
     public float getAtomicMass() {
         return atomicMass;
+    }
+
+    public static Comparator getByAtomicNumber() {
+        return byAtomicNumber;
+    }
+
+    public static Comparator getByElement() {
+        return byElement;
+    }
+
+    public static Comparator getBySymbol() {
+        return bySymbol;
+    }
+
+    public static Comparator getByAtomicMass() {
+        return byAtomicMass;
     }
 }
