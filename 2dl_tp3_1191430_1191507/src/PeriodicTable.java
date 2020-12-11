@@ -1,117 +1,87 @@
 import java.util.*;
 
-public class PeriodicTable extends BinaryTree <ChemicalElement> {
+public class PeriodicTable extends BinaryTree<ChemicalElement> {
 
-    Map<String,Integer> phasesMap = new HashMap<>();
+    final static Map<String, Integer> PHASES = new HashMap<>();
 
-    public PeriodicTable(Comparator compare) {
+    public PeriodicTable(Comparator<ChemicalElement> compare) {
         super(compare);
-        phasesMap.put("artificial",0);
-        phasesMap.put("gas",1);
-        phasesMap.put("liq",2);
-        phasesMap.put("solid",3);
+        PHASES.put("artificial", 0);
+        PHASES.put("gas", 1);
+        PHASES.put("liq", 2);
+        PHASES.put("solid", 3);
     }
 
-    public ChemicalElement find (ChemicalElement searched)
-    {
-        Node<ChemicalElement> searchResult = find(root,searched);
-
-        if(searchResult != null)
-        {
-            return searchResult.getElement();
-        }
-
-        else
-            return null;
+    public ChemicalElement find(ChemicalElement searched) {
+        Node<ChemicalElement> searchResult = find(root, searched);
+        return searchResult == null ? null : searchResult.getElement();
     }
 
-    public List<ChemicalElement> searchByInterval(ChemicalElement min, ChemicalElement max)
-    {
-        Node<ChemicalElement> minNode = find(root,min);
-        Node<ChemicalElement> maxNode = find(root,max);
+    public List<ChemicalElement> searchByInterval(ChemicalElement min, ChemicalElement max) {
+        Node<ChemicalElement> minNode = find(root, min);
+        Node<ChemicalElement> maxNode = find(root, max);
 
-        List<ChemicalElement> listAux =  new ArrayList<ChemicalElement>();
+        List<ChemicalElement> listAux = new ArrayList<>();
         listAux.add(minNode.getElement());
 
-        inOrderSubtree(maxNode,listAux,minNode);
+        inOrderSubtree(maxNode, listAux, minNode);
 
         return listAux;
     }
 
-    public void orderByDiscovererAndYear(List<ChemicalElement> listAux)
-    {
-        Comparator<ChemicalElement> comparatorByDiscovererAndYear = new Comparator<ChemicalElement>() {
+    public void orderByDiscovererAndYear(List<ChemicalElement> listAux) {
+        Comparator byDiscovererAndYear = new Comparator<ChemicalElement>() {
             @Override
             public int compare(ChemicalElement o1, ChemicalElement o2) {
-                if(o1.getDiscoverer().equals(o2.getDiscoverer()))
-                {
-                    return -Integer.compare(o1.getYearOfDiscovery(),o2.getYearOfDiscovery());
-                }
-
-                else
-                {
+                if (o1.getDiscoverer().equals(o2.getDiscoverer())) {
+                    return -Integer.compare(o1.getYearOfDiscovery(), o2.getYearOfDiscovery());
+                } else {
                     return o1.getDiscoverer().compareTo(o2.getDiscoverer());
                 }
             }
         };
 
-        Collections.sort(listAux,comparatorByDiscovererAndYear);
-
+        listAux.sort(byDiscovererAndYear);
     }
 
-    public ArrayList<ArrayList<Integer>> groupByTypeAndPhase(List<ChemicalElement> listAux)
-    {
+    public List<List<Integer>> groupByTypeAndPhase(List<ChemicalElement> listAux) {
         Comparator<ChemicalElement> comparatorByTypeAndPhase = new Comparator<ChemicalElement>() {
             @Override
             public int compare(ChemicalElement o1, ChemicalElement o2) {
-                if(o1.getType().equals(o2.getType()))
-                {
+                if (o1.getType().equals(o2.getType())) {
                     return o1.getPhase().compareTo(o2.getPhase());
-                }
-
-                else
-                {
+                } else {
                     return o1.getType().compareTo(o2.getDiscoverer());
                 }
             }
         };
 
-        Collections.sort(listAux,comparatorByTypeAndPhase);
+        listAux.sort(comparatorByTypeAndPhase);
 
-        ArrayList<ArrayList<Integer>> matrix = new ArrayList<>();
+        //Criação da matriz resumo
+        List<List<Integer>> matrix = new ArrayList<>();
+        List<Integer> newLine = new ArrayList<>(Collections.nCopies(PHASES.size(), 0));
 
-        Iterator<ChemicalElement> i = listAux.listIterator();
-
-        ChemicalElement elementAux = i.next();
-
-        String typeAux = elementAux.getType();
-        String phaseAux = elementAux.getPhase();
-
-        int contador = matrix.get(0).get(phasesMap.get(phaseAux));
-        contador +=1;
-        matrix.get(0).set(phasesMap.get(phaseAux),contador);
-
-        int line = 0;
-
-        while(i.hasNext())
-        {
-            ChemicalElement next = i.next();
-
-            while(next.getType().equals(typeAux))
-            {
-                contador = 0;
-
-                while(next.getPhase().equals(phaseAux))
-                {
-                    contador++;
+        //Criação de uma linha de zeros e um prevElement vazio
+        List<Integer> line = new ArrayList<>(newLine);
+        ChemicalElement prevElement = new ChemicalElement();
+        int sum = 0;
+        //Iteração por todos os elementos da lista e adição das somas à matriz
+        for (ChemicalElement element : listAux) {
+            if (element.getType().equals(prevElement.getType())) {
+                if (element.getPhase().equals(prevElement.getPhase())) {
+                    sum++;
+                } else {
+                    line.set(PHASES.get(prevElement.getPhase()), sum);
+                    sum = 1;
                 }
-
-                matrix.get(line).set(phasesMap.get(phaseAux),contador);
-
+            } else {
+                matrix.add(line);
+                Collections.copy(line, newLine);
+                sum = 1;
             }
-            line++;
+            prevElement = element;
         }
-
         return matrix;
     }
 
