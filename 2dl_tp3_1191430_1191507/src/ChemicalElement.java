@@ -8,9 +8,9 @@ public class ChemicalElement implements Comparable<ChemicalElement> {
     private float atomicMass;
     int period;
     int group;
-    String phase;
+    private String phase;
     String mostStableCrystal;
-    String type;
+    private String type;
     float ionicRadius;
     float atomicRadius;
     float electronegativity;
@@ -19,8 +19,8 @@ public class ChemicalElement implements Comparable<ChemicalElement> {
     float meltingPoint;
     float boilingPoint;
     int isotopes;
-    String discoverer;
-    int yearOfDiscovery;
+    private String discoverer;
+    private int yearOfDiscovery;
     float specificHeatCapacity;
     String electronConfiguration;
     int displayRow;
@@ -121,5 +121,21 @@ public class ChemicalElement implements Comparable<ChemicalElement> {
 
     public static Comparator getByAtomicMass() {
         return byAtomicMass;
+    }
+
+    public String getDiscoverer() {
+        return discoverer;
+    }
+
+    public int getYearOfDiscovery() {
+        return yearOfDiscovery;
+    }
+
+    public String getPhase() {
+        return phase;
+    }
+
+    public String getType() {
+        return type;
     }
 }
