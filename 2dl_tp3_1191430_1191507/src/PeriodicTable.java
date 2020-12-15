@@ -18,8 +18,8 @@ public class PeriodicTable extends BinaryTree<ChemicalElement> {
     }
 
     public List<ChemicalElement> searchByInterval(ChemicalElement min, ChemicalElement max) {
-        Node<ChemicalElement> minNode = find(root, min);
-        Node<ChemicalElement> maxNode = find(root, max);
+        Node<ChemicalElement> minNode = findMin(root, min);
+        Node<ChemicalElement> maxNode = findMax(root, max);
 
         List<ChemicalElement> listAux = new ArrayList<>();
         listAux.add(minNode.getElement());
@@ -51,7 +51,7 @@ public class PeriodicTable extends BinaryTree<ChemicalElement> {
                 if (o1.getType().equals(o2.getType())) {
                     return o1.getPhase().compareTo(o2.getPhase());
                 } else {
-                    return o1.getType().compareTo(o2.getDiscoverer());
+                    return o1.getType().compareTo(o2.getType());
                 }
             }
         };
@@ -64,24 +64,26 @@ public class PeriodicTable extends BinaryTree<ChemicalElement> {
 
         //Criação de uma linha de zeros e um prevElement vazio
         List<Integer> line = new ArrayList<>(newLine);
-        ChemicalElement prevElement = new ChemicalElement();
-        int sum = 0;
+        ChemicalElement prevElement = listAux.remove(0);
+        int sum = 1;
         //Iteração por todos os elementos da lista e adição das somas à matriz
         for (ChemicalElement element : listAux) {
             if (element.getType().equals(prevElement.getType())) {
-                if (element.getPhase().equals(prevElement.getPhase())) {
-                    sum++;
-                } else {
+                if (element.getPhase().equals(prevElement.getPhase())) sum++;
+                else {
                     line.set(PHASES.get(prevElement.getPhase()), sum);
                     sum = 1;
                 }
             } else {
-                matrix.add(line);
+                line.set(PHASES.get(prevElement.getPhase()), sum);
+                matrix.add(new ArrayList<>(line));
                 Collections.copy(line, newLine);
                 sum = 1;
             }
             prevElement = element;
         }
+        line.set(PHASES.get(prevElement.getPhase()), sum);
+        matrix.add(new ArrayList<>(line));
         return matrix;
     }
 

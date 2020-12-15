@@ -1,9 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    static String FILE_NAME = "2dl_tp3_1191430_1191507/Periodic Table of Elements.csv";
+    static String FILE_NAME = "Periodic Table of Elements.csv";
 
     //Criação das árvores binárias de pesquisa
     static PeriodicTable atomicNumbers = new PeriodicTable(ChemicalElement.getByAtomicNumber());
@@ -13,6 +15,13 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
         readFile();
+        //Testes
+        searchbyAtomicNumber(2);
+        searchbyElement("Helium");
+        searchbySymbol("He");
+        searchbyAtomicMass(4.0026f);
+
+        searchAtomicMassInterval(20, 65);
     }
 
     public static void readFile() throws FileNotFoundException {
@@ -30,5 +39,43 @@ public class Main {
             atomicMasses.insert(element);
         }
         reader.close();
+    }
+
+    //1. a)
+    public static void searchbyAtomicNumber(int number) {
+        ChemicalElement searchResult = atomicNumbers.find(new ChemicalElement(number));
+        System.out.println(searchResult);
+    }
+
+    public static void searchbyElement(String element) {
+        ChemicalElement searchResult = periodicTable.find(new ChemicalElement(element));
+        System.out.println(searchResult);
+    }
+
+    public static void searchbySymbol(String symbol) {
+        ChemicalElement searchResult = symbols.find(new ChemicalElement(symbol));
+        System.out.println(searchResult);
+    }
+
+    public static void searchbyAtomicMass(float number) {
+        ChemicalElement searchResult = atomicMasses.find(new ChemicalElement(number));
+        System.out.println(searchResult);
+    }
+
+    //1. b)
+    public static void searchAtomicMassInterval(float minAtomicMass, float maxAtomicMass) {
+        List<ChemicalElement> interval = atomicMasses.searchByInterval(new ChemicalElement(minAtomicMass), new ChemicalElement(maxAtomicMass));
+
+        atomicMasses.orderByDiscovererAndYear(interval);
+        System.out.println("| Atomic Number | Element | Symbol | Atomic Mass | Phase | Type | Discoverer | Year of Discovery |");
+        for (ChemicalElement e : interval) {
+            System.out.printf("| %d | %s | %s | %.2f | %s | %s | %s | %d |\n", e.getAtomicNumber(), e.getElement(), e.getSymbol(), e.getAtomicMass(), e.getPhase(), e.getType(), e.getDiscoverer(), e.getYearOfDiscovery());
+        }
+
+        List<List<Integer>> summary = atomicMasses.groupByTypeAndPhase(interval);
+        System.out.println("artificial    gas    liq    solid");
+        for (List<Integer> l : summary) {
+            System.out.println(Arrays.toString(l.toArray()));
+        }
     }
 }

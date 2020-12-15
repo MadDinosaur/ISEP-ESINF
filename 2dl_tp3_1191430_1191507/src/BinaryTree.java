@@ -90,8 +90,8 @@ public class BinaryTree<E> {
         if (node == null) {
             return new Node<>(element, null, null);
         }
-        boolean isLesser = comparator.compare(element,node.element) < 0;
-        boolean isGreater = comparator.compare(element,node.element) > 0;
+        boolean isLesser = comparator.compare(element, node.element) < 0;
+        boolean isGreater = comparator.compare(element, node.element) > 0;
 
         if (isLesser) {
             node.setLeft(insert(element, node.left));
@@ -115,7 +115,7 @@ public class BinaryTree<E> {
         if (node == null) {
             return null;    //throw new IllegalArgumentException("Element does not exist");
         }
-        if (comparator.compare(element,node.element) == 0) {
+        if (comparator.compare(element, node.element) == 0) {
             // node is the Node to be removed
             if (node.getLeft() == null && node.getRight() == null) { //node is a leaf (has no childs)
                 return null;
@@ -129,7 +129,7 @@ public class BinaryTree<E> {
             E min = smallestElement(node.getRight());
             node.setElement(min);
             node.setRight(remove(min, node.getRight()));
-        } else if (comparator.compare(element,node.element) < 0)
+        } else if (comparator.compare(element, node.element) < 0)
             node.setLeft(remove(element, node.getLeft()));
         else
             node.setRight(remove(element, node.getRight()));
@@ -203,15 +203,32 @@ public class BinaryTree<E> {
      */
     protected Node<E> find(Node<E> node, E element) {
         if (node == null) return null;
-        if (comparator.compare(node.element,element) == 0) {
+        if (comparator.compare(node.element, element) == 0) {
             return node;
-        } else if (comparator.compare(node.element,element) < 0) {
+        } else if (comparator.compare(node.element, element) > 0) {
             return find(node.left, element);
         } else {
             return find(node.right, element);
         }
     }
 
+    protected Node<E> findMax(Node<E> node, E element) {
+        if (node == null) return null;
+        if (comparator.compare(node.element, element) == 0) return node;
+        else if (comparator.compare(node.element, element) > 0) {
+            if (findMax(node.left, element) == null) return node;
+            else return null;
+        } else return findMax(node.right, element);
+    }
+
+    protected Node<E> findMin(Node<E> node, E element) {
+        if (node == null) return null;
+        if (comparator.compare(node.element, element) == 0) return node;
+        else if (comparator.compare(node.element, element) > 0) {
+            if (findMin(node.left, element) == null) return node;
+            else return null;
+        } else return findMin(node.right, element);
+    }
 
     /*
      * Returns an iterable collection of elements of the tree, reported in in-order.
@@ -220,7 +237,7 @@ public class BinaryTree<E> {
     public Iterable<E> inOrder() {
         List<E> snapshot = new ArrayList<>();
         if (root != null)
-            inOrderSubtree(root, snapshot,null);   // fill the snapshot recursively
+            inOrderSubtree(root, snapshot, null);   // fill the snapshot recursively
         return snapshot;
     }
 
@@ -228,15 +245,15 @@ public class BinaryTree<E> {
      * Adds elements of the subtree rooted at Node node to the given
      * snapshot using an in-order traversal
      *
-     * @param nodeMax Node serving as the root of a subtree
+     * @param nodeMax  Node serving as the root of a subtree
      * @param snapshot a list to which results are appended
      */
     protected void inOrderSubtree(Node<E> nodeMax, List<E> snapshot, Node<E> nodeMin) {
-        if (nodeMax == nodeMin || nodeMax == null)
+        if (nodeMin == nodeMax || nodeMin == null)
             return;
-        inOrderSubtree(nodeMax.getLeft(), snapshot, nodeMin);
-        snapshot.add(nodeMax.getElement());
-        inOrderSubtree(nodeMax.getRight(), snapshot, nodeMin);
+        inOrderSubtree(nodeMax, snapshot, nodeMin.right);
+        snapshot.add(nodeMin.element);
+        inOrderSubtree(nodeMax, snapshot, nodeMin.left);
     }
 
     /**
@@ -311,7 +328,6 @@ public class BinaryTree<E> {
         processBstByLevel(node.left, result, level + 1);
         processBstByLevel(node.right, result, level + 1);
     }
-
 
 
 //#########################################################################

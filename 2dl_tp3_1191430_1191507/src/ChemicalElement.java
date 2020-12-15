@@ -101,6 +101,86 @@ public class ChemicalElement {
         this.displayColumn = Integer.parseInt(displayColumn);
     }
 
+    public ChemicalElement(int atomicNumber) {
+        this.element = "";
+        this.specificHeatCapacity = 0;
+        this.yearOfDiscovery = 0;
+        this.isotopes = 0;
+        this.boilingPoint = 0;
+        this.meltingPoint = 0;
+        this.density = 0;
+        this.firstIonizationPotential = 0;
+        this.electronegativity = 0;
+        this.atomicRadius = 0;
+        this.ionicRadius = 0;
+        this.atomicMass = 0;
+        this.atomicWeight = 0;
+        this.atomicNumber = atomicNumber;
+        this.discoverer = "";
+        this.displayColumn = -1;
+        this.displayRow = -1;
+        this.electronConfiguration = "";
+        this.group = 0;
+        this.phase = "";
+        this.symbol = "";
+        this.type = "";
+    }
+
+    public ChemicalElement(String element) {
+        if (element.length() <= 3) {
+            this.symbol = element;
+            this.element = "";
+        } else {
+            this.element = element;
+            this.symbol = "";
+        }
+        this.specificHeatCapacity = 0;
+        this.yearOfDiscovery = 0;
+        this.isotopes = 0;
+        this.boilingPoint = 0;
+        this.meltingPoint = 0;
+        this.density = 0;
+        this.firstIonizationPotential = 0;
+        this.electronegativity = 0;
+        this.atomicRadius = 0;
+        this.ionicRadius = 0;
+        this.atomicMass = 0;
+        this.atomicWeight = 0;
+        this.atomicNumber = 0;
+        this.discoverer = "";
+        this.displayColumn = -1;
+        this.displayRow = -1;
+        this.electronConfiguration = "";
+        this.group = 0;
+        this.phase = "";
+        this.type = "";
+    }
+
+    public ChemicalElement(float atomicMass) {
+        this.element = "";
+        this.specificHeatCapacity = 0;
+        this.yearOfDiscovery = 0;
+        this.isotopes = 0;
+        this.boilingPoint = 0;
+        this.meltingPoint = 0;
+        this.density = 0;
+        this.firstIonizationPotential = 0;
+        this.electronegativity = 0;
+        this.atomicRadius = 0;
+        this.ionicRadius = 0;
+        this.atomicMass = atomicMass;
+        this.atomicWeight = 0;
+        this.atomicNumber = 0;
+        this.discoverer = "";
+        this.displayColumn = -1;
+        this.displayRow = -1;
+        this.electronConfiguration = "";
+        this.group = 0;
+        this.phase = "";
+        this.symbol = "";
+        this.type = "";
+    }
+
     public ChemicalElement() {
         this.element = "";
         this.specificHeatCapacity = 0;
@@ -168,7 +248,7 @@ public class ChemicalElement {
         return new Comparator<ChemicalElement>() {
             @Override
             public int compare(ChemicalElement o1, ChemicalElement o2) {
-                return (o1.getSymbol().compareTo(o2.getSymbol()));
+                return (o1.getSymbol()).compareTo(o2.getSymbol());
             }
         };
     }
@@ -196,5 +276,10 @@ public class ChemicalElement {
 
     public String getType() {
         return type;
+    }
+
+    public String toString() {
+        return String.format("|%d|%s|%s|%.2f|%.2f|%d|%d|%s|%s|%s|%.2f|%.2f|%.2f|%.2f|%.2f|%.2f|%.2f|%d|%s|%d|%.2f|%s|",
+                atomicNumber, element, symbol, atomicWeight, atomicMass, period, group, phase, mostStableCrystal, type, ionicRadius, atomicRadius, electronegativity, firstIonizationPotential, density, meltingPoint, boilingPoint, isotopes, discoverer, yearOfDiscovery, specificHeatCapacity, electronConfiguration);
     }
 }
