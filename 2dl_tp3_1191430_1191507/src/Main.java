@@ -22,6 +22,8 @@ public class Main {
         searchbyAtomicMass(4.0026f);
 
         searchAtomicMassInterval(20, 65);
+
+        getElectronConfigurations();
     }
 
     public static void readFile() throws FileNotFoundException {
@@ -77,5 +79,10 @@ public class Main {
         for (List<Integer> l : summary) {
             System.out.println(Arrays.toString(l.toArray()));
         }
+    }
+
+    //2. a)
+    public static void getElectronConfigurations() {
+        periodicTable.getPatterns().forEach((k, v) -> System.out.printf("%d %s\n", v, k));
     }
 }

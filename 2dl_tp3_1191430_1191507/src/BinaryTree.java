@@ -237,7 +237,7 @@ public class BinaryTree<E> {
     public Iterable<E> inOrder() {
         List<E> snapshot = new ArrayList<>();
         if (root != null)
-            inOrderSubtree(root, snapshot, null);   // fill the snapshot recursively
+            inOrderSubtree(null, snapshot, root);   // fill the snapshot recursively
         return snapshot;
     }
 

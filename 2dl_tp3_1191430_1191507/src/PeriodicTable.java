@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PeriodicTable extends BinaryTree<ChemicalElement> {
 
@@ -87,5 +88,30 @@ public class PeriodicTable extends BinaryTree<ChemicalElement> {
         return matrix;
     }
 
+    public Map<String, Integer> getPatterns() {
+        Map<String, Integer> patterns = new HashMap<>();
+        for (ChemicalElement element : inOrder()) {
+            StringBuilder configBuilder = new StringBuilder();
+            for (String config : element.electronConfiguration.split(" ")) {
+                configBuilder.append(" ").append(config);
+                patterns.putIfAbsent(configBuilder.toString().trim(), 0);
+            }
 
+        }
+        patterns.remove("");
+        for (ChemicalElement element : inOrder()) {
+            for (String pattern : patterns.keySet()) {
+                if (element.electronConfiguration.contains(pattern)) {
+                    patterns.put(pattern, patterns.get(pattern) + 1);
+                }
+            }
+        }
+        Map<String, Integer> sortedPatterns =
+                patterns.entrySet().stream()
+                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                        .filter(entry -> entry.getValue() > 1)
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        return sortedPatterns;
+    }
 }
