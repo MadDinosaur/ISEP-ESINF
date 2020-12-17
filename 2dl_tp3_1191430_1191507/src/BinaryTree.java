@@ -329,7 +329,6 @@ public class BinaryTree<E> {
         processBstByLevel(node.right, result, level + 1);
     }
 
-
 //#########################################################################
 
     /**

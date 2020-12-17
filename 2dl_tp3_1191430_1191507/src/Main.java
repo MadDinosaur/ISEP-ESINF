@@ -1,11 +1,9 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
-    static String FILE_NAME = "Periodic Table of Elements.csv";
+    static String FILE_NAME = "2dl_tp3_1191430_1191507/Periodic Table of Elements.csv";
 
     //Criação das árvores binárias de pesquisa
     static PeriodicTable atomicNumbers = new PeriodicTable(ChemicalElement.getByAtomicNumber());
@@ -85,4 +83,25 @@ public class Main {
     public static void getElectronConfigurations() {
         periodicTable.getPatterns().forEach((k, v) -> System.out.printf("%d %s\n", v, k));
     }
+
+
+    //2. b)
+
+
+    //2. c)
+
+    public static void getFurthestElectronConfig()
+    {
+        BinaryTree<Map.Entry<String,Integer>> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
+
+        Map<Integer,List<Map.Entry<String,Integer>>> mapAux = bstElectronConfig.nodesByLevel();
+
+        int maxLvl = Collections.max(mapAux.keySet());
+
+        if(mapAux.get(maxLvl).size() == 2)
+        {
+            
+        }
+    }
+
 }

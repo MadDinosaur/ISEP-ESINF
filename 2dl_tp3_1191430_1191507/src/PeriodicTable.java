@@ -99,13 +99,18 @@ public class PeriodicTable extends BinaryTree<ChemicalElement> {
 
         }
         patterns.remove("");
+
         for (ChemicalElement element : inOrder()) {
-            for (String pattern : patterns.keySet()) {
-                if (element.electronConfiguration.contains(pattern)) {
-                    patterns.put(pattern, patterns.get(pattern) + 1);
+            StringBuilder elementBuilder = new StringBuilder();
+            for (String config : element.electronConfiguration.split(" ")) {
+                elementBuilder.append(" ").append(config);
+
+                if (patterns.containsKey(elementBuilder.toString().trim())) {
+                    patterns.put(elementBuilder.toString().trim(), patterns.get(elementBuilder.toString().trim()) + 1);
                 }
             }
         }
+
         Map<String, Integer> sortedPatterns =
                 patterns.entrySet().stream()
                         .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -114,4 +119,24 @@ public class PeriodicTable extends BinaryTree<ChemicalElement> {
                                 Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         return sortedPatterns;
     }
+
+    public BinaryTree<Map.Entry<String, Integer>> generateElectronConfigTree(Map<String, Integer> mapAux)
+    {
+        Comparator<Map.Entry<String,Integer>> byRepetitions = new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                return -Integer.compare(o1.getValue(),o2.getValue());
+            }
+        };
+
+        BinaryTree<Map.Entry<String,Integer>> bstElectronConfig = new BinaryTree<>(byRepetitions);
+
+        for(Map.Entry<String, Integer> entry : mapAux.entrySet())
+        {
+            bstElectronConfig.insert(entry);
+        }
+
+        return bstElectronConfig;
+    }
+
 }
