@@ -13,6 +13,7 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
         readFile();
+
         //Testes
         searchbyAtomicNumber(2);
         searchbyElement("Helium");
@@ -25,7 +26,7 @@ public class Main {
     }
 
     public static void readFile() throws FileNotFoundException {
-        Scanner reader = new Scanner(new File(FILE_NAME), "utf-8");
+        Scanner reader = new Scanner(new File(FILE_NAME), "ISO-8859-1");
 
         //Descartar linha do cabeçalho
         reader.nextLine();
@@ -43,23 +44,31 @@ public class Main {
 
     //1. a)
     public static void searchbyAtomicNumber(int number) {
+        System.out.println("=======================================================================================================");
         ChemicalElement searchResult = atomicNumbers.find(new ChemicalElement(number));
         System.out.println(searchResult);
+        System.out.println("=======================================================================================================");
     }
 
     public static void searchbyElement(String element) {
+        System.out.println("=======================================================================================================");
         ChemicalElement searchResult = periodicTable.find(new ChemicalElement(element));
         System.out.println(searchResult);
+        System.out.println("=======================================================================================================");
     }
 
     public static void searchbySymbol(String symbol) {
+        System.out.println("=======================================================================================================");
         ChemicalElement searchResult = symbols.find(new ChemicalElement(symbol));
         System.out.println(searchResult);
+        System.out.println("=======================================================================================================");
     }
 
     public static void searchbyAtomicMass(float number) {
+        System.out.println("=======================================================================================================");
         ChemicalElement searchResult = atomicMasses.find(new ChemicalElement(number));
         System.out.println(searchResult);
+        System.out.println("=======================================================================================================");
     }
 
     //1. b)
@@ -67,17 +76,40 @@ public class Main {
         List<ChemicalElement> interval = atomicMasses.searchByInterval(new ChemicalElement(minAtomicMass), new ChemicalElement(maxAtomicMass));
 
         atomicMasses.orderByDiscovererAndYear(interval);
-        System.out.println("| Atomic Number | Element | Symbol | Atomic Mass | Phase | Type | Discoverer | Year of Discovery |");
+        String[] headliner = {"Atomic Number","Element","Symbol" ,"Atomic Mass", "Phase","Type", "Discoverer", "Year of Discovery"};
+        System.out.println("==================================================================================================================================================");
+        System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-10s| %-25s| %-20s| %-20s| %n",headliner[0],headliner[1],headliner[2],headliner[3],headliner[4],headliner[5],headliner[6],headliner[7]);
+        System.out.println("==================================================================================================================================================");
         for (ChemicalElement e : interval) {
-            System.out.printf("| %d | %s | %s | %.2f | %s | %s | %s | %d |\n", e.getAtomicNumber(), e.getElement(), e.getSymbol(), e.getAtomicMass(), e.getPhase(), e.getType(), e.getDiscoverer(), e.getYearOfDiscovery());
-        }
 
-        List<List<Integer>> summary = atomicMasses.groupByTypeAndPhase(interval);
-        System.out.println("artificial    gas    liq    solid");
-        for (List<Integer> l : summary) {
-            System.out.println(Arrays.toString(l.toArray()));
+            System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-10s| %-25s| %-20s| %-20s| %n",e.getAtomicNumber(),e.getElement(),e.getSymbol(),e.getAtomicMass(),e.getPhase(),e.getType(),e.getDiscoverer().trim(),e.getYearOfDiscovery());
+
         }
+        // mudar nome ao gajo! :D - Lembrar
+        System.out.println("================================================================================================================================================== \n");
+
+        System.out.println("=============================================================================");
+        String[] headliner2 = {"Alkali Metal","Alkaline Earth Metal","Halogen","Metal","Metalloid","Noble Gas","Nonmetal","Transition Metal"};
+        int pos = 0;
+        List<List<Integer>> summary = atomicMasses.groupByTypeAndPhase(interval);
+        System.out.printf("%-21s %-13s %-10s %-10s %-10s %-10s%n"," ","artificial","gas","liq","solid","TOTAL  |");
+        System.out.println("=============================================================================");
+
+        for (List<Integer> l : summary) {
+            Integer artificial = l.get(0);
+            Integer gas = l.get(1);
+            Integer liq = l.get(2);
+            Integer solid = l.get(3);
+
+            Integer total = artificial + gas + liq + solid;
+
+            System.out.printf("%-21s %-13s %-10s %-10s %-10s %-7s|%n",headliner2[pos],artificial.toString(),gas.toString(),liq.toString(),solid.toString(),total.toString());
+
+            pos++;
+        }
+        System.out.println("=============================================================================");
     }
+
 
     //2. a)
     public static void getElectronConfigurations() {
@@ -89,7 +121,7 @@ public class Main {
 
 
     //2. c)
-
+/*
     public static void getFurthestElectronConfig()
     {
         BinaryTree<Map.Entry<String,Integer>> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
@@ -103,5 +135,5 @@ public class Main {
             
         }
     }
-
+*/
 }
