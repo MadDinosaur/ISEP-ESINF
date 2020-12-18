@@ -120,23 +120,22 @@ public class PeriodicTable extends BinaryTree<ChemicalElement> {
         return sortedPatterns;
     }
 
-    public BinaryTree<Map.Entry<String, Integer>> generateElectronConfigTree(Map<String, Integer> mapAux)
+    public BinaryTree<String> generateElectronConfigTree(Map<String, Integer> mapAux)
     {
-        Comparator<Map.Entry<String,Integer>> byRepetitions = new Comparator<Map.Entry<String, Integer>>() {
+        /*Comparator<Map.Entry<String,Integer>> byRepetitions = new Comparator<Map.Entry<String, Integer>>() {
             @Override
             public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
                 return -Integer.compare(o1.getValue(),o2.getValue());
             }
-        };
+        };*/
 
-        BinaryTree<Map.Entry<String,Integer>> bstElectronConfig = new BinaryTree<>(byRepetitions);
+        BinaryTree<String> bstElectronConfig = new BinaryTree<>(Comparator.comparing(String::toString));
 
-        for(Map.Entry<String, Integer> entry : mapAux.entrySet())
+        for(String entry : mapAux.keySet())
         {
             bstElectronConfig.insert(entry);
         }
 
         return bstElectronConfig;
     }
-
 }

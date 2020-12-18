@@ -23,6 +23,7 @@ public class Main {
         searchAtomicMassInterval(20, 65);
 
         getElectronConfigurations();
+        getFurthestElectronConfig();
     }
 
     public static void readFile() throws FileNotFoundException {
@@ -85,7 +86,7 @@ public class Main {
             System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-10s| %-25s| %-20s| %-20s| %n",e.getAtomicNumber(),e.getElement(),e.getSymbol(),e.getAtomicMass(),e.getPhase(),e.getType(),e.getDiscoverer().trim(),e.getYearOfDiscovery());
 
         }
-        // mudar nome ao gajo! :D - Lembrar
+
         System.out.println("================================================================================================================================================== \n");
 
         System.out.println("=============================================================================");
@@ -95,7 +96,8 @@ public class Main {
         System.out.printf("%-21s %-13s %-10s %-10s %-10s %-10s%n"," ","artificial","gas","liq","solid","TOTAL  |");
         System.out.println("=============================================================================");
 
-        for (List<Integer> l : summary) {
+        for (List<Integer> l : summary)
+        {
             Integer artificial = l.get(0);
             Integer gas = l.get(1);
             Integer liq = l.get(2);
@@ -116,24 +118,14 @@ public class Main {
         periodicTable.getPatterns().forEach((k, v) -> System.out.printf("%d %s\n", v, k));
     }
 
-
-    //2. b)
-
-
     //2. c)
-/*
+
     public static void getFurthestElectronConfig()
     {
-        BinaryTree<Map.Entry<String,Integer>> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
-
-        Map<Integer,List<Map.Entry<String,Integer>>> mapAux = bstElectronConfig.nodesByLevel();
-
-        int maxLvl = Collections.max(mapAux.keySet());
-
-        if(mapAux.get(maxLvl).size() == 2)
-        {
-            
-        }
+        ArrayList<String> auxList = new ArrayList<>();
+        BinaryTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
+        System.out.printf("A distância entre as duas configurações eletrónicas mais distantes é: %d\n",bstElectronConfig.maxDistance(auxList));
+        System.out.println((Arrays.toString(auxList.toArray())));
     }
-*/
+
 }

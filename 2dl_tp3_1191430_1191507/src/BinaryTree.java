@@ -329,6 +329,31 @@ public class BinaryTree<E> {
         processBstByLevel(node.right, result, level + 1);
     }
 
+    private int subTreeHeight(Node<E> node,ArrayList<E> auxList)
+    {
+        if(node == null)
+        {
+            return 0;
+        }
+
+        int leftHeight = height(node.left);
+        int rightHeight = height(node.right);
+
+        int leftDiameter = subTreeHeight(node.left,auxList);
+        int rightDiameter = subTreeHeight(node.right,auxList);
+        int nodeDiameter = Math.max(leftDiameter,rightDiameter)+1;
+
+        auxList.add(node.element);
+
+        return Math.max(leftHeight+rightHeight+1,nodeDiameter);
+    }
+
+    public int maxDistance(ArrayList<E> auxList)
+    {
+        return subTreeHeight(root,auxList);
+    }
+
+
 //#########################################################################
 
     /**
