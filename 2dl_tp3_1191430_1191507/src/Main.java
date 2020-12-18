@@ -3,7 +3,8 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Main {
-    static String FILE_NAME = "2dl_tp3_1191430_1191507/Periodic Table of Elements.csv";
+    static String FILE_NAME_FABIO = "2dl_tp3_1191430_1191507/Periodic Table of Elements.csv";
+    static String FILE_NAME = "Periodic Table of Elements.csv";
 
     //Criação das árvores binárias de pesquisa
     static PeriodicTable atomicNumbers = new PeriodicTable(ChemicalElement.getByAtomicNumber());
@@ -77,27 +78,26 @@ public class Main {
         List<ChemicalElement> interval = atomicMasses.searchByInterval(new ChemicalElement(minAtomicMass), new ChemicalElement(maxAtomicMass));
 
         atomicMasses.orderByDiscovererAndYear(interval);
-        String[] headliner = {"Atomic Number","Element","Symbol" ,"Atomic Mass", "Phase","Type", "Discoverer", "Year of Discovery"};
+        String[] headliner = {"Atomic Number", "Element", "Symbol", "Atomic Mass", "Phase", "Type", "Discoverer", "Year of Discovery"};
         System.out.println("==================================================================================================================================================");
-        System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-10s| %-25s| %-20s| %-20s| %n",headliner[0],headliner[1],headliner[2],headliner[3],headliner[4],headliner[5],headliner[6],headliner[7]);
+        System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-10s| %-25s| %-20s| %-20s| %n", headliner[0], headliner[1], headliner[2], headliner[3], headliner[4], headliner[5], headliner[6], headliner[7]);
         System.out.println("==================================================================================================================================================");
         for (ChemicalElement e : interval) {
 
-            System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-10s| %-25s| %-20s| %-20s| %n",e.getAtomicNumber(),e.getElement(),e.getSymbol(),e.getAtomicMass(),e.getPhase(),e.getType(),e.getDiscoverer().trim(),e.getYearOfDiscovery());
+            System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-10s| %-25s| %-20s| %-20s| %n", e.getAtomicNumber(), e.getElement(), e.getSymbol(), e.getAtomicMass(), e.getPhase(), e.getType(), e.getDiscoverer().trim(), e.getYearOfDiscovery());
 
         }
 
         System.out.println("================================================================================================================================================== \n");
 
         System.out.println("=============================================================================");
-        String[] headliner2 = {"Alkali Metal","Alkaline Earth Metal","Halogen","Metal","Metalloid","Noble Gas","Nonmetal","Transition Metal"};
+        String[] headliner2 = {"Alkali Metal", "Alkaline Earth Metal", "Halogen", "Metal", "Metalloid", "Noble Gas", "Nonmetal", "Transition Metal"};
         int pos = 0;
         List<List<Integer>> summary = atomicMasses.groupByTypeAndPhase(interval);
-        System.out.printf("%-21s %-13s %-10s %-10s %-10s %-10s%n"," ","artificial","gas","liq","solid","TOTAL  |");
+        System.out.printf("%-21s %-13s %-10s %-10s %-10s %-10s%n", " ", "artificial", "gas", "liq", "solid", "TOTAL  |");
         System.out.println("=============================================================================");
 
-        for (List<Integer> l : summary)
-        {
+        for (List<Integer> l : summary) {
             Integer artificial = l.get(0);
             Integer gas = l.get(1);
             Integer liq = l.get(2);
@@ -105,7 +105,7 @@ public class Main {
 
             Integer total = artificial + gas + liq + solid;
 
-            System.out.printf("%-21s %-13s %-10s %-10s %-10s %-7s|%n",headliner2[pos],artificial.toString(),gas.toString(),liq.toString(),solid.toString(),total.toString());
+            System.out.printf("%-21s %-13s %-10s %-10s %-10s %-7s|%n", headliner2[pos], artificial.toString(), gas.toString(), liq.toString(), solid.toString(), total.toString());
 
             pos++;
         }
@@ -120,12 +120,12 @@ public class Main {
 
     //2. c)
 
-    public static void getFurthestElectronConfig()
-    {
-        ArrayList<String> auxList = new ArrayList<>();
+    public static void getFurthestElectronConfig() {
+        List<String> auxList = new ArrayList<>();
         BinaryTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
-        System.out.printf("A distância entre as duas configurações eletrónicas mais distantes é: %d\n",bstElectronConfig.maxDistance(auxList));
-        System.out.println((Arrays.toString(auxList.toArray())));
+        System.out.printf("A distância entre as duas configurações eletrónicas mais distantes é: %d.\n" +
+                        "Possível combinação de configurações eletrónicas mais distantes: %s.\n",
+                bstElectronConfig.maxDistance(auxList), Arrays.toString(auxList.toArray()));
     }
 
 }

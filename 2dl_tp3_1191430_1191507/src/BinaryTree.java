@@ -329,28 +329,42 @@ public class BinaryTree<E> {
         processBstByLevel(node.right, result, level + 1);
     }
 
-    private int subTreeHeight(Node<E> node,ArrayList<E> auxList)
-    {
-        if(node == null)
-        {
+    private int subTreeHeight(Node<E> node, List<Map.Entry<E, Integer>> auxList) {
+        if (node == null) {
             return 0;
+        } else if (node.left == null && node.right == null) {
+            auxList.add(new AbstractMap.SimpleEntry<>(node.element, 0));
         }
 
         int leftHeight = height(node.left);
         int rightHeight = height(node.right);
 
-        int leftDiameter = subTreeHeight(node.left,auxList);
-        int rightDiameter = subTreeHeight(node.right,auxList);
-        int nodeDiameter = Math.max(leftDiameter,rightDiameter)+1;
+        int leftDiameter = subTreeHeight(node.left, auxList);
+        int rightDiameter = subTreeHeight(node.right, auxList);
+        int nodeDiameter = Math.max(leftDiameter, rightDiameter) + 1;
 
-        auxList.add(node.element);
+        int maxDistance = Math.max(leftHeight + rightHeight + 1, nodeDiameter);
+        auxList.get(auxList.size() - 1).setValue(maxDistance);
 
-        return Math.max(leftHeight+rightHeight+1,nodeDiameter);
+        return maxDistance;
     }
 
-    public int maxDistance(ArrayList<E> auxList)
-    {
-        return subTreeHeight(root,auxList);
+    public int maxDistance(List<E> endNodes) {
+        List<Map.Entry<E, Integer>> potentialEndNodes = new ArrayList<>();
+        int diameter = subTreeHeight(root, potentialEndNodes);
+
+        if (potentialEndNodes.isEmpty()) return diameter;
+
+        Map.Entry<E, Integer> min = potentialEndNodes.get(0);
+        Map.Entry<E, Integer> max = potentialEndNodes.get(0);
+        potentialEndNodes.remove(0);
+        for (Map.Entry<E, Integer> node : potentialEndNodes) {
+            if (node.getValue() < min.getValue()) min = node;
+            else if (node.getValue() > max.getValue()) max = node;
+        }
+        endNodes.add(min.getKey());
+        endNodes.add(max.getKey());
+        return diameter;
     }
 
 
