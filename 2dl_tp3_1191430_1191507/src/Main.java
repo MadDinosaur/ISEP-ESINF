@@ -127,5 +127,4 @@ public class Main {
                         "Possível combinação de configurações eletrónicas mais distantes: %s.\n",
                 bstElectronConfig.maxDistance(auxList), Arrays.toString(auxList.toArray()));
     }
-
 }
