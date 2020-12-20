@@ -16,11 +16,11 @@ public class Main {
         readFile();
 
         //Testes
-        searchbyAtomicNumber(2);
+        searchbyAtomicNumber(118);
         searchbyElement("Helium");
         searchbySymbol("He");
         searchbyAtomicMass(4.0026f);
-        searchAtomicMassInterval(20, 118);
+        searchAtomicMassInterval(109, 118);
         getElectronConfigurations();
         getFurthestElectronConfig();
     }
@@ -44,31 +44,27 @@ public class Main {
 
     //1. a)
     public static void searchbyAtomicNumber(int number) {
-        System.out.println("=======================================================================================================");
         ChemicalElement searchResult = atomicNumbers.find(new ChemicalElement(number));
         System.out.println(searchResult);
-        System.out.println("=======================================================================================================");
+        System.out.println();
     }
 
     public static void searchbyElement(String element) {
-        System.out.println("=======================================================================================================");
         ChemicalElement searchResult = periodicTable.find(new ChemicalElement(element));
         System.out.println(searchResult);
-        System.out.println("=======================================================================================================");
+        System.out.println();
     }
 
     public static void searchbySymbol(String symbol) {
-        System.out.println("=======================================================================================================");
         ChemicalElement searchResult = symbols.find(new ChemicalElement(symbol));
         System.out.println(searchResult);
-        System.out.println("=======================================================================================================");
+        System.out.println();
     }
 
     public static void searchbyAtomicMass(float number) {
-        System.out.println("=======================================================================================================");
         ChemicalElement searchResult = atomicMasses.find(new ChemicalElement(number));
         System.out.println(searchResult);
-        System.out.println("=======================================================================================================");
+        System.out.println();
     }
 
     //1. b)
@@ -140,7 +136,8 @@ public class Main {
 
     //2. c)
 
-    public static void getFurthestElectronConfig() {
+    public static void getFurthestElectronConfig()
+    {
         List<String> auxList = new ArrayList<>();
         BinaryTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
         System.out.printf("A distância entre as duas configurações eletrónicas mais distantes é: %d.\n" +

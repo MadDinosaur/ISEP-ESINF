@@ -127,9 +127,14 @@ public class PeriodicTable extends BalancedTree<ChemicalElement> {
 
         BinaryTree<String> bstElectronConfig = new BinaryTree<>(Comparator.comparing(String::toString));
 
-        for(String entry : mapAux.keySet())
+        for(Map.Entry<String,Integer> entry : mapAux.entrySet())
         {
-            bstElectronConfig.insert(entry);
+            if(entry.getValue()<=2)
+            {
+                break;
+            }
+
+            bstElectronConfig.insert(entry.getKey());
         }
 
         return bstElectronConfig;
