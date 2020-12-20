@@ -57,7 +57,7 @@ public class BinaryTree<E> {
 
     protected Node<E> root = null;     // root of the tree
 
-    private Comparator comparator;
+    protected Comparator comparator;
 
     /* Constructs an empty binary search tree. */
     public BinaryTree(Comparator compare) {
@@ -214,23 +214,17 @@ public class BinaryTree<E> {
         }
     }
 
-    protected Node<E> findMax(Node<E> node, E element) {
-        if (node == null) return null;
-        if (comparator.compare(node.element, element) == 0) return node;
-        else if (comparator.compare(node.element, element) > 0) {
-            if (findMax(node.left, element) == null) return node;
-            else return null;
-        } else return findMax(node.right, element);
+    protected void findInterval(Node<E> node,E nodeMin,E nodeMax,List<E> snapshot)
+    {
+        if (node == null)
+            return;
+
+        findInterval(node.left,nodeMin,nodeMax, snapshot);
+        if(comparator.compare(node.element,nodeMin)>=0 && comparator.compare(node.element,nodeMax)<=0)
+            snapshot.add(node.element);
+        findInterval(node.right,nodeMin,nodeMax,snapshot);
     }
 
-    protected Node<E> findMin(Node<E> node, E element) {
-        if (node == null) return null;
-        if (comparator.compare(node.element, element) == 0) return node;
-        else if (comparator.compare(node.element, element) > 0) {
-            if (findMin(node.left, element) == null) return node;
-            else return null;
-        } else return findMin(node.right, element);
-    }
 
     /*
      * Returns an iterable collection of elements of the tree, reported in in-order.
@@ -239,23 +233,25 @@ public class BinaryTree<E> {
     public Iterable<E> inOrder() {
         List<E> snapshot = new ArrayList<>();
         if (root != null)
-            inOrderSubtree(null, snapshot, root);   // fill the snapshot recursively
+            inOrderSubtree(root, snapshot);   // fill the snapshot recursively
         return snapshot;
     }
+
 
     /**
      * Adds elements of the subtree rooted at Node node to the given
      * snapshot using an in-order traversal
      *
-     * @param nodeMax  Node serving as the root of a subtree
+     * @param node  Node serving as the root of a subtree
      * @param snapshot a list to which results are appended
      */
-    protected void inOrderSubtree(Node<E> nodeMax, List<E> snapshot, Node<E> nodeMin) {
-        if (nodeMin == nodeMax || nodeMin == null)
+    protected void inOrderSubtree(Node<E> node, List<E> snapshot) {
+        if (node == null)
             return;
-        inOrderSubtree(nodeMax, snapshot, nodeMin.right);
-        snapshot.add(nodeMin.element);
-        inOrderSubtree(nodeMax, snapshot, nodeMin.left);
+
+        inOrderSubtree(node.left, snapshot);
+        snapshot.add(node.element);
+        inOrderSubtree(node.right, snapshot);
     }
 
     /**

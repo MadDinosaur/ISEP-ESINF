@@ -1,7 +1,7 @@
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PeriodicTable extends BinaryTree<ChemicalElement> {
+public class PeriodicTable extends BalancedTree<ChemicalElement> {
 
     final static Map<String, Integer> PHASES = new HashMap<>();
 
@@ -19,13 +19,9 @@ public class PeriodicTable extends BinaryTree<ChemicalElement> {
     }
 
     public List<ChemicalElement> searchByInterval(ChemicalElement min, ChemicalElement max) {
-        Node<ChemicalElement> minNode = findMin(root, min);
-        Node<ChemicalElement> maxNode = findMax(root, max);
 
         List<ChemicalElement> listAux = new ArrayList<>();
-        listAux.add(minNode.getElement());
-
-        inOrderSubtree(maxNode, listAux, minNode);
+        findInterval(root,min,max,listAux);
 
         return listAux;
     }

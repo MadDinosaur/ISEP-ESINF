@@ -20,15 +20,13 @@ public class Main {
         searchbyElement("Helium");
         searchbySymbol("He");
         searchbyAtomicMass(4.0026f);
-
-        searchAtomicMassInterval(20, 65);
-
+        searchAtomicMassInterval(20, 118);
         getElectronConfigurations();
         getFurthestElectronConfig();
     }
 
     public static void readFile() throws FileNotFoundException {
-        Scanner reader = new Scanner(new File(FILE_NAME), "ISO-8859-1");
+        Scanner reader = new Scanner(new File(FILE_NAME_FABIO), "ISO-8859-1");
 
         //Descartar linha do cabeçalho
         reader.nextLine();
@@ -79,16 +77,16 @@ public class Main {
 
         atomicMasses.orderByDiscovererAndYear(interval);
         String[] headliner = {"Atomic Number", "Element", "Symbol", "Atomic Mass", "Phase", "Type", "Discoverer", "Year of Discovery"};
-        System.out.println("==================================================================================================================================================");
-        System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-10s| %-25s| %-20s| %-20s| %n", headliner[0], headliner[1], headliner[2], headliner[3], headliner[4], headliner[5], headliner[6], headliner[7]);
-        System.out.println("==================================================================================================================================================");
+        System.out.println("=========================================================================================================================================================");
+        System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-12s| %-25s| %-25s| %-20s| %n", headliner[0], headliner[1], headliner[2], headliner[3], headliner[4], headliner[5], headliner[6], headliner[7]);
+        System.out.println("=========================================================================================================================================================");
         for (ChemicalElement e : interval) {
 
-            System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-10s| %-25s| %-20s| %-20s| %n", e.getAtomicNumber(), e.getElement(), e.getSymbol(), e.getAtomicMass(), e.getPhase(), e.getType(), e.getDiscoverer().trim(), e.getYearOfDiscovery());
+            System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-12s| %-25s| %-25s| %-20s| %n", e.getAtomicNumber(), e.getElement(), e.getSymbol(), e.getAtomicMass(), e.getPhase(), e.getType(), e.getDiscoverer().trim(), e.getYearOfDiscovery());
 
         }
 
-        System.out.println("================================================================================================================================================== \n");
+        System.out.println("========================================================================================================================================================= \n");
 
         System.out.println("=============================================================================");
         String[] headliner2 = {"Alkali Metal", "Alkaline Earth Metal", "Halogen", "Metal", "Metalloid", "Noble Gas", "Nonmetal", "Transition Metal"};
@@ -114,8 +112,30 @@ public class Main {
 
 
     //2. a)
-    public static void getElectronConfigurations() {
-        periodicTable.getPatterns().forEach((k, v) -> System.out.printf("%d %s\n", v, k));
+    public static void getElectronConfigurations()
+    {
+        Iterator<Map.Entry<String,Integer>> iterator = periodicTable.getPatterns().entrySet().iterator();
+
+        int repetitions = 0;
+
+        while (iterator.hasNext())
+        {
+
+            Map.Entry<String,Integer> entry = iterator.next();
+
+            if(entry.getValue() == repetitions)
+            {
+                System.out.printf(" %-2s",entry.getKey());
+            }
+
+            else
+            {
+                System.out.printf("\n %-2d %s",entry.getValue(),entry.getKey());
+            }
+
+            repetitions = entry.getValue();
+        }
+        System.out.printf("\n\n");
     }
 
     //2. c)
