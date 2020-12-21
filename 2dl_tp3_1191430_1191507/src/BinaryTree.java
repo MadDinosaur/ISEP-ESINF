@@ -222,6 +222,8 @@ public class BinaryTree<E> {
         findInterval(node.left,nodeMin,nodeMax, snapshot);
         if(comparator.compare(node.element,nodeMin)>=0 && comparator.compare(node.element,nodeMax)<=0)
             snapshot.add(node.element);
+        if(comparator.compare(node.element,nodeMax)>0)
+            return;
         findInterval(node.right,nodeMin,nodeMax,snapshot);
     }
 
