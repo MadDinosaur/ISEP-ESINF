@@ -116,23 +116,12 @@ public class PeriodicTable extends BalancedTree<ChemicalElement> {
         return sortedPatterns;
     }
 
-    public BalancedTree<Map.Entry<String, Integer>> generateElectronConfigTree(Map<String, Integer> mapAux) {
-        Comparator<Map.Entry<String, Integer>> byRepetitions = new Comparator<Map.Entry<String, Integer>>() {
-            @Override
-            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                if (Integer.compare(o1.getValue(), o2.getValue()) == 0) return o1.getKey().compareTo(o2.getKey());
-                else return -Integer.compare(o1.getValue(), o2.getValue());
-            }
-        };
-
-        BalancedTree<Map.Entry<String, Integer>> bstElectronConfig = new BalancedTree<>(byRepetitions);
+    public BalancedTree<String> generateElectronConfigTree(Map<String, Integer> mapAux) {
+        BalancedTree<String> bstElectronConfig = new BalancedTree<>(Comparator.comparing(String::toString));
 
         for (Map.Entry<String, Integer> entry : mapAux.entrySet()) {
-            if (entry.getValue() <= 2) {
-                break;
-            }
-
-            bstElectronConfig.insert(entry);
+            if (entry.getValue() <= 2) break;
+            bstElectronConfig.insert(entry.getKey());
         }
 
         return bstElectronConfig;

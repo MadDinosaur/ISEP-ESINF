@@ -137,8 +137,8 @@ public class Main {
     //2. c)
 
     public static void getFurthestElectronConfig() {
-        List<Map.Entry<String, Integer>> auxList = new ArrayList<>();
-        BalancedTree<Map.Entry<String, Integer>> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
+        List<String> auxList = new ArrayList<>();
+        BalancedTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
         System.out.printf("A distância entre as duas configurações eletrónicas mais distantes é: %d.\n" +
                         "Possível combinação de configurações eletrónicas mais distantes: %s.\n",
                 bstElectronConfig.maxDistance(auxList), Arrays.toString(auxList.toArray()));
