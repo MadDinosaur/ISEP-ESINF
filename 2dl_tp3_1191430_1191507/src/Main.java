@@ -15,18 +15,128 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         readFile();
 
-        //Testes
-        searchbyAtomicNumber(118);
-        searchbyElement("Helium");
-        searchbySymbol("He");
-        searchbyAtomicMass(4.0026f);
-        searchAtomicMassInterval(109, 118);
-        getElectronConfigurations();
-        getFurthestElectronConfig();
+        Scanner sc = new Scanner(System.in);
+        String menu = "Aqui estão as funcionalidades disponíveis: \n" + "1. Pesquisa de Elementos \n" + "2. Pesquisar por Intervalo \n" + "3. Configurações eletrónicas e suas repetições \n" + "4. Nova BST de configurações eletrónicas \n" + "5. Configurações eletrónicas mais distantes \n" + "6. BST Completa \n" + "0. Opção de saída \n";
+        System.out.printf("Bem-vindo à Tabela Períodica!\n" + menu);
+
+        int op = sc.nextInt();
+
+        while (op!=0)
+        {
+            switch (op)
+            {
+                case 1:
+
+                    System.out.println("\nDeseja pesquisar de que forma?");
+                    System.out.println("1. Atomic Number");
+                    System.out.println("2. Symbol");
+                    System.out.println("3. AtomicMasses");
+                    System.out.println("4. Element");
+
+                    int escolha = sc.nextInt();
+                    sc.nextLine();
+
+                    switch (escolha)
+                    {
+                        case 1:
+                            System.out.println("\nIntroduza o número atómico do elemento");
+                            int numeroAtomico = sc.nextInt();
+
+                            System.out.println();
+                            searchbyAtomicNumber(numeroAtomico);
+                            System.out.println(menu);
+                            op = sc.nextInt();
+                            break;
+
+                        case 2:
+                            System.out.println("\nIntroduza o símbolo do elemento");
+                            String simbolo = sc.nextLine();
+                            System.out.println();
+                            searchbySymbol(simbolo);
+
+                            System.out.println(menu);
+                            op = sc.nextInt();
+                            break;
+
+                        case 3:
+                            System.out.println("\nIntroduza a massa atómica do elemento");
+                            float massaAtomica = sc.nextFloat();
+                            System.out.println();
+
+                            searchbyAtomicMass(massaAtomica);
+                            System.out.println(menu);
+                            op = sc.nextInt();
+                            break;
+
+                        case 4:
+                            System.out.println("\nIntroduza o nome do elemento");
+                            String nomeElemento = sc.nextLine();
+                            System.out.println();
+
+                            searchbyElement(nomeElemento);
+                            System.out.println(menu);
+                            op = sc.nextInt();
+                            break;
+
+                        default:
+                            System.out.println("Opção Inválida. Insira opção novamente");
+                    }
+
+                    break;
+
+                case 2:
+                    System.out.println("Introduza o intervalo que pretende pesquisar");
+                    System.out.println("Introduza o valor mínimo: ");
+
+                    float min = sc.nextFloat();
+
+                    System.out.println("Introduza o valor máximo: ");
+
+                    float max = sc.nextFloat();
+
+                    searchAtomicMassInterval(min,max);
+                    System.out.println(menu);
+                    op = sc.nextInt();
+                    break;
+
+                case 3:
+                    System.out.println("Aqui está a tabela de configurações eletrónicas e suas repetições: ");
+                    getElectronConfigurations();
+                    System.out.println(menu);
+                    op = sc.nextInt();
+                    break;
+
+                case 4:
+                    System.out.println("Nova BST: ");
+                    BalancedTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
+                    System.out.println(bstElectronConfig);
+                    System.out.println(menu);
+                    op = sc.nextInt();
+                    break;
+
+                case 5:
+                    getFurthestElectronConfig();
+                    System.out.println(menu);
+                    op = sc.nextInt();
+                    break;
+
+                case 6:
+                    System.out.println("Ainda não está pronto");
+                    System.out.println(menu);
+                    op = sc.nextInt();
+
+                default:
+                    System.out.println("Opção Inválida. Insira opção novamente.");
+                    System.out.println(menu);
+                    op = sc.nextInt();
+            }
+        }
+
+        System.out.println("Obrigado pela sua visita! Volte sempre!");
     }
 
     public static void readFile() throws FileNotFoundException {
-        Scanner reader = new Scanner(new File(FILE_NAME), "ISO-8859-1");
+        Scanner reader = new Scanner(new File(FILE_NAME_FABIO), "ISO-8859-1");
 
         //Descartar linha do cabeçalho
         reader.nextLine();
@@ -45,7 +155,12 @@ public class Main {
     //1. a)
     public static void searchbyAtomicNumber(int number) {
         ChemicalElement searchResult = atomicNumbers.find(new ChemicalElement(number));
-        System.out.println(searchResult);
+        if(searchResult == null) {
+            System.out.println("Elemento não existe");
+        }
+        else {
+            System.out.println(searchResult);
+        }
         System.out.println();
     }
 
