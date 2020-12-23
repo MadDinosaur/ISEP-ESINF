@@ -26,7 +26,7 @@ public class Main {
     }
 
     public static void readFile() throws FileNotFoundException {
-        Scanner reader = new Scanner(new File(FILE_NAME_FABIO), "ISO-8859-1");
+        Scanner reader = new Scanner(new File(FILE_NAME), "ISO-8859-1");
 
         //Descartar linha do cabeçalho
         reader.nextLine();
@@ -136,10 +136,9 @@ public class Main {
 
     //2. c)
 
-    public static void getFurthestElectronConfig()
-    {
-        List<String> auxList = new ArrayList<>();
-        BinaryTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
+    public static void getFurthestElectronConfig() {
+        List<Map.Entry<String, Integer>> auxList = new ArrayList<>();
+        BalancedTree<Map.Entry<String, Integer>> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
         System.out.printf("A distância entre as duas configurações eletrónicas mais distantes é: %d.\n" +
                         "Possível combinação de configurações eletrónicas mais distantes: %s.\n",
                 bstElectronConfig.maxDistance(auxList), Arrays.toString(auxList.toArray()));

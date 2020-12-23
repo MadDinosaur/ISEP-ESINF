@@ -351,9 +351,9 @@ public class BinaryTree<E> {
 
     public int maxDistance(List<E> endNodes) {
         List<Map.Entry<E, Integer>> potentialEndNodes = new ArrayList<>();
-        int diameter = subTreeHeight(root, potentialEndNodes);
+        subTreeHeight(root, potentialEndNodes);
 
-        if (potentialEndNodes.isEmpty()) return diameter;
+        if (potentialEndNodes.isEmpty()) return 0;
 
         Map.Entry<E, Integer> min = potentialEndNodes.get(0);
         Map.Entry<E, Integer> max = potentialEndNodes.get(0);
@@ -364,7 +364,7 @@ public class BinaryTree<E> {
         }
         endNodes.add(min.getKey());
         endNodes.add(max.getKey());
-        return diameter;
+        return min.getValue() + max.getValue();
     }
 
 

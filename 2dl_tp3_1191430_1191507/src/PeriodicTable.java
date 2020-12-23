@@ -21,7 +21,7 @@ public class PeriodicTable extends BalancedTree<ChemicalElement> {
     public List<ChemicalElement> searchByInterval(ChemicalElement min, ChemicalElement max) {
 
         List<ChemicalElement> listAux = new ArrayList<>();
-        findInterval(root,min,max,listAux);
+        findInterval(root, min, max, listAux);
 
         return listAux;
     }
@@ -116,25 +116,23 @@ public class PeriodicTable extends BalancedTree<ChemicalElement> {
         return sortedPatterns;
     }
 
-    public BinaryTree<String> generateElectronConfigTree(Map<String, Integer> mapAux)
-    {
-        /*Comparator<Map.Entry<String,Integer>> byRepetitions = new Comparator<Map.Entry<String, Integer>>() {
+    public BalancedTree<Map.Entry<String, Integer>> generateElectronConfigTree(Map<String, Integer> mapAux) {
+        Comparator<Map.Entry<String, Integer>> byRepetitions = new Comparator<Map.Entry<String, Integer>>() {
             @Override
             public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                return -Integer.compare(o1.getValue(),o2.getValue());
+                if (Integer.compare(o1.getValue(), o2.getValue()) == 0) return o1.getKey().compareTo(o2.getKey());
+                else return -Integer.compare(o1.getValue(), o2.getValue());
             }
-        };*/
+        };
 
-        BinaryTree<String> bstElectronConfig = new BinaryTree<>(Comparator.comparing(String::toString));
+        BalancedTree<Map.Entry<String, Integer>> bstElectronConfig = new BalancedTree<>(byRepetitions);
 
-        for(Map.Entry<String,Integer> entry : mapAux.entrySet())
-        {
-            if(entry.getValue()<=2)
-            {
+        for (Map.Entry<String, Integer> entry : mapAux.entrySet()) {
+            if (entry.getValue() <= 2) {
                 break;
             }
 
-            bstElectronConfig.insert(entry.getKey());
+            bstElectronConfig.insert(entry);
         }
 
         return bstElectronConfig;
