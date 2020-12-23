@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,7 +43,7 @@ public class PeriodicTable extends BalancedTree<ChemicalElement> {
         listAux.sort(byDiscovererAndYear);
     }
 
-    public List<List<Integer>> groupByTypeAndPhase(List<ChemicalElement> listAux) {
+    public List<Pair<String,List<Integer>>> groupByTypeAndPhase(List<ChemicalElement> listAux) {
         Comparator<ChemicalElement> comparatorByTypeAndPhase = new Comparator<ChemicalElement>() {
             @Override
             public int compare(ChemicalElement o1, ChemicalElement o2) {
@@ -56,7 +58,7 @@ public class PeriodicTable extends BalancedTree<ChemicalElement> {
         listAux.sort(comparatorByTypeAndPhase);
 
         //Criação da matriz resumo
-        List<List<Integer>> matrix = new ArrayList<>();
+        List<Pair<String,List<Integer>>> matrix = new ArrayList<>();
         List<Integer> newLine = new ArrayList<>(Collections.nCopies(PHASES.size(), 0));
 
         //Criação de uma linha de zeros e um prevElement vazio
@@ -73,14 +75,14 @@ public class PeriodicTable extends BalancedTree<ChemicalElement> {
                 }
             } else {
                 line.set(PHASES.get(prevElement.getPhase()), sum);
-                matrix.add(new ArrayList<>(line));
+                matrix.add(new Pair<>(prevElement.getType(), new ArrayList<>(line)));
                 Collections.copy(line, newLine);
                 sum = 1;
             }
             prevElement = element;
         }
         line.set(PHASES.get(prevElement.getPhase()), sum);
-        matrix.add(new ArrayList<>(line));
+        matrix.add(new Pair<>(prevElement.getType(), new ArrayList<>(line)));
         return matrix;
     }
 

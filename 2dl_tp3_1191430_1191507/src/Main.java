@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -198,37 +200,36 @@ public class Main {
 
         atomicMasses.orderByDiscovererAndYear(interval);
         String[] headliner = {"Atomic Number", "Element", "Symbol", "Atomic Mass", "Phase", "Type", "Discoverer", "Year of Discovery"};
-        System.out.println("=========================================================================================================================================================");
-        System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-12s| %-25s| %-25s| %-20s| %n", headliner[0], headliner[1], headliner[2], headliner[3], headliner[4], headliner[5], headliner[6], headliner[7]);
-        System.out.println("=========================================================================================================================================================");
+        System.out.println("==============================================================================================================================================================");
+        System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-12s| %-25s| %-30s| %-20s| %n", headliner[0], headliner[1], headliner[2], headliner[3], headliner[4], headliner[5], headliner[6], headliner[7]);
+        System.out.println("==============================================================================================================================================================");
         for (ChemicalElement e : interval) {
 
-            System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-12s| %-25s| %-25s| %-20s| %n", e.getAtomicNumber(), e.getElement(), e.getSymbol(), e.getAtomicMass(), e.getPhase(), e.getType(), e.getDiscoverer().trim(), e.getYearOfDiscovery());
+            System.out.printf("|%-15s| %-15s| %-10s| %-15s| %-12s| %-25s| %-30s| %-20s| %n", e.getAtomicNumber(), e.getElement(), e.getSymbol(), e.getAtomicMass(), e.getPhase(), e.getType(), e.getDiscoverer().trim(), e.getYearOfDiscovery());
 
         }
 
-        System.out.println("========================================================================================================================================================= \n");
+        System.out.println("============================================================================================================================================================== \n");
 
         System.out.println("=============================================================================");
-        String[] headliner2 = {"Alkali Metal", "Alkaline Earth Metal", "Halogen","Lanthanide", "Metal", "Metalloid", "Noble Gas", "Nonmetal", "Transition Metal"};
-        int pos = 0;
-        List<List<Integer>> summary = atomicMasses.groupByTypeAndPhase(interval);
+        List<Pair<String,List<Integer>>> summary = atomicMasses.groupByTypeAndPhase(interval);
         System.out.printf("%-21s %-13s %-10s %-10s %-10s %-10s%n", " ", "artificial", "gas", "liq", "solid", "TOTAL  |");
         System.out.println("=============================================================================");
 
-        for (List<Integer> l : summary) {
-            Integer artificial = l.get(0);
-            Integer gas = l.get(1);
-            Integer liq = l.get(2);
-            Integer solid = l.get(3);
+        for (Pair<String,List<Integer>> l : summary) {
+            List<Integer> p = l.getValue();
+            String s = l.getKey();
+            Integer artificial = p.get(0);
+            Integer gas = p.get(1);
+            Integer liq = p.get(2);
+            Integer solid = p.get(3);
 
             Integer total = artificial + gas + liq + solid;
 
-            System.out.printf("%-21s %-13s %-10s %-10s %-10s %-7s|%n", headliner2[pos], artificial.toString(), gas.toString(), liq.toString(), solid.toString(), total.toString());
+            System.out.printf("%-21s %-13s %-10s %-10s %-10s %-7s|%n", s, artificial.toString(), gas.toString(), liq.toString(), solid.toString(), total.toString());
 
-            pos++;
         }
-        System.out.println("=============================================================================");
+        System.out.println("=============================================================================\n");
     }
 
 
