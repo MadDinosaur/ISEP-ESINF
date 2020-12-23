@@ -1,5 +1,3 @@
-import sun.management.AgentConfigurationError;
-
 import java.util.*;
 
 public class BinaryTree<E> {
@@ -214,19 +212,37 @@ public class BinaryTree<E> {
         }
     }
 
-    protected void findInterval(Node<E> node,E nodeMin,E nodeMax,List<E> snapshot)
-    {
+    protected void findInterval(Node<E> node, E nodeMin, E nodeMax, List<E> snapshot) {
         if (node == null)
             return;
 
-        findInterval(node.left,nodeMin,nodeMax, snapshot);
-        if(comparator.compare(node.element,nodeMin)>=0 && comparator.compare(node.element,nodeMax)<=0)
+        findInterval(node.left, nodeMin, nodeMax, snapshot);
+        if (comparator.compare(node.element, nodeMin) >= 0 && comparator.compare(node.element, nodeMax) <= 0)
             snapshot.add(node.element);
-        if(comparator.compare(node.element,nodeMax)>0)
+        if (comparator.compare(node.element, nodeMax) > 0)
             return;
-        findInterval(node.right,nodeMin,nodeMax,snapshot);
+        findInterval(node.right, nodeMin, nodeMax, snapshot);
     }
 
+    protected Node<E> findMax(Node<E> node, E element) {
+        if (node == null) return null;
+        if (comparator.compare(node.element, element) == 0) return node;
+        else if (comparator.compare(node.element, element) > 0) {
+            if (findMax(node.left, element) == null) return node;
+            else return null;
+        } else return findMax(node.right, element);
+    }
+
+    protected Node<E> findMin(Node<E> node, E element) {
+        if (node == null) return null;
+        Node<E> minNode;
+        if (comparator.compare(node.element, element) == 0) return node;
+        else if (comparator.compare(node.element, element) > 0) {
+            minNode = findMin(node.left, element);
+            if (minNode == null) return node;
+        } else return findMin(node.right, element);
+        return minNode;
+    }
 
     /*
      * Returns an iterable collection of elements of the tree, reported in in-order.
@@ -244,7 +260,7 @@ public class BinaryTree<E> {
      * Adds elements of the subtree rooted at Node node to the given
      * snapshot using an in-order traversal
      *
-     * @param node  Node serving as the root of a subtree
+     * @param node     Node serving as the root of a subtree
      * @param snapshot a list to which results are appended
      */
     protected void inOrderSubtree(Node<E> node, List<E> snapshot) {
@@ -367,6 +383,27 @@ public class BinaryTree<E> {
         return min.getValue() + max.getValue();
     }
 
+    public void completeTree(BinaryTree<E> insertionList) {
+        TreeMap<Integer, List<E>> descendingLevels = new TreeMap<>(Collections.reverseOrder());
+        descendingLevels.putAll(nodesByLevel());
+        descendingLevels.remove(descendingLevels.firstKey());
+
+        Iterator<Map.Entry<Integer, List<E>>> i = descendingLevels.entrySet().iterator();
+        Map.Entry<Integer, List<E>> level = i.next();
+        while (i.hasNext()) {
+            Map.Entry<Integer, List<E>> prevLevel = i.next();
+            int missingNodes = (int) (Math.pow(2, level.getKey()) - level.getValue().size());
+            if (missingNodes == 0) break;
+            else {
+                for (E element : prevLevel.getValue()) {
+                    Node<E> node = find(root, element);
+                    if (node.left == null) insert(insertionList.findMax(insertionList.root, element).element);
+                    if (node.right == null) insert(insertionList.findMin(insertionList.root, element).element);
+                }
+            }
+            level = prevLevel;
+        }
+    }
 
 //#########################################################################
 

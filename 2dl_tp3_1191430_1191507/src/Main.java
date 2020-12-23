@@ -108,7 +108,7 @@ public class Main {
 
                 case 4:
                     System.out.println("Nova BST: ");
-                    BalancedTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
+                    BalancedTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns(3));
                     System.out.println(bstElectronConfig);
                     System.out.println(menu);
                     op = sc.nextInt();
@@ -121,7 +121,7 @@ public class Main {
                     break;
 
                 case 6:
-                    System.out.println("Ainda não está pronto");
+                    completeElectronConfigTree();
                     System.out.println(menu);
                     op = sc.nextInt();
 
@@ -136,7 +136,7 @@ public class Main {
     }
 
     public static void readFile() throws FileNotFoundException {
-        Scanner reader = new Scanner(new File(FILE_NAME_FABIO), "ISO-8859-1");
+        Scanner reader = new Scanner(new File(FILE_NAME), "ISO-8859-1");
 
         //Descartar linha do cabeçalho
         reader.nextLine();
@@ -225,7 +225,7 @@ public class Main {
     //2. a)
     public static void getElectronConfigurations()
     {
-        Iterator<Map.Entry<String,Integer>> iterator = periodicTable.getPatterns().entrySet().iterator();
+        Iterator<Map.Entry<String, Integer>> iterator = periodicTable.getPatterns(2).entrySet().iterator();
 
         int repetitions = 0;
 
@@ -253,9 +253,19 @@ public class Main {
 
     public static void getFurthestElectronConfig() {
         List<String> auxList = new ArrayList<>();
-        BalancedTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns());
+        BalancedTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns(3));
         System.out.printf("A distância entre as duas configurações eletrónicas mais distantes é: %d.\n" +
                         "Possível combinação de configurações eletrónicas mais distantes: %s.\n",
                 bstElectronConfig.maxDistance(auxList), Arrays.toString(auxList.toArray()));
     }
+
+    //2. d)
+    public static void completeElectronConfigTree() {
+        BalancedTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns(3));
+        BalancedTree<String> insertionList = periodicTable.generateElectronConfigTree(periodicTable.getPatterns(1, 2));
+        bstElectronConfig.completeTree(insertionList);
+
+        System.out.printf("\n%s\n", bstElectronConfig.toString());
+    }
+
 }

@@ -84,7 +84,7 @@ public class PeriodicTable extends BalancedTree<ChemicalElement> {
         return matrix;
     }
 
-    public Map<String, Integer> getPatterns() {
+    private Map<String, Integer> getPatterns() {
         Map<String, Integer> patterns = new HashMap<>();
         for (ChemicalElement element : inOrder()) {
             StringBuilder configBuilder = new StringBuilder();
@@ -106,11 +106,26 @@ public class PeriodicTable extends BalancedTree<ChemicalElement> {
                 }
             }
         }
+        return patterns;
+    }
+
+    public Map<String, Integer> getPatterns(int minRepetitions, int maxRepetitions) {
 
         Map<String, Integer> sortedPatterns =
-                patterns.entrySet().stream()
+                getPatterns().entrySet().stream()
                         .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                        .filter(entry -> entry.getValue() > 1)
+                        .filter(entry -> entry.getValue() >= minRepetitions && entry.getValue() < maxRepetitions)
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        return sortedPatterns;
+    }
+
+    public Map<String, Integer> getPatterns(int minRepetitions) {
+
+        Map<String, Integer> sortedPatterns =
+                getPatterns().entrySet().stream()
+                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                        .filter(entry -> entry.getValue() >= minRepetitions)
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         return sortedPatterns;
@@ -120,7 +135,6 @@ public class PeriodicTable extends BalancedTree<ChemicalElement> {
         BalancedTree<String> bstElectronConfig = new BalancedTree<>(Comparator.comparing(String::toString));
 
         for (Map.Entry<String, Integer> entry : mapAux.entrySet()) {
-            if (entry.getValue() <= 2) break;
             bstElectronConfig.insert(entry.getKey());
         }
 
