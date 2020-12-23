@@ -178,19 +178,37 @@ public class Main {
 
     public static void searchbyElement(String element) {
         ChemicalElement searchResult = periodicTable.find(new ChemicalElement(element));
-        System.out.println(searchResult);
+        if(searchResult == null)
+        {
+            System.out.println("Elemento não existe");
+        }
+        else{
+            System.out.println(searchResult);
+        }
         System.out.println();
     }
 
     public static void searchbySymbol(String symbol) {
         ChemicalElement searchResult = symbols.find(new ChemicalElement(symbol));
-        System.out.println(searchResult);
+        if(searchResult == null)
+        {
+            System.out.println("Elemento não existe");
+        }
+        else {
+            System.out.println(searchResult);
+        }
         System.out.println();
     }
 
     public static void searchbyAtomicMass(float number) {
         ChemicalElement searchResult = atomicMasses.find(new ChemicalElement(number));
-        System.out.println(searchResult);
+        if(searchResult == null)
+        {
+            System.out.println("Elemento não existe");
+        }
+        else {
+            System.out.println(searchResult);
+        }
         System.out.println();
     }
 
