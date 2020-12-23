@@ -16,7 +16,15 @@ public class Main {
         readFile();
 
         Scanner sc = new Scanner(System.in);
-        String menu = "Aqui estão as funcionalidades disponíveis: \n" + "1. Pesquisa de Elementos \n" + "2. Pesquisar por Intervalo \n" + "3. Configurações eletrónicas e suas repetições \n" + "4. Nova BST de configurações eletrónicas \n" + "5. Configurações eletrónicas mais distantes \n" + "6. BST Completa \n" + "0. Opção de saída \n";
+        String menu = "Aqui estão as funcionalidades disponíveis: \n" +
+                "1. Pesquisa de Elementos \n" +
+                "2. Pesquisar por Intervalo \n" +
+                "3. Configurações eletrónicas e suas repetições \n" +
+                "4. Nova BST de configurações eletrónicas \n" +
+                "5. Configurações eletrónicas mais distantes \n" +
+                "6. BST Completa \n" +
+                "0. Opção de saída \n";
+
         System.out.printf("Bem-vindo à Tabela Períodica!\n" + menu);
 
         int op = sc.nextInt();
@@ -121,9 +129,11 @@ public class Main {
                     break;
 
                 case 6:
+                    System.out.println("BST completa: ");
                     completeElectronConfigTree();
                     System.out.println(menu);
                     op = sc.nextInt();
+                    break;
 
                 default:
                     System.out.println("Opção Inválida. Insira opção novamente.");
@@ -136,7 +146,7 @@ public class Main {
     }
 
     public static void readFile() throws FileNotFoundException {
-        Scanner reader = new Scanner(new File(FILE_NAME), "ISO-8859-1");
+        Scanner reader = new Scanner(new File(FILE_NAME_FABIO), "ISO-8859-1");
 
         //Descartar linha do cabeçalho
         reader.nextLine();
@@ -200,7 +210,7 @@ public class Main {
         System.out.println("========================================================================================================================================================= \n");
 
         System.out.println("=============================================================================");
-        String[] headliner2 = {"Alkali Metal", "Alkaline Earth Metal", "Halogen", "Metal", "Metalloid", "Noble Gas", "Nonmetal", "Transition Metal"};
+        String[] headliner2 = {"Alkali Metal", "Alkaline Earth Metal", "Halogen","Lanthanide", "Metal", "Metalloid", "Noble Gas", "Nonmetal", "Transition Metal"};
         int pos = 0;
         List<List<Integer>> summary = atomicMasses.groupByTypeAndPhase(interval);
         System.out.printf("%-21s %-13s %-10s %-10s %-10s %-10s%n", " ", "artificial", "gas", "liq", "solid", "TOTAL  |");
