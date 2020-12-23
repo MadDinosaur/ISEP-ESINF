@@ -264,7 +264,7 @@ public class Main {
         BalancedTree<String> bstElectronConfig = periodicTable.generateElectronConfigTree(periodicTable.getPatterns(3));
         BalancedTree<String> insertionList = periodicTable.generateElectronConfigTree(periodicTable.getPatterns(1, 2));
         bstElectronConfig.completeTree(insertionList);
-
+        bstElectronConfig.inOrder().forEach(x -> System.out.printf("%s; ", x));
         System.out.printf("\n%s\n", bstElectronConfig.toString());
     }
 

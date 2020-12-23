@@ -226,11 +226,16 @@ public class BinaryTree<E> {
 
     protected Node<E> findMax(Node<E> node, E element) {
         if (node == null) return null;
+        Node<E> maxNode;
         if (comparator.compare(node.element, element) == 0) return node;
         else if (comparator.compare(node.element, element) > 0) {
-            if (findMax(node.left, element) == null) return node;
-            else return null;
-        } else return findMax(node.right, element);
+            maxNode = findMax(node.left, element);
+            if (maxNode == null) return node;
+        } else {
+            maxNode = findMax(node.right, element);
+            if (maxNode == null) return node;
+        }
+        return comparator.compare(maxNode.element, element) > 0 ? null : maxNode;
     }
 
     protected Node<E> findMin(Node<E> node, E element) {
@@ -240,8 +245,11 @@ public class BinaryTree<E> {
         else if (comparator.compare(node.element, element) > 0) {
             minNode = findMin(node.left, element);
             if (minNode == null) return node;
-        } else return findMin(node.right, element);
-        return minNode;
+        } else {
+            minNode = findMin(node.right, element);
+            if (minNode == null) return node;
+        }
+        return comparator.compare(minNode.element, element) < 0 ? null : minNode;
     }
 
     /*

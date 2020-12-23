@@ -282,4 +282,20 @@ public class ChemicalElement {
         return String.format("|%d|%s|%s|%.2f|%.2f|%d|%d|%s|%s|%s|%.2f|%.2f|%.2f|%.2f|%.2f|%.2f|%.2f|%d|%s|%d|%.2f|%s|",
                 atomicNumber, element, symbol, atomicWeight, atomicMass, period, group, phase, mostStableCrystal, type, ionicRadius, atomicRadius, electronegativity, firstIonizationPotential, density, meltingPoint, boilingPoint, isotopes, discoverer, yearOfDiscovery, specificHeatCapacity, electronConfiguration);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        // self check
+        if (this == o)
+            return true;
+        // null check
+        if (o == null)
+            return false;
+        // type check and cast
+        if (getClass() != o.getClass())
+            return false;
+        ChemicalElement c = (ChemicalElement) o;
+        // field comparison
+        return c.atomicNumber == this.atomicNumber && c.element.equals(this.element);
+    }
 }

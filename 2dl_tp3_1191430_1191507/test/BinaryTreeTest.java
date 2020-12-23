@@ -1,22 +1,29 @@
+import org.junit.Assert;
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
 public class BinaryTreeTest {
+    //Dois tipos de Binary Tree - Periodic Table e Balanced Tree
     PeriodicTable emptyInstance = new PeriodicTable(null);
-    PeriodicTable instance = Main.periodicTable;
+    PeriodicTable bigInstance = Main.periodicTable;
+
+    BalancedTree<String> smallInstance;
 
     public BinaryTreeTest() throws FileNotFoundException {
         Main.readFile();
+        smallInstance = Main.periodicTable.generateElectronConfigTree(Main.periodicTable.getPatterns(3));
     }
 
     @org.junit.Test
     public void isEmpty() {
-        boolean actual = instance.isEmpty();
+        boolean actual = bigInstance.isEmpty();
+        assertFalse(actual);
+
+        smallInstance.isEmpty();
         assertFalse(actual);
 
         actual = emptyInstance.isEmpty();
@@ -26,7 +33,11 @@ public class BinaryTreeTest {
     @org.junit.Test
     public void size() {
         int expected = 118;
-        int actual = instance.size();
+        int actual = bigInstance.size();
+        assertEquals(expected, actual);
+
+        expected = 15;
+        actual = smallInstance.size();
         assertEquals(expected, actual);
 
         expected = 0;
@@ -37,7 +48,11 @@ public class BinaryTreeTest {
     @org.junit.Test
     public void height() {
         int expected = 8;
-        int actual = instance.height();
+        int actual = bigInstance.height();
+        assertEquals(expected, actual);
+
+        expected = 4;
+        actual = smallInstance.height();
         assertEquals(expected, actual);
 
         expected = -1;
@@ -50,46 +65,94 @@ public class BinaryTreeTest {
         ChemicalElement expected = readNFirstLines(1).get(0);
 
         ChemicalElement element = new ChemicalElement("Hydrogen");
-        ChemicalElement actual = instance.find(element);
+        ChemicalElement actual = bigInstance.find(element);
 
-        assert (expected.equals(actual));
+        assertEquals(expected, actual);
     }
 
     @org.junit.Test
     public void findInterval() throws FileNotFoundException {
-        ChemicalElement min = new ChemicalElement(1);
-        ChemicalElement max = new ChemicalElement(3);
-        List<ChemicalElement> actual = new ArrayList<>();
-        instance.findInterval(instance.root, min, max, actual);
+        ChemicalElement min = new ChemicalElement("Hydrogen");
+        ChemicalElement max = new ChemicalElement("Lithium");
+        List<String> actual = new ArrayList<>();
+        smallInstance.findInterval(smallInstance.root, "[Ar]", "[He]", actual);
 
-        List<ChemicalElement> expected = readNFirstLines(3);
+        List<String> expected = Arrays.asList("[Ar]", "[Ar] 3d10", "[Ar] 3d10 4s2", "[He]");
 
-        assert (expected.containsAll(actual));
-        assert (actual.containsAll(expected));
+        assertArrayEquals(expected.toArray(), actual.toArray());
     }
 
     @org.junit.Test
     public void findMax() {
+        BinaryTree.Node<String> actual = smallInstance.findMax(smallInstance.root, "[Z]");
+        BinaryTree.Node<String> expected = smallInstance.find(smallInstance.root, "[Xe] 4f14 5d10 6s2");
+
+        assertEquals(expected, actual);
+
+
+        actual = smallInstance.findMax(smallInstance.root, "[A]");
+        expected = null;
+
+        assertEquals(expected, actual);
     }
 
     @org.junit.Test
     public void findMin() {
+        BinaryTree.Node<String> actual = smallInstance.findMin(smallInstance.root, "[A]");
+        BinaryTree.Node<String> expected = smallInstance.find(smallInstance.root, "[Ar]");
+
+        assertTrue(actual.equals(expected));
+
+        actual = smallInstance.findMin(smallInstance.root, "[Z]");
+        expected = null;
+
+        assertEquals(actual, expected);
     }
 
     @org.junit.Test
     public void inOrder() {
+        List<String> actual = (List<String>) smallInstance.inOrder();
+        List<String> expected = Arrays.asList("[Ar]", "[Ar] 3d10", "[Ar] 3d10 4s2", "[He]", "[He] 2s2", "[Kr]", "[Kr] 4d10", "[Kr] 4d10 5s2", "[Ne]", "[Ne] 3s2", "[Rn]", "[Xe]", "[Xe] 4f14", "[Xe] 4f14 5d10", "[Xe] 4f14 5d10 6s2");
+
+        assertArrayEquals(expected.toArray(), actual.toArray());
     }
 
     @org.junit.Test
     public void nodesByLevel() {
+        Map<Integer, List<String>> actual = smallInstance.nodesByLevel();
+
+        Map<Integer, List<String>> expected = new HashMap<>();
+        expected.put(0, Arrays.asList("[Kr] 4d10"));
+        expected.put(1, Arrays.asList("[He]", "[Xe]"));
+        expected.put(2, Arrays.asList("[Ar] 3d10", "[Kr]", "[Ne] 3s2", "[Xe] 4f14 5d10"));
+        expected.put(3, Arrays.asList("[Ar]", "[Ar] 3d10 4s2", "[He] 2s2", "[Ne]", "[Rn]", "[Xe] 4f14", "[Xe] 4f14 5d10 6s2"));
+        expected.put(4, Arrays.asList("[Kr] 4d10 5s2"));
+
+        assertArrayEquals(expected.keySet().toArray(), actual.keySet().toArray());
+        assertArrayEquals(expected.values().toArray(), actual.values().toArray());
     }
 
     @org.junit.Test
     public void maxDistance() {
+        List<String> actualNodes = new ArrayList<>();
+        int actual = smallInstance.maxDistance(actualNodes);
+
+        List<String> expectedNodes = Arrays.asList("[Ar]", "[Kr] 4d10 5s2");
+        int expected = 7;
+
+        assertEquals(expected, actual);
+        assertArrayEquals(expectedNodes.toArray(), actualNodes.toArray());
     }
 
     @org.junit.Test
     public void completeTree() {
+        BalancedTree<String> insertionList = Main.periodicTable.generateElectronConfigTree(Main.periodicTable.getPatterns(1, 2));
+        smallInstance.completeTree(insertionList);
+
+        for (Map.Entry<Integer, List<String>> entry : smallInstance.nodesByLevel().entrySet()) {
+            if (entry.getKey() == smallInstance.height()) break;
+            assertEquals((int) Math.pow(2, entry.getKey()), entry.getValue().size());
+        }
     }
 
     private List<ChemicalElement> readNFirstLines(int n) throws FileNotFoundException {
