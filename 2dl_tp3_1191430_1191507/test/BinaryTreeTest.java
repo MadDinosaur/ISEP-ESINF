@@ -1,17 +1,18 @@
-import org.junit.Assert;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
 import static org.junit.Assert.*;
 
+/**
+ * Testes unitários à classe BinaryTree (apenas aqueles que foram criados no âmbito do presente trabalho).
+ */
 public class BinaryTreeTest {
     //Dois tipos de Binary Tree - Periodic Table e Balanced Tree
     PeriodicTable emptyInstance = new PeriodicTable(null);
     PeriodicTable bigInstance = Main.periodicTable;
 
-    BalancedTree<String> smallInstance;
+    BinaryTree<String> smallInstance;
 
     public BinaryTreeTest() throws FileNotFoundException {
         Main.readFile();
@@ -72,8 +73,6 @@ public class BinaryTreeTest {
 
     @org.junit.Test
     public void findInterval() throws FileNotFoundException {
-        ChemicalElement min = new ChemicalElement("Hydrogen");
-        ChemicalElement max = new ChemicalElement("Lithium");
         List<String> actual = new ArrayList<>();
         smallInstance.findInterval(smallInstance.root, "[Ar]", "[He]", actual);
 
@@ -141,16 +140,16 @@ public class BinaryTreeTest {
         int expected = 7;
 
         assertEquals(expected, actual);
-        assertArrayEquals(expectedNodes.toArray(), actualNodes.toArray());
+        assertTrue(expectedNodes.containsAll(actualNodes));
     }
 
     @org.junit.Test
     public void completeTree() {
-        BalancedTree<String> insertionList = Main.periodicTable.generateElectronConfigTree(Main.periodicTable.getPatterns(1, 2));
-        smallInstance.completeTree(insertionList);
+        BalancedTree<String> completeBstElectronConfig = new BalancedTree<>(Comparator.comparing(String::toString));
+        completeBstElectronConfig.completeTree(smallInstance.inOrder());
 
-        for (Map.Entry<Integer, List<String>> entry : smallInstance.nodesByLevel().entrySet()) {
-            if (entry.getKey() == smallInstance.height()) break;
+        for (Map.Entry<Integer, List<String>> entry : completeBstElectronConfig.nodesByLevel().entrySet()) {
+            if (entry.getKey() == completeBstElectronConfig.height()) break;
             assertEquals((int) Math.pow(2, entry.getKey()), entry.getValue().size());
         }
     }

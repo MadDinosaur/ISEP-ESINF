@@ -1,9 +1,13 @@
 import java.util.Comparator;
-
+/**
+ * Classe que modela uma árvore binária de pesquisa com balanceamento (AVL), utiliza na íntegra a estrutura e material das PLs da cadeira de ESINF.
+ *
+ * @param <E>: Tipo de dados associado à árvore.
+ */
 public class BalancedTree<E> extends BinaryTree<E>
 {
 
-    public BalancedTree(Comparator compare) {
+    public BalancedTree(Comparator<E> compare) {
         super(compare);
     }
 
@@ -70,6 +74,7 @@ public class BalancedTree<E> extends BinaryTree<E>
     public void insert(E element){
         root = insert(element, root);
     }
+
     private Node<E> insert(E element, Node<E> node)
     {
         if (node == null) return new Node(element, null, null);
@@ -117,7 +122,6 @@ public class BalancedTree<E> extends BinaryTree<E>
         }
         return node;
     }
-
 
     public boolean equals(Object otherObj) {
 

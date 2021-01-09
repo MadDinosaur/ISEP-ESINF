@@ -1,5 +1,8 @@
 import java.util.Comparator;
 
+/**
+ * Classe que modela um elemento da tabela periódica.
+ */
 public class ChemicalElement {
     private int atomicNumber;
     private String element;
@@ -25,7 +28,36 @@ public class ChemicalElement {
     String electronConfiguration;
     int displayRow;
     int displayColumn;
+    //------------------------------- Construtores ---------------------------------
 
+    /**
+     * Construtor completo da classe ChemicalElement.
+     *
+     * @param atomicNumber
+     * @param element
+     * @param symbol
+     * @param atomicWeight
+     * @param atomicMass
+     * @param period
+     * @param group
+     * @param phase
+     * @param mostStableCrystal
+     * @param type
+     * @param ionicRadius
+     * @param atomicRadius
+     * @param electronegativity
+     * @param firstIonizationPotential
+     * @param density
+     * @param meltingPoint
+     * @param boilingPoint
+     * @param isotopes
+     * @param discoverer
+     * @param yearOfDiscovery
+     * @param specificHeatCapacity
+     * @param electronConfiguration
+     * @param displayRow
+     * @param displayColumn
+     */
     public ChemicalElement(String atomicNumber, String element, String symbol, String atomicWeight, String atomicMass, String period, String group, String phase, String mostStableCrystal, String type, String ionicRadius, String atomicRadius, String electronegativity, String firstIonizationPotential, String density, String meltingPoint, String boilingPoint, String isotopes, String discoverer, String yearOfDiscovery, String specificHeatCapacity, String electronConfiguration, String displayRow, String displayColumn) {
         this.atomicNumber = Integer.parseInt(atomicNumber);
         this.element = element;
@@ -101,6 +133,12 @@ public class ChemicalElement {
         this.displayColumn = Integer.parseInt(displayColumn);
     }
 
+    /**
+     * Construtor parcial da classe ChemicalElement.
+     * Deve ser usado apenas para buscas através do método find() de BinaryTree.
+     *
+     * @param atomicNumber: Número Atómico
+     */
     public ChemicalElement(int atomicNumber) {
         this.element = "";
         this.specificHeatCapacity = 0;
@@ -126,6 +164,12 @@ public class ChemicalElement {
         this.type = "";
     }
 
+    /**
+     * Construtor parcial da classe ChemicalElement.
+     * Deve ser usado apenas para buscas através do método find() de BinaryTree.
+     *
+     * @param element: Nome do Elemento ou Símbolo
+     */
     public ChemicalElement(String element) {
         if (element.length() <= 3) {
             this.symbol = element;
@@ -156,6 +200,12 @@ public class ChemicalElement {
         this.type = "";
     }
 
+    /**
+     * Construtor parcial da classe ChemicalElement.
+     * Deve ser usado apenas para buscas através do método find() de BinaryTree.
+     *
+     * @param atomicMass: Massa Atómica
+     */
     public ChemicalElement(float atomicMass) {
         this.element = "";
         this.specificHeatCapacity = 0;
@@ -181,6 +231,9 @@ public class ChemicalElement {
         this.type = "";
     }
 
+    /**
+     * Construtor vazio da classe ChemicalElement.
+     */
     public ChemicalElement() {
         this.element = "";
         this.specificHeatCapacity = 0;
@@ -206,6 +259,7 @@ public class ChemicalElement {
         this.type = "";
     }
 
+    //------------------------------- Getters e Setters ---------------------------------
     public int getAtomicNumber() {
         return atomicNumber;
     }
@@ -278,6 +332,7 @@ public class ChemicalElement {
         return type;
     }
 
+    @Override
     public String toString() {
         return String.format("|%d|%s|%s|%.2f|%.2f|%d|%d|%s|%s|%s|%.2f|%.2f|%.2f|%.2f|%.2f|%.2f|%.2f|%d|%s|%d|%.2f|%s|",
                 atomicNumber, element, symbol, atomicWeight, atomicMass, period, group, phase, mostStableCrystal, type, ionicRadius, atomicRadius, electronegativity, firstIonizationPotential, density, meltingPoint, boilingPoint, isotopes, discoverer, yearOfDiscovery, specificHeatCapacity, electronConfiguration);
